@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Arv2</title>
+  <title>Agencia Royal - Servicios</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %> 
@@ -16,92 +16,31 @@
     <body>            
         
         <header>
-            <div class="wrap">
-                <div id="header">   
-
-                    <a id="logo" href="./" title="Agencia Royal 33">Agencia Royal 33<span>*</span></a>
-                    
-                    <hr> 
-                    
-                    <nav>
-                        <ul>
-                            <li>
-                                <a href="/" title="Principal">
-                                    <strong>Principal</strong>
-                                    <span>Lo mas Importante</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/history" title="Historia">
-                                    <strong>Historia</strong>
-                                    <span>Nuestra Historia</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/products" title="Productos">
-                                    <strong>Productos</strong>
-                                    <span>Nuestros Productos</span>
-                                </a>
-                            </li>                            
-                            <li>
-                                <a href="/services" title="Servicios">
-                                    <strong>Servicios</strong>
-                                    <span>Atención a Nuestros Clientes</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/contact" title="Contactanos">
-                                    <strong>Contactanos</strong>
-                                    <span>Comunicate con Nosotros</span>
-                                </a>
-                            </li>
-                        </ul>          
-                    </nav>
-
-                </div> <!-- / #header -->
-                
-                <hr>                
-            </div>
+            <%= render 'layouts/header_main' %>
         </header>
-                
-<%= yield %>
+        <hr>
+        <div id="container">
+            <div id="content" class="wrap">
 
-        <footer>
-            <div id="footer">
-                
-                <div class="wrap clearFix">
-                    
-                    <div class="col1-4">
-                        <a href="./" id="footerLogo">Agencia Royal 33<span>*</span></a>
-                        
-                        <p class="light">&copy; 2012, Todos los Derechos Reservados.</p>
-                        <p>Tip: <a href="http://www.cotecso.com.ve/">Desarrollado por Cotecso</a></p>
-                    </div>
-                    
-                    <div class="col1-4">
-                        <h3>Hacerca de Nosotros</h3>
-                        
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
-                    </div>
-                    
-                    <div class="col1-4">
-                        <h3>Siguenos</h3>
-                        
-                        <p class="followUs clearFix">
-                            <a href="./" class="facebook">Facebook</a>
-                            <a href="./" class="twitter">Twitter</a>
-                        </p>
-                    </div>
-                    
-                    <div class="col1-4">
-                        <h3>Intranet de Agencia Royal</h3>
-                        
-                        <a href="/intranet" class="button" title="Intranet de Agencia Royal"><span>Intranet</span></a>
-                    </div>
-                    
-                </div>
-                
+            <%= yield %>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+    
             </div>
+        </div> <!-- / #container -->        
+
+        <hr>
+        <footer>
+            <%= render 'layouts/footer' %>
         </footer>
         
     </body>

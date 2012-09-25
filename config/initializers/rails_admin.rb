@@ -124,5 +124,8 @@ RailsAdmin.config do |config|
     label_plural 'Usuarios'      # Same, plural
   end
 
+  config.actions do
+    root :experiences, :dashboard
+  end
 
 end
