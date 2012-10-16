@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AccionTest < ActiveSupport::TestCase
+class Profit::ZonaTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

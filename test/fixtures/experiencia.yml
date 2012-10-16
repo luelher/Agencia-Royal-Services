@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  from: 2012-10-09
+  to: 2012-10-09
+  result: MyString
+
+two:
+  from: 2012-10-09
+  to: 2012-10-09
+  result: MyString

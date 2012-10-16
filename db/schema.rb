@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120907020511) do
+ActiveRecord::Schema.define(:version => 20121010041956) do
 
   create_table "acciones", :force => true do |t|
     t.integer  "servicios_id",                 :null => false
@@ -59,6 +59,13 @@ ActiveRecord::Schema.define(:version => 20120907020511) do
     t.datetime "fecha",                        :null => false
   end
 
+  create_table "experiencia", :force => true do |t|
+    t.date     "desde"
+    t.string   "resultado"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "inbox", :force => true do |t|
     t.string    "number",     :limit => 20, :default => "", :null => false
     t.datetime  "smsdate",                                  :null => false
@@ -98,6 +105,16 @@ ActiveRecord::Schema.define(:version => 20120907020511) do
     t.string    "co_cli",         :limit => 20,  :default => ""
     t.date      "fec_venc",                                                         :null => false
     t.integer   "telefonos_id"
+  end
+
+  create_table "profit_cobros", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "profit_reng_cobs", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "rails_admin_histories", :force => true do |t|

@@ -4,8 +4,8 @@
 RailsAdmin.config do |config|
 
   # If your default_local is different from :en, uncomment the following 2 lines and set your default locale here:
-  # require 'i18n'
-  # I18n.default_locale = :de
+  require 'i18n'
+  I18n.default_locale = :es
 
   config.current_user_method { current_user } # auto-generated
 
@@ -31,7 +31,7 @@ RailsAdmin.config do |config|
 
   #  ==> Included models
   # Add all excluded models here:
-  config.excluded_models = ['Outbox', 'Multipartinbox', 'Inbox', 'Telefono']
+  config.excluded_models = ['Sms::Outbox', 'Sms::Multipartinbox', 'Sms::Inbox', 'Sms::Telefono', 'Profit::Cliente', 'Profit::Cobro', 'Profit::Condicio', 'Profit::DocumCc', 'Profit::Factura', 'Profit::RengCob', 'Profit::Zona']
 
   # Add models here if you want to go 'whitelist mode':
   # config.included_models = []
@@ -79,41 +79,23 @@ RailsAdmin.config do |config|
 
   # All fields marked as 'hidden' won't be shown anywhere in the rails_admin unless you mark them as visible. (visible(true))
 
-  # Cliente
-  config.model ClienteProfit do
-    navigation_label 'Servicios'
-    weight -1
-  end
-
-  # Servicio
-  config.model Servicio do
-    parent ClienteProfit
-    weight 0
-  end
-
   # Accion
-  config.model Accion do
+  config.model Servicios::Accion do
     label 'Acciones'              # Name of ModelName (smartly defaults to ActiveRecord's I18n API)
     label_plural 'Acciones'      # Same, plural
-    parent ClienteProfit
-    weight 0
-  end
-
-  # Entrega
-  config.model Entrega do
-    parent ClienteProfit
+    # parent ClienteProfit
     weight 0
   end
 
   # Carta
-  config.model Carta do
+  config.model Cobranza::Carta do
     label 'Cartas'              # Name of ModelName (smartly defaults to ActiveRecord's I18n API)
     label_plural 'Cartas'      # Same, plural
   end
 
 
   # Opcion
-  config.model Opcion do
+  config.model Cobranza::Opcion do
     label 'Opciones'              # Name of ModelName (smartly defaults to ActiveRecord's I18n API)
     label_plural 'Opciones'      # Same, plural
   end
@@ -124,8 +106,28 @@ RailsAdmin.config do |config|
     label_plural 'Usuarios'      # Same, plural
   end
 
+  # Cliente
+  # config.model ClienteProfit do
+  #   navigation_label 'Servicios'
+  #   weight -1
+  # end
+
+  # config.actions do
+  #   root :experiences, :dashboard
+  # end
+
   config.actions do
-    root :experiences, :dashboard
+    # root actions
+    dashboard                     # mandatory
+    # collection actions 
+    index                         # mandatory
+    new
+    bulk_delete
+    # member actions
+    show
+    edit
+    delete
+    show_in_app
   end
 
 end

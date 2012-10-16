@@ -1,0 +1,5 @@
+<% if form.object.new_record? %>
+Archivo no Generado
+<% else %>
+<%= link_to form.object.resultado, '/uploads/' + form.object.resultado , :type => 'application/octet-stream' %>  
+<% end %>
