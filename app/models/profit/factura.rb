@@ -42,15 +42,15 @@ class Profit::Factura < ActiveRecord::Base
   end
 
   def pago_mensual
-    @pago_mensual ||= @giros.sort_by{|item| item.monto_net}.first.monto_net unless @giros.nil?
+    @pago_mensual ||= @giros.sort_by{|item| item.monto_net}.first.monto_net unless @giros.count.zero?
   end
 
   def monto_total
-    @monto_total ||= @giros.inject(0){|sum,item| sum + item.monto_net} unless @giros.nil?
+    @monto_total ||= @giros.inject(0){|sum,item| sum + item.monto_net} unless @giros.count.zero?
   end
 
   def saldo
-    @saldo ||= @giros.inject(0){|sum,item| sum + item.saldo} unless @giros.nil?
+    @saldo ||= @giros.inject(0){|sum,item| sum + item.saldo} unless @giros.count.zero?
   end
 
   def detalle_giros
