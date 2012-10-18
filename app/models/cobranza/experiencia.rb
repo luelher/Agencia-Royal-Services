@@ -35,7 +35,7 @@ class Cobranza::Experiencia < ActiveRecord::Base
     facturas = Profit::Factura.all_facturas
     facturas.each do |f|
       f.generar_resumen self.desde
-      line = [f.cliente.co_cli, f.cliente.cli_des, f.cliente.telefonos, "", f.nro_doc_cfxg, f.fec_emis, f.monto_total, f.pago_mensual, f.detalle_giros.count, f.fecha_cancelacion, f.experiencia].join("\t")
+      line = [f.cliente.co_cli, f.cliente.cli_des, f.cliente.telefonos, "", f.nro_doc_cfxg, f.fec_emis, f.monto_total, f.pago_mensual, f.detalle_giros.count, f.fecha_cancelacion, f.experiencia].join("\t") unless f.detalle_giros.nil?
       file.puts line
     end
     self.resultado = archivo 
