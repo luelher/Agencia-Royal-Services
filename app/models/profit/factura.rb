@@ -24,6 +24,7 @@ class Profit::Factura < ActiveRecord::Base
     @experiencia=0
     @fecha_cancelacion=nil
     @nro_doc_cfxg=nil
+    @count_giros=nil
   end
 
 
@@ -42,20 +43,25 @@ class Profit::Factura < ActiveRecord::Base
   end
 
   def pago_mensual
-    @pago_mensual ||= @giros.sort_by{|item| item.monto_net}.first.monto_net unless @giros.count.zero?
+    @pago_mensual ||= @giros.sort_by{|item| item.monto_net}.first.monto_net unless count_giros.zero?
   end
 
   def monto_total
-    @monto_total ||= @giros.inject(0){|sum,item| sum + item.monto_net} unless @giros.count.zero?
+    @monto_total ||= @giros.inject(0){|sum,item| sum + item.monto_net} unless count_giros.zero?
   end
 
   def saldo
-    @saldo ||= @giros.inject(0){|sum,item| sum + item.saldo} unless @giros.count.zero?
+    @saldo ||= @giros.inject(0){|sum,item| sum + item.saldo} unless count_giros.zero?
   end
 
   def detalle_giros
     fac = nro_doc_cfxg
     @giros ||= Profit::DocumCc.giros(fac) unless fac.nil?
+    @count_giros ||= @giros.length.to_i unless fac.nil?
+  end
+
+  def count_giros
+    @count_giros
   end
 
   def cancelado?
@@ -83,7 +89,6 @@ class Profit::Factura < ActiveRecord::Base
     cuota=0
     detalle_giros if @giros.nil?
     unless @giros.nil?
-      giros_count = @giros.count unless @giros.nil?
       @giros.each do |g|
         if g.saldo > 0.0
           @giros_sin_cancelar+=1
@@ -125,7 +130,7 @@ class Profit::Factura < ActiveRecord::Base
         else
           if !experiencia
             @experiencia = 1
-            if cuota === giros_count && g.saldo == 0.0
+            if cuota === count_giros && g.saldo == 0.0
               @fecha_cancelacion = g.fecha_ultimo_cobro
             end          
           end

@@ -25,18 +25,17 @@ class Cobranza::Experiencia < ActiveRecord::Base
     end    
   end
 
-  private
-
   def calcular_experiencias
     archivo = "experiencia" + self.desde.to_s + ".csv"
     dir_file = "public/uploads/" + archivo
     file = File.open(dir_file, 'w')
 
-    facturas = Profit::Factura.all_facturas
-    facturas.each do |f|
+    facturas = Profit::Factura.all_facturas.includes(:cliente)
+    facturas.each_with_index do |f, i|
       f.generar_resumen self.desde
-      line = [f.cliente.co_cli, f.cliente.cli_des, f.cliente.telefonos, "", f.nro_doc_cfxg, f.fec_emis, f.monto_total, f.pago_mensual, f.detalle_giros.count, f.fecha_cancelacion, f.experiencia].join("\t") unless f.detalle_giros.nil?
+      line = [f.cliente.co_cli, f.cliente.cli_des, f.cliente.telefonos, "", f.nro_doc_cfxg, f.fec_emis.strftime("%d/%m/%Y"), f.monto_total, f.pago_mensual, f.count_giros, f.fecha_cancelacion.nil? ? '' : f.fecha_cancelacion.strftime("%d/%m/%Y"), f.experiencia].join("\t") unless f.detalle_giros.nil?
       file.puts line
+      GC.start if (i % 1000) == 0
     end
     self.resultado = archivo 
   end

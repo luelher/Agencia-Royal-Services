@@ -7,5 +7,6 @@ class Profit::Cliente < ActiveRecord::Base
 
   has_one :zona, {:foreign_key => 'co_zon', :primary_key => 'co_zon'}
 
+  belongs_to :factura, {:foreign_key => 'co_cli', :primary_key => 'co_cli'}
 
 end

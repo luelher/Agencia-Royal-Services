@@ -39,7 +39,7 @@ class Profit::DocumCc < ActiveRecord::Base
   end
 
   def fecha_ultimo_cobro
-    reng_cob.cobro.fec_cob if not reng_cob.nil?
+    reng_cob.cobro.fec_cob unless reng_cob.nil?
   end
 
 
