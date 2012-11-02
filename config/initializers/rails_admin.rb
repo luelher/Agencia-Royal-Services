@@ -89,10 +89,15 @@ RailsAdmin.config do |config|
 
   # Carta
   config.model Cobranza::Carta do
-    label 'Cartas'              # Name of ModelName (smartly defaults to ActiveRecord's I18n API)
-    label_plural 'Cartas'      # Same, plural
+    label 'Carta Entregada'              # Name of ModelName (smartly defaults to ActiveRecord's I18n API)
+    label_plural 'Cartas Entregadas'      # Same, plural
   end
 
+  # Notificaciones
+  config.model Cobranza::Notificacion do
+    label 'Notificacion'              # Name of ModelName (smartly defaults to ActiveRecord's I18n API)
+    label_plural 'Notificaciones'      # Same, plural
+  end
 
   # Opcion
   config.model Cobranza::Opcion do

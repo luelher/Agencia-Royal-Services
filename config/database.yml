@@ -1,6 +1,6 @@
 profit_development:
   adapter: sqlserver
-  host: 192.168.0.14
+  host: 10.42.0.86
   database: RECADMAR
   username: luelher
   password: "797965"
@@ -30,7 +30,7 @@ test:
 
 profit_production:
   adapter: sqlserver
-  host: 192.168.0.14
+  host: 10.42.0.86
   database: RECADMAR
   username: luelher
   password: "797965"

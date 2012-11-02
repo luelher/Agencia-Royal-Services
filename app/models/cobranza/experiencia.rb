@@ -26,7 +26,7 @@ class Cobranza::Experiencia < ActiveRecord::Base
   end
 
   def calcular_experiencias
-    archivo = "experiencia" + self.desde.to_s + ".csv"
+    archivo = "experiencia" + self.desde.strftime("%Y-%m-%d") + ".csv"
     dir_file = "public/uploads/" + archivo
     file = File.open(dir_file, 'w')
 

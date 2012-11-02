@@ -10,7 +10,7 @@ class Profit::Factura < ActiveRecord::Base
 
   has_one :cliente, {:foreign_key => 'co_cli', :primary_key => 'co_cli'}
 
-  scope :all_facturas, joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = ? AND condicio.dias_cred > ?", 'FACT', 0).order("docum_cc.nro_doc ASC")
+  scope :all_facturas, joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = ? AND condicio.dias_cred > ? AND factura.fec_venc >= DATEADD(YEAR, -4, GETDATE())", 'FACT', 0).order("docum_cc.nro_doc ASC")
 
   def init
     @giros=nil

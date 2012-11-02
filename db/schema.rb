@@ -11,12 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121010041956) do
+ActiveRecord::Schema.define(:version => 20121102042945) do
 
   create_table "acciones", :force => true do |t|
     t.integer  "servicios_id",                 :null => false
     t.string   "accion",       :limit => 1000, :null => false
     t.datetime "fecha",                        :null => false
+  end
+
+  create_table "accions", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "cartas", :force => true do |t|
@@ -26,12 +31,12 @@ ActiveRecord::Schema.define(:version => 20121010041956) do
   end
 
   create_table "clientes", :force => true do |t|
-    t.string   "nombre",               :limit => 50,  :null => false
-    t.integer  "ci",                                  :null => false
-    t.string   "nacionalidad",         :limit => 50,  :null => false
-    t.string   "estado_civil",         :limit => 20,  :null => false
-    t.string   "direccion",            :limit => 500, :null => false
-    t.string   "telefono",             :limit => 15,  :null => false
+    t.string   "nombre",               :limit => 50,                                 :null => false
+    t.integer  "ci",                                                                 :null => false
+    t.string   "nacionalidad",         :limit => 50,                                 :null => false
+    t.string   "estado_civil",         :limit => 20,                                 :null => false
+    t.string   "direccion",            :limit => 500,                                :null => false
+    t.string   "telefono",             :limit => 15,                                 :null => false
     t.string   "empleado_en",          :limit => 50
     t.string   "direccion_trabajo",    :limit => 500
     t.string   "telefono_trabajo",     :limit => 15
@@ -47,8 +52,14 @@ ActiveRecord::Schema.define(:version => 20121010041956) do
     t.integer  "conyugue_tiempo"
     t.integer  "conyugue_sueldo"
     t.string   "conyugue_cargo",       :limit => 50
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
+    t.decimal  "latitude",                            :precision => 10, :scale => 0
+    t.decimal  "longitude",                           :precision => 10, :scale => 0
   end
 
   add_index "clientes", ["ci", "nombre"], :name => "index_clientes"
@@ -85,6 +96,15 @@ ActiveRecord::Schema.define(:version => 20121010041956) do
     t.integer   "refnum"
     t.integer   "maxnum"
     t.integer   "curnum"
+  end
+
+  create_table "notificaciones", :force => true do |t|
+    t.integer  "mes_desde"
+    t.integer  "mes_hasta"
+    t.date     "fecha"
+    t.string   "resultado"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "opciones", :force => true do |t|

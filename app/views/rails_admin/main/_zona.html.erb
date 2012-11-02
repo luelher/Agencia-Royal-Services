@@ -1,0 +1,1 @@
+<%= select("cobranza_carta", "co_zon", Profit::Zona.all.collect {|p| [ p.zon_des, p.co_zon ] }, {:index => form.object.co_zon }) %>
