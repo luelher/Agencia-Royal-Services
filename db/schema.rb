@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121102042945) do
+ActiveRecord::Schema.define(:version => 20121112234815) do
 
   create_table "acciones", :force => true do |t|
     t.integer  "servicios_id",                 :null => false
@@ -63,6 +63,16 @@ ActiveRecord::Schema.define(:version => 20121102042945) do
   end
 
   add_index "clientes", ["ci", "nombre"], :name => "index_clientes"
+
+  create_table "detalles_presupuestos", :force => true do |t|
+    t.integer  "presupuesto_id",               :null => false
+    t.string   "codigo",         :limit => 50, :null => false
+    t.float    "cantidad",                     :null => false
+    t.float    "precio",                       :null => false
+    t.float    "total",                        :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
 
   create_table "entregas", :force => true do |t|
     t.integer  "servicios_id",                 :null => false
@@ -125,6 +135,18 @@ ActiveRecord::Schema.define(:version => 20121102042945) do
     t.string    "co_cli",         :limit => 20,  :default => ""
     t.date      "fec_venc",                                                         :null => false
     t.integer   "telefonos_id"
+  end
+
+  create_table "presupuestos", :force => true do |t|
+    t.integer  "cliente_id",                      :null => false
+    t.string   "instalacion",      :limit => 100, :null => false
+    t.float    "inicial",                         :null => false
+    t.integer  "giros",                           :null => false
+    t.integer  "giros_especiales",                :null => false
+    t.string   "vendedor",         :limit => 100, :null => false
+    t.string   "aprobado_por",     :limit => 100
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   create_table "profit_cobros", :force => true do |t|
