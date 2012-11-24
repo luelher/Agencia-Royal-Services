@@ -1,8 +1,9 @@
 profit_development:
   adapter: sqlserver
-  host: 10.42.0.86
+  host: 10.10.2.4
+  dataserver: SERVER01\SERVER
   database: RECADMAR
-  username: luelher
+  username: gescob
   password: "797965"
   timeout: 100
 
@@ -30,9 +31,10 @@ test:
 
 profit_production:
   adapter: sqlserver
-  host: 10.42.0.86
+  host: 10.10.2.4
+  dataserver: SERVER01\SERVER
   database: RECADMAR
-  username: luelher
+  username: gescob
   password: "797965"
   encoding: utf8  
 
