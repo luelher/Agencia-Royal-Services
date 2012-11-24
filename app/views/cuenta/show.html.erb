@@ -1,0 +1,27 @@
+<% unless @cliente.nil? %>
+<p><%= @cliente.co_cli %></p>
+<p><%= @cliente.cli_des %></p>
+<p>
+  <table>
+  <% @cliente.factura.solo_facturas_creditos.each do |fac| %>
+    <ul>
+    <% fac.generar_resumen Time.now %>
+    <p>Fecha Emisión: <%= fac.fec_emis.strftime "%d/%m/%Y" %></p>
+    <p>¿Cancelado?: <%= fac.cancelado?.to_s %></p>
+    <p>Giros: <%= fac.count_giros %></p>
+    <p>Monto Total: <%= fac.monto_total %></p>
+    <p>Pago Mensual: <%= fac.pago_mensual %></p>
+    <p>Giros Vencidos Sin Cancelar: <%= fac.giros_vencidos_sin_cancelar %></p>
+    <p>Saldo Vecido Sin Cancelar: <%= fac.saldo_vencido_sin_cancelar %></p>
+    <p>Saldo Restante: <%= fac.saldo_restante %></p>
+    </ul>
+  <% end %>
+  </table>
+</p>
+<% end %>
+<% if @cliente.nil? %>
+No Encontrado
+<% end %>
+<br>
+<br>
+<%= link_to "Nueva Búsqueda", cuenta_path %>

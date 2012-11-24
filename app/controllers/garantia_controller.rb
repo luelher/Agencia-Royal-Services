@@ -1,0 +1,2 @@
+class GarantiaController < ApplicationController
+end

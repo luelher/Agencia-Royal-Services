@@ -12,6 +12,8 @@ class Profit::Factura < ActiveRecord::Base
 
   scope :all_facturas, joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = ? AND condicio.dias_cred > ? AND factura.fec_venc >= DATEADD(YEAR, -4, GETDATE())", 'FACT', 0).order("docum_cc.nro_doc ASC")
 
+  scope :solo_facturas_creditos, joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = ? AND condicio.dias_cred > ? ", 'FACT', 0).order("docum_cc.nro_doc ASC")  
+
   def init
     @giros=nil
     @pago_mensual=nil
@@ -82,6 +84,10 @@ class Profit::Factura < ActiveRecord::Base
 
   def fecha_cancelacion
     @fecha_cancelacion
+  end
+
+  def saldo_restante
+    @saldo_restante
   end
 
   def generar_resumen(la_fecha)

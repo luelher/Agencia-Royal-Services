@@ -1,6 +1,7 @@
 class Ventas::Cliente < ActiveRecord::Base
-  
-  attr_accessible :latitude, :longitude :avatar, :nombre, :ci, :nacionalidad, :estado_civil, :direccion, :telefono, :empleado_en, :direccion_trabajo, :telefono_trabajo, :tiempo, :sueldo, :cargo, :subordinados, :otros_ingresos, :conyugue_nombre, :conyugue_ci, :conyugue_empleado_en, :conyugue_telefono, :conyugue_tiempo, :conyugue_sueldo, :conyugue_cargo
+
+  has_one :presupuesto
+  attr_accessible :latitude, :longitude, :avatar, :nombre, :ci, :nacionalidad, :estado_civil, :direccion, :telefono, :empleado_en, :direccion_trabajo, :telefono_trabajo, :tiempo, :sueldo, :cargo, :subordinados, :otros_ingresos, :conyugue_nombre, :conyugue_ci, :conyugue_empleado_en, :conyugue_telefono, :conyugue_tiempo, :conyugue_sueldo, :conyugue_cargo
   has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }
 
   validates :nombre, :presence => true
@@ -15,8 +16,8 @@ class Ventas::Cliente < ActiveRecord::Base
     edit do
       field :latitude, :map do
         longitude_field :longitude
-        default_latitude -34.0
-        default_longitude 151.0
+        default_latitude 10.064044
+        default_longitude -69.335471
       end
       field :longitude do
         hide
@@ -51,7 +52,7 @@ class Ventas::Cliente < ActiveRecord::Base
 
   def crear_cliente_profit
 
-    cliente_profit = Profit::Cliente.find_by_co_cli(self.ci)
+    cliente_profit = Profit::Cliente.find_by_co_cli(self.ci.to_s)
 
     unless cliente_profit
       cliente_profit = Profit::Cliente.new
@@ -67,9 +68,9 @@ class Ventas::Cliente < ActiveRecord::Base
       cliente_profit.respons = " "
       cliente_profit.fecha_reg = Time.now
       cliente_profit.puntaje = 0
-      cliente_profit.aldo = 0.0
-      cliente_profit.aldo_ini = 0.0
-      cliente_profit.ac_ult_ve = 0
+      cliente_profit.saldo = 0.0
+      cliente_profit.saldo_ini = 0.0
+      cliente_profit.fac_ult_ve = 0
       cliente_profit.fec_ult_ve = Time.now
       cliente_profit.net_ult_ve = 0.0
       cliente_profit.mont_cre = 0.0
@@ -91,7 +92,7 @@ class Ventas::Cliente < ActiveRecord::Base
       cliente_profit.dir_ent2 = ""
       cliente_profit.tipo_iva = " "
       cliente_profit.iva = 0.0
-      cliente_profit.rif = "V-" + self.ci
+      cliente_profit.rif = "V-" + self.ci.to_s
       cliente_profit.contribu = false
       cliente_profit.dis_cen = " "
       cliente_profit.nit = "                  "
@@ -133,6 +134,7 @@ class Ventas::Cliente < ActiveRecord::Base
       cliente_profit.contribu_e = false
       cliente_profit.porc_esp = 0.0
       cliente_profit.sincredito = false
+      cliente_profit.rowguid = Profit::Cliente.find_by_sql('Select NEWID() as rowid').collect(&:rowid)[0]
 
       cliente_profit.save
 
