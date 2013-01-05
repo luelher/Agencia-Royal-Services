@@ -1,29 +1,11 @@
 class Cobranza::Experiencia < ActiveRecord::Base
+  # establish_connection Rails.env
   self.table_name = 'experiencia'
   attr_accessible :desde, :resultado
 
   before_save :calcular_experiencias
 
   validates :desde, :presence => true
-
-  rails_admin do
-    list do
-      field :desde
-      field :resultado
-      field :created_at do
-        hide
-      end
-    end    
-    edit do
-      field :desde
-      field :resultado do
-        partial "download"
-      end
-      field :created_at do
-        hide
-      end
-    end    
-  end
 
   def calcular_experiencias
     archivo = "experiencia" + self.desde.strftime("%Y-%m-%d") + ".csv"
@@ -38,6 +20,10 @@ class Cobranza::Experiencia < ActiveRecord::Base
       GC.start if (i % 1000) == 0
     end
     self.resultado = archivo 
+  end
+
+  def to_string
+    self.desde
   end
 
 end

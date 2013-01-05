@@ -1,10 +1,12 @@
 profit_development:
   adapter: sqlserver
-  host: 10.42.0.86
+  host: 192.168.0.101
+  dataserver: DESARROLLO100V\SQLEXPRESS
   database: RECADMAR
   username: luelher
   password: "797965"
   timeout: 100
+  tds_version: "80"
 
 development:
   adapter: mysql2
@@ -30,11 +32,12 @@ test:
 
 profit_production:
   adapter: sqlserver
-  host: 10.42.0.86
+  host: 10.10.2.6
+  dataserver: SERVER01\SERVER
   database: RECADMAR
-  username: luelher
+  username: gescob
   password: "797965"
-  encoding: utf8  
+  timeout: 100
 
 production:
   adapter: mysql2

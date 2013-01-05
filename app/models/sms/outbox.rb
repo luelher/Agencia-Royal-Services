@@ -1,4 +1,5 @@
 class Sms::Outbox < ActiveRecord::Base
-  set_table_name 'outbox'
+  # establish_connection Rails.env  
+  self.table_name = 'outbox'
   # attr_accessible :title, :body
 end

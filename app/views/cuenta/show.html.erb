@@ -1,21 +1,37 @@
 <% unless @cliente.nil? %>
-<p><%= @cliente.co_cli %></p>
-<p><%= @cliente.cli_des %></p>
+<h2>Información del Cuenta de Clientes</h2>
+
+<label>Cedula: </label> <p><%= @cliente.co_cli %></p>
+<label>Nombre: </label> <p><%= @cliente.cli_des %></p>
 <p>
-  <table>
-  <% @cliente.factura.solo_facturas_creditos.each do |fac| %>
-    <ul>
-    <% fac.generar_resumen Time.now %>
-    <p>Fecha Emisión: <%= fac.fec_emis.strftime "%d/%m/%Y" %></p>
-    <p>¿Cancelado?: <%= fac.cancelado?.to_s %></p>
-    <p>Giros: <%= fac.count_giros %></p>
-    <p>Monto Total: <%= fac.monto_total %></p>
-    <p>Pago Mensual: <%= fac.pago_mensual %></p>
-    <p>Giros Vencidos Sin Cancelar: <%= fac.giros_vencidos_sin_cancelar %></p>
-    <p>Saldo Vecido Sin Cancelar: <%= fac.saldo_vencido_sin_cancelar %></p>
-    <p>Saldo Restante: <%= fac.saldo_restante %></p>
-    </ul>
-  <% end %>
+  <table class="zebra-striped">
+    <thead>
+      <tr>
+        <th class="blue">Fecha Emisión</th> 
+        <th class="green">¿Cancelado?</th> 
+        <th class="blue">Giros</th> 
+        <th class="green">Monto Total</th> 
+        <th class="blue">Pago Mensual</th> 
+        <th class="green">Giros Vencidos Sin Cancelar</th> 
+        <th class="blue">Saldo Vecido Sin Cancelar</th> 
+        <th class="green">Saldo Restante</th> 
+      </tr>
+    </thead>
+    <tbody>
+      <% @cliente.factura.solo_facturas_creditos.each do |fac| %>
+        <tr>
+          <% fac.generar_resumen Time.now %>
+          <td><%= fac.fec_emis.strftime "%d/%m/%Y" %></td>
+          <td><%= fac.cancelado? ? 'Sí' : 'No' %></td>
+          <td><%= fac.count_giros %></td>
+          <td><%= fac.monto_total %></td>
+          <td><%= fac.pago_mensual %></td>
+          <td><%= fac.giros_vencidos_sin_cancelar %></td>
+          <td><%= fac.saldo_vencido_sin_cancelar %></td>
+          <td><%= fac.saldo_restante %></td>
+        </tr>
+      <% end %>
+    </tbody>
   </table>
 </p>
 <% end %>
