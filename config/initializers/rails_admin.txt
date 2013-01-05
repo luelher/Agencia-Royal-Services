@@ -31,13 +31,13 @@ RailsAdmin.config do |config|
 
   #  ==> Included models
   # Add all excluded models here:
-  config.excluded_models = ['Sms::Outbox', 'Sms::Multipartinbox', 'Sms::Inbox', 'Sms::Telefono', 'Profit::Cliente', 'Profit::Cobro', 'Profit::Condicio', 'Profit::DocumCc', 'Profit::Factura', 'Profit::RengCob', 'Profit::Zona']
+  config.excluded_models = ['Sms::Outbox', 'Sms::Multipartinbox', 'Sms::Inbox', 'Sms::Telefono', 'Profit::Cobro', 'Profit::Condicio', 'Profit::DocumCc', 'Profit::Factura', 'Profit::RengCob', 'Profit::Zona']
 
   # Add models here if you want to go 'whitelist mode':
   # config.included_models = []
 
   # Application wide tried label methods for models' instances
-  # config.label_methods << :description # Default is [:name, :title]
+  config.label_methods << :to_string # Default is [:name, :title]
 
   #  ==> Global models configuration
   # config.models do

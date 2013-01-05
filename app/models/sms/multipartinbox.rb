@@ -1,4 +1,5 @@
 class Sms::Multipartinbox < ActiveRecord::Base
-  set_table_name 'multipartinbox'
+  # establish_connection Rails.env  
+  self.table_name = 'multipartinbox'
   # attr_accessible :title, :body
 end

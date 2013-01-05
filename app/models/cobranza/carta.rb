@@ -1,11 +1,15 @@
 class Cobranza::Carta < ActiveRecord::Base
-  set_table_name 'cartas'
+  # establish_connection Rails.env
+  self.table_name = 'cartas'
   attr_accessible :co_zon, :co_cli, :entregado
 
   after_initialize :init
 
   validates :co_zon, :presence => true
   validates :co_cli, :presence => true
+
+  belongs_to :zona, {:foreign_key => 'co_zon', :primary_key => 'co_zon', :class_name => "Profit::Zona"}
+  belongs_to :cliente, {:foreign_key => 'co_cli', :primary_key => 'co_cli', :class_name => "Profit::Cliente"}
 
   validate :exist_cliente
  
@@ -19,17 +23,30 @@ class Cobranza::Carta < ActiveRecord::Base
 
   rails_admin do
     list do
-      field :co_zon
-      field :co_cli      
+      field :co_zon do
+        hide
+      end
+      field :zona
+      field :co_cli do
+        hide
+      end
+      field :cliente
       field :entregado, :datetime
     end
     edit do
+      field :zona
       field :co_zon do
-        partial "zona"
+        hide
       end
-      field :co_cli
+      field :cliente
+      field :co_cli do
+        hide
+      end
     end    
   end
 
-end
+  def to_string
+    self.co_zon
+  end
 
+end

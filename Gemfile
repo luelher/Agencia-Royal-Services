@@ -49,4 +49,4 @@ gem 'rails_admin'
 
 gem "paperclip", "~> 3.0"
 
-gem "rails_admin_map_field", :git => "git://github.com/jasonl/rails_admin_map_field.git"
+gem "rails_admin_map_field", :git => "https://github.com/jasonl/rails_admin_map_field.git"

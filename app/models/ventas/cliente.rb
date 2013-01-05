@@ -1,54 +1,24 @@
 class Ventas::Cliente < ActiveRecord::Base
+  acts_as_gmappable :callback => :save_geocode, :process_geocoding => false
 
-  has_one :presupuesto
+  has_one :presupuesto, {:class_name => "Ventas::Presupuesto"}
   attr_accessible :latitude, :longitude, :avatar, :nombre, :ci, :nacionalidad, :estado_civil, :direccion, :telefono, :empleado_en, :direccion_trabajo, :telefono_trabajo, :tiempo, :sueldo, :cargo, :subordinados, :otros_ingresos, :conyugue_nombre, :conyugue_ci, :conyugue_empleado_en, :conyugue_telefono, :conyugue_tiempo, :conyugue_sueldo, :conyugue_cargo
   has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }
 
   validates :nombre, :presence => true
-  validates :latitude, :presence => true
+  # validates :latitude, :presence => true
   validates :ci, :presence => true
   validates :nacionalidad, :presence => true
   validates :estado_civil, :presence => true
   validates :direccion, :presence => true
   validates :telefono, :presence => true
 
-  rails_admin do
-    edit do
-      field :latitude, :map do
-        longitude_field :longitude
-        default_latitude 10.064044
-        default_longitude -69.335471
-      end
-      field :longitude do
-        hide
-      end
-      field :avatar
-      field :nombre
-      field :ci
-      field :nacionalidad
-      field :estado_civil
-      field :direccion
-      field :telefono
-      field :empleado_en
-      field :direccion_trabajo
-      field :telefono_trabajo
-      field :tiempo
-      field :sueldo
-      field :cargo
-      field :subordinados
-      field :otros_ingresos
-      field :conyugue_nombre
-      field :conyugue_ci
-      field :conyugue_empleado_en
-      field :conyugue_telefono
-      field :conyugue_tiempo
-      field :conyugue_sueldo
-      field :conyugue_cargo      
-    end
-  end
+  before_validation :validate_geocode
 
   after_save :crear_cliente_profit
 
+  def validate_geocode
+  end
 
   def crear_cliente_profit
 
@@ -143,5 +113,8 @@ class Ventas::Cliente < ActiveRecord::Base
 
   end
 
+  def to_string
+    self.ci.to_s + ' - ' + self.nombre
+  end
 
 end

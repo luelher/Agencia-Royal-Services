@@ -1,11 +1,17 @@
 profit_development:
   adapter: sqlserver
+<<<<<<< HEAD
   host: 10.10.2.4
   dataserver: SERVER01\SERVER
+=======
+  host: 192.168.0.101
+  dataserver: DESARROLLO100V\SQLEXPRESS
+>>>>>>> c7d166cb8a28eb9ddf1059f1067ed8bd9fc97ca9
   database: RECADMAR
   username: gescob
   password: "797965"
   timeout: 100
+  tds_version: "80"
 
 development:
   adapter: mysql2
@@ -31,12 +37,16 @@ test:
 
 profit_production:
   adapter: sqlserver
+<<<<<<< HEAD
   host: 10.10.2.4
+=======
+  host: 10.10.2.6
+>>>>>>> c7d166cb8a28eb9ddf1059f1067ed8bd9fc97ca9
   dataserver: SERVER01\SERVER
   database: RECADMAR
   username: gescob
   password: "797965"
-  encoding: utf8  
+  timeout: 100
 
 production:
   adapter: mysql2
