@@ -21,30 +21,6 @@ class Cobranza::Carta < ActiveRecord::Base
     self.entregado = Time.now
   end
 
-  rails_admin do
-    list do
-      field :co_zon do
-        hide
-      end
-      field :zona
-      field :co_cli do
-        hide
-      end
-      field :cliente
-      field :entregado, :datetime
-    end
-    edit do
-      field :zona
-      field :co_zon do
-        hide
-      end
-      field :cliente
-      field :co_cli do
-        hide
-      end
-    end    
-  end
-
   def to_string
     self.co_zon
   end
