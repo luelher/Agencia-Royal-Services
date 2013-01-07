@@ -1,4 +1,6 @@
 Arv2::Application.routes.draw do
+  namespace :ventas do resources :presupuestos end
+
   namespace :ventas do resources :clientes end
 
   # mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'

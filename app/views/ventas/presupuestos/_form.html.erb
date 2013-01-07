@@ -1,0 +1,50 @@
+<%= form_for @ventas_presupuesto, :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :cliente_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :cliente_id, :class => 'number_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :instalacion, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :instalacion, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :inicial, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :inicial, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :giros, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :giros, :class => 'number_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :giros_especiales, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :giros_especiales, :class => 'number_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :vendedor, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :vendedor, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :aprobado_por, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :aprobado_por, :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                ventas_presupuestos_path, :class => 'btn' %>
+  </div>
+<% end %>
