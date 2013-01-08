@@ -3,8 +3,8 @@ Arv2::Application.routes.draw do
 
   namespace :ventas do resources :clientes end
 
-  # mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
-  # mount RailsAdmin::Engine => '/intranet', :as => 'rails_admin'
+  # 
+  # 
 
   devise_for :users
 

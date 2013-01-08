@@ -7,11 +7,15 @@ gem 'rails', '3.2.8'
 
 
 #gem 'execjs'
-gem 'therubyracer'
+# gem 'therubyracer'
 
 gem 'mysql2'
 gem 'activerecord-sqlserver-adapter'
 gem 'tiny_tds'
+
+
+# gem 'activeadmin'
+# gem "meta_search",    '>= 1.1.0.pre'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -26,6 +30,8 @@ group :assets do
 end
 
 gem 'jquery-rails'
+
+gem "twitter-bootstrap-rails"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -45,8 +51,11 @@ gem 'jquery-rails'
 
 gem 'devise'
 
-gem 'rails_admin'
+#gem 'rails_admin'
 
 gem "paperclip", "~> 3.0"
+gem 'map-fields'
 
-gem "rails_admin_map_field", :git => "https://github.com/jasonl/rails_admin_map_field.git"
+gem 'gmaps4rails'
+
+#gem "rails_admin_map_field", :git => "git://github.com/jasonl/rails_admin_map_field.git"
