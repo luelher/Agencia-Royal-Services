@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130102080419) do
+ActiveRecord::Schema.define(:version => 20130111162624) do
 
   create_table "acciones", :force => true do |t|
     t.integer  "servicios_id",                 :null => false
@@ -91,8 +91,8 @@ ActiveRecord::Schema.define(:version => 20130102080419) do
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
-    t.decimal  "latitude",                            :precision => 10, :scale => 0
-    t.decimal  "longitude",                           :precision => 10, :scale => 0
+    t.decimal  "latitude",                            :precision => 10, :scale => 6
+    t.decimal  "longitude",                           :precision => 10, :scale => 6
   end
 
   add_index "clientes", ["ci", "nombre"], :name => "index_clientes"
@@ -202,18 +202,14 @@ ActiveRecord::Schema.define(:version => 20130102080419) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "rails_admin_histories", :force => true do |t|
-    t.text     "message"
-    t.string   "username"
-    t.integer  "item"
-    t.string   "table"
-    t.integer  "month",      :limit => 2
-    t.integer  "year",       :limit => 8
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
+  create_table "seguimientos", :force => true do |t|
+    t.string   "cliente_id",  :limit => 50,  :null => false
+    t.string   "motivo",      :limit => 50,  :null => false
+    t.string   "observacion", :limit => 500
+    t.string   "usuario",     :limit => 50
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
-
-  add_index "rails_admin_histories", ["item", "table", "month", "year"], :name => "index_rails_admin_histories"
 
   create_table "servicios", :force => true do |t|
     t.string   "cliente",     :limit => 10,   :null => false
@@ -247,5 +243,10 @@ ActiveRecord::Schema.define(:version => 20130102080419) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "ventas_presupuestos", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
 end

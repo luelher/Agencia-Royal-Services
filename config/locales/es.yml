@@ -1,11 +1,17 @@
 es:
-  activerecord:
-    models:
-      cliente:
-        attributes:
-          co_cli:
-            label: Cedula
+  helpers:
+    label:
+      ventas_cliente:
+          ci: "Cedula"
+  ventas:
+    clientes:
+      new:
+        title: "Nuevo Cliente"
+    presupuestos:
+      new:
+        title: "Nuevo Presupuesto"
 
+  activerecord:
     errors:
       models:
         experiencia:
@@ -262,5 +268,17 @@ es:
     errors:
       <<: *errors
   activerecord:
+    attributes:
+      ventas_cliente:
+        ci: "Cedula"
+
+    models:
+      ventas_cliente:
+          ci: "Cedula"
+
+      cliente:
+        attributes:
+          co_cli:
+            label: Cedula  
     errors:
       <<: *errors

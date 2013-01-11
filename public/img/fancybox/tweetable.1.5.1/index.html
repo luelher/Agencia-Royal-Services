@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>tweetable | jQuery plugin</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.tweetable.js"></script>
+<link rel="stylesheet" href="style.css" type="text/css" />
+<script>
+	$(function(){
+	 $('#tweets').tweetable({username: 'philipbeel', time: true, limit: 10, replies: false, position: 'append'});
+	});
+</script>
+</head>
+<body>
+<div id="tweets">
+</div>
+</body>
+</html>

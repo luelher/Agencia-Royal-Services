@@ -82,4 +82,18 @@ class Ventas::PresupuestosController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def clientes
+    @clientes = Profit::Cliente.where("co_cli like ?", "#{params[:q]}%").limit(10)
+    respond_to do |format|
+      format.json { render :json => @clientes.to_json(:only => [ :co_cli, :cli_des ]) }
+    end
+  end  
+  def productos
+    @productos = Profit::Art.where("art_des like ?", "%#{params[:q]}%").limit(10)
+    respond_to do |format|
+      format.json { render :json => @productos.to_json(:only => [ :co_art, :art_des, :prec_vta5, :stock_act ]) }
+    end
+  end  
+
 end

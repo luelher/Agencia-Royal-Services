@@ -1,0 +1,57 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td { 
+	margin:0;
+	padding:0;
+}
+table {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+fieldset,img { 
+	border:0;
+}
+address,caption,cite,code,dfn,em,strong,th,var {
+	font-style:normal;
+	font-weight:normal;
+}
+ol,ul {
+	list-style:none;
+}
+caption,th {
+	text-align:left;
+}
+h1,h2,h3,h4,h5,h6 {
+	font-size:100%;
+	font-weight:normal;
+}
+q:before,q:after {
+	content:'';
+}
+abbr,acronym { border:0;
+}
+
+body {
+	font-family: georgia;
+	font-size:1.1em;	
+}
+
+small {font-style:italic; }
+
+#tweets li {
+	font-size:13px;
+	background:url(images/twitter.png) no-repeat left ;
+	padding-left:25px;
+	padding-top:4px;
+	margin-left:10px;
+	margin-top:8px;
+	list-style-type:none;
+	height:17px;
+}
+
+#tweets .hash { color:#0066CC; } 
+
+#tweets .reply { color:#0066CC; } 
+
+#tweets a:link { text-decoration:none; color:#0066CC;}
+#tweets a:active { text-decoration:none; color:#0066CC;}
+#tweets a:hover { text-decoration:underline; color:#0066CC;}
+#tweets a:visited { text-decoration:none; color:#0066CC;}

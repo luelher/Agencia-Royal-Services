@@ -1,0 +1,26 @@
+<%= form_for @ventas_seguimiento, :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :cliente_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :cliente_id, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :motivo, :class => 'control-label' %>
+    <div class="controls">
+      <%= select_tag :ventas_seguimiento_motivo, options_for_select([[''],['Llamada Telefónica'],['SMS Enviado'],['Correo Electrónico'],['Carta Enviada'],['Carta Ultimo Aviso'],['Carta Legal']]), :class => 'text_field', :name => "ventas_seguimiento[motivo]" %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :observacion, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :observacion, :class => 'input-xxlarge', :size => "60x3" %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                ventas_seguimientos_path, :class => 'btn' %>
+  </div>
+<% end %>

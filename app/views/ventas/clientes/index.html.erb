@@ -6,7 +6,6 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:avatar) %></th>
-      <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:nombre) %></th>
       <th><%= model_class.human_attribute_name(:ci) %></th>
       <th><%= model_class.human_attribute_name(:direccion) %></th>
@@ -18,9 +17,8 @@
     <% @ventas_clientes.each do |cliente| %>
       <tr>
         <td><%= image_tag cliente.avatar.url(:thumb) %></td>
-        <td><%= link_to cliente.id, ventas_cliente_path(cliente) %></td>
-        <td><%= cliente.nombre %></td>
-        <td><%= cliente.ci %></td>
+        <td><%= link_to cliente.nombre, ventas_cliente_path(cliente) %></td>
+        <td><%= link_to cliente.ci, ventas_cliente_path(cliente) %></td>
         <td><%= cliente.direccion %></td>
         <td><%= cliente.telefono %></td>
         <td>

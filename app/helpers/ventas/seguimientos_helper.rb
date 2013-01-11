@@ -1,0 +1,2 @@
+module Ventas::SeguimientosHelper
+end

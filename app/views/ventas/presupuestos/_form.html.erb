@@ -2,15 +2,38 @@
   <div class="control-group">
     <%= f.label :cliente_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.number_field :cliente_id, :class => 'number_field' %>
+      <%= f.text_field :cliente_id, :class => 'text_field' %>
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :instalacion, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :instalacion, :class => 'text_field' %>
+    <%= f.label :producto, :class => 'control-label' %>
+    <div class="controls detalle-producto">
+      <%= f.text_field :producto, :class => 'text_field' %>
     </div>
   </div>
+  <div class="control-group">
+    <%= f.label :cantidad, :class => 'control-label' %>
+    <div class="controls form-inline">
+      <%= f.text_field :cantidad, :class => 'input-small' %>
+      <%= button_to_function "Agregar", "", :class => "btn", :id => "btn-agregar" %>
+    </div>
+  </div>
+  <div class="control-group">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Codigo</th>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Total</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="detalle_tabla">
+      </tbody>
+    </table>
+  </div>  
   <div class="control-group">
     <%= f.label :inicial, :class => 'control-label' %>
     <div class="controls">
@@ -28,20 +51,13 @@
     <div class="controls">
       <%= f.number_field :giros_especiales, :class => 'number_field' %>
     </div>
-  </div>
+  </div>  
   <div class="control-group">
-    <%= f.label :vendedor, :class => 'control-label' %>
+    <%= f.label :instalacion, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :vendedor, :class => 'text_field' %>
+      <%= f.text_field :instalacion, :class => 'text_field' %>
     </div>
   </div>
-  <div class="control-group">
-    <%= f.label :aprobado_por, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :aprobado_por, :class => 'text_field' %>
-    </div>
-  </div>
-
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

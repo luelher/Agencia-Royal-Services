@@ -16,6 +16,7 @@ class Ventas::ClientesController < ApplicationController
   # GET /ventas/clientes/1.json
   def show
     @ventas_cliente = Ventas::Cliente.find(params[:id])
+    @gmap_json = @ventas_cliente.to_gmaps4rails
 
     respond_to do |format|
       format.html # show.html.erb

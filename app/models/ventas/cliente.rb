@@ -1,7 +1,7 @@
 class Ventas::Cliente < ActiveRecord::Base
   acts_as_gmappable :callback => :save_geocode, :process_geocoding => false
 
-  has_one :presupuesto, {:class_name => "Ventas::Presupuesto"}
+  has_many :presupuesto, {:class_name => "Ventas::Presupuesto"}
   attr_accessible :latitude, :longitude, :avatar, :nombre, :ci, :nacionalidad, :estado_civil, :direccion, :telefono, :empleado_en, :direccion_trabajo, :telefono_trabajo, :tiempo, :sueldo, :cargo, :subordinados, :otros_ingresos, :conyugue_nombre, :conyugue_ci, :conyugue_empleado_en, :conyugue_telefono, :conyugue_tiempo, :conyugue_sueldo, :conyugue_cargo
   has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }
 

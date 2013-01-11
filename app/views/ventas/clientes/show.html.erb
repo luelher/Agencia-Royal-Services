@@ -4,9 +4,11 @@
 </div>
 
 <dl class="dl-horizontal">
+
+  <dt><strong><%= model_class.human_attribute_name(:latitude) %>:</strong></dt>
+  <dd><%= gmaps4rails(@gmap_json) %></dd>  
   <dt><strong><%= model_class.human_attribute_name(:avatar_file_name) %>:</strong></dt>
   <dd><%= image_tag @ventas_cliente.avatar.url(:thumb) %></dd>
-
   <dt><strong><%= model_class.human_attribute_name(:nombre) %>:</strong></dt>
   <dd><%= @ventas_cliente.nombre %></dd>
   <dt><strong><%= model_class.human_attribute_name(:ci) %>:</strong></dt>
@@ -49,10 +51,6 @@
   <dd><%= @ventas_cliente.conyugue_sueldo %></dd>
   <dt><strong><%= model_class.human_attribute_name(:conyugue_cargo) %>:</strong></dt>
   <dd><%= @ventas_cliente.conyugue_cargo %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:latitude) %>:</strong></dt>
-  <dd><%= @ventas_cliente.latitude %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:longitude) %>:</strong></dt>
-  <dd><%= @ventas_cliente.longitude %></dd>
 </dl>
 
 <div class="form-actions">

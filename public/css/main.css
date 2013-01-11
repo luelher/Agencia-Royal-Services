@@ -14,7 +14,7 @@
 *  BASE                                                                                                            
 *******************************************************************************************************************/
 html {background: #37363b url('/img/noise.png');}
-body {color: #71777d;font: normal 13px Arial, Tahoma, Verdana;background: url('/img/background-x.png') repeat-x;}
+body {color: #71777d;font: normal 14px Arial, Tahoma, Verdana;background: url('/img/background-x.png') repeat-x;}
 p {line-height: 1.7em;margin-bottom: 15px}
 address {font-style: normal;padding-bottom: 15px;}
 

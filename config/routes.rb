@@ -1,5 +1,14 @@
 Arv2::Application.routes.draw do
-  namespace :ventas do resources :presupuestos end
+  namespace :ventas do resources :seguimientos end
+
+  namespace :ventas do 
+    resources :presupuestos do
+      collection do
+        get 'clientes'
+        get 'productos'
+      end
+    end
+  end
 
   namespace :ventas do resources :clientes end
 
@@ -10,9 +19,11 @@ Arv2::Application.routes.draw do
 
   root :to => 'home#index'
 
-  match '/history', :to => 'home#history'
+  match '/historia', :to => 'historia#index'
+  match '/contacto', :to => 'contacto#index'  
 
   match '/servicios', :to => 'servicios#index'
+  match '/productos', :to => 'productos#index'  
 
   get "/intranet" => 'intranet#index', as: :intranet
 

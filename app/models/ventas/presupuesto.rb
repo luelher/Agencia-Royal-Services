@@ -3,6 +3,7 @@ class Ventas::Presupuesto < ActiveRecord::Base
 
   attr_accessible :cliente_id, :instalacion, :inicial, :giros, :giros_especiales, :vendedor, :aprobado_por
   attr_accessible :detalle_presupuesto_attributes, :allow_destroy => true
+  attr_reader :producto, :cantidad
   belongs_to :cliente, :class_name => "Ventas::Cliente"
   has_many :detalle_presupuesto, {:class_name => "Ventas::DetallePresupuesto", :inverse_of => :presupuesto}
 
