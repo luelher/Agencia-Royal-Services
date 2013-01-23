@@ -40,6 +40,17 @@ window.onload = ->
       window.exiart = Number(item.stock_act)
   }
 
+  update_total = ->
+    total = $('.total')
+    suma = 0
+    for t in total
+      do (t) ->
+        suma = parseFloat(t.innerHTML,10)
+    $('#ventas_presupuesto_total').val(suma)
+
+
+
+
   $("#btn-agregar").click ->
     intVal = parseInt($('#ventas_presupuesto_cantidad').val(), 10)
 
@@ -50,13 +61,20 @@ window.onload = ->
     if $("#ventas_presupuesto_cantidad").val() != "" and $("#ventas_presupuesto_producto").val() != ""
       $("#detalle_tabla").after("
         <tr>
-          <td>" + window.codart + "</td>
+          <td>
+            " + window.codart + "
+            <input type=hidden name=\"ventas_presupuesto[detalle_presupuesto][][codigo]\" value=\"" + window.codart + "\"/>
+          </td>
           <td>" + window.nomart + "</td>
           <td>" + window.preart.toFixed(2) + " Bs</td>
-          <td>" + intVal + "</td>
-          <td>" + (intVal * window.preart).toFixed(2) + " Bs</td>
+          <td>
+            " + intVal + "
+            <input type=hidden name=\"ventas_presupuesto[detalle_presupuesto][][cantidad]\" value=\"" + intVal + "\"/>
+          </td>
+          <td> <strong class=\"total\"> " + (intVal * window.preart).toFixed(2) + " </strong> Bs</td>
         </tr>
       ");
+      update_total()
     else
       alert "Debe seleccionar el producto y agregar la cantidad"
     return true

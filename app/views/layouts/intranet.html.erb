@@ -13,6 +13,9 @@
     <![endif]-->
 
     <%= stylesheet_link_tag "application", "/css/token-input", :media => "all" %>
+    <%= stylesheet_link_tag 'gmaps4rails' %>
+
+    <%= stylesheet_link_tag params[:controller] %>
 
     <!-- For all other devices -->
     <!-- Size should be 32 x 32 pixels -->
@@ -29,6 +32,7 @@
             <span class="icon-bar"></span>
           </a>
           <a class="brand" href="#">Intranet V1.0</a>
+          <a class="brand" href="/">Portal</a>
 <!--           <div class="container nav-collapse">
             <ul class="nav">
               <li><%= link_to "Clientes", "/clientes"  %></li>
@@ -66,16 +70,15 @@
                   <p>Tip: <a href="http://www.cotecso.com.ve/">Desarrollado por Cotecso</a></p>
               </div>                    
             </div>
+            <!-- Javascripts
+            ================================================== -->
+            <!-- Placed at the end of the document so the pages load faster -->
+            <%= javascript_include_tag "intranet_layout", '/js/jquery.tokeninput' %>
+            <%= javascript_include_tag params[:controller] %>
+            <%= yield :scripts %>
 
       </footer>
 
     </div> <!-- /container -->
-
-    <!-- Javascripts
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <%= javascript_include_tag "application", '/js/jquery.tokeninput' %>
-    <%= yield :scripts %>
-
   </body>
 </html>

@@ -5,30 +5,22 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:cliente_id) %></th>
       <th><%= model_class.human_attribute_name(:instalacion) %></th>
-      <th><%= model_class.human_attribute_name(:inicial) %></th>
-      <th><%= model_class.human_attribute_name(:giros) %></th>
-      <th><%= model_class.human_attribute_name(:giros_especiales) %></th>
+      <th>Total Presupuesto</th>
       <th><%= model_class.human_attribute_name(:vendedor) %></th>
       <th><%= model_class.human_attribute_name(:aprobado_por) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @ventas_presupuestos.each do |presupuesto| %>
       <tr>
-        <td><%= link_to presupuesto.id, ventas_presupuesto_path(presupuesto) %></td>
-        <td><%= presupuesto.cliente_id %></td>
+        <td><%= link_to presupuesto.cliente.nombre, ventas_presupuesto_path(presupuesto) %></td>
         <td><%= presupuesto.instalacion %></td>
-        <td><%= presupuesto.inicial %></td>
-        <td><%= presupuesto.giros %></td>
-        <td><%= presupuesto.giros_especiales %></td>
+        <td><%= presupuesto.total %></td>
         <td><%= presupuesto.vendedor %></td>
         <td><%= presupuesto.aprobado_por %></td>
-        <td><%=l presupuesto.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_ventas_presupuesto_path(presupuesto), :class => 'btn btn-mini' %>

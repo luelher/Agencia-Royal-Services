@@ -8,4 +8,11 @@ class Profit::Art < ActiveRecord::Base
     self.co_art.strip + " - " + self.art_des.strip
   end
 
+  def url_photo
+    '/img/300x300.gif'
+  end
+  def url_small_photo
+    '/img/60x60.gif'
+  end
+
 end

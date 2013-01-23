@@ -171,15 +171,17 @@ ActiveRecord::Schema.define(:version => 20130111162624) do
   end
 
   create_table "presupuestos", :force => true do |t|
-    t.integer  "cliente_id",                      :null => false
-    t.string   "instalacion",      :limit => 100, :null => false
-    t.float    "inicial",                         :null => false
-    t.integer  "giros",                           :null => false
-    t.integer  "giros_especiales",                :null => false
-    t.string   "vendedor",         :limit => 100, :null => false
-    t.string   "aprobado_por",     :limit => 100
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.integer  "cliente_id",                     :null => false
+    t.string   "instalacion",      :limit => 50, :null => false
+    t.float    "inicial",                        :null => false
+    t.integer  "giros",                          :null => false
+    t.float    "cuota",                          :null => false
+    t.integer  "giros_especiales",               :null => false
+    t.float    "cuota_especial",                 :null => false
+    t.integer  "vendedor",                       :null => false
+    t.integer  "aprobado_por"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   create_table "profit_arts", :force => true do |t|

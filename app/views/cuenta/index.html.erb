@@ -1,17 +1,8 @@
 <h2>Estado de Cuenta</h2>
 
 <%= form_for @cliente, :url => show_cuenta_path do |f| %>
-<p>
-<%= f.label :co_cli %>
-<%= f.text_field :co_cli %>
-</p>
-<%= submit_tag "Buscar" %>
-<% end %>
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+<%= f.label :cedula %>
+<%= f.text_field :co_cli, :class => 'input-medium search-query' %>
+<%= submit_tag "Buscar", :class => 'bnt' %>
+<% end %>

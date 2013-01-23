@@ -1,8 +1,8 @@
 class CreateProfitVendedors < ActiveRecord::Migration
   def change
-    create_table :profit_vendedors do |t|
+    # create_table :profit_vendedors do |t|
 
-      t.timestamps
-    end
+    #   t.timestamps
+    # end
   end
 end

@@ -1,8 +1,61 @@
-<h2>Productos de Agencia Royal 33</h2>
+<h2>Consulta de Productos</h2>
+<div class="container offset1">
+  <div class="row span7 offset2">
+    <%= form_for @producto, :url => show_productos_path do |f| %>
+      <%= f.text_field :art_des, :class => 'input-medium search-query' %>
+      <%= submit_tag "Buscar", :class => 'bnt' %>
+    <% end %>    
+  </div>
+  <div class="row">
+    <div class="span7" data-toggle="modal-gallery" data-target="#modal-gallery">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Foto</th>
+            <th>Codigo</th>
+            <th>Descripción</th>
+            <th>Modelo</th>
+            <th>¿En Existencia?</th>
+          </tr>
+        </thead>
+        <tbody>
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+          <% unless @productos.nil? %>
+            <% @productos.each do |p| %>
+            <tr>
+              <td>
+                <a href="<%= p.url_photo %>" title="<%= p.art_des %>" data-gallery="gallery">
+                  <%= image_tag p.url_small_photo %>
+                </a>              
+              </td>
+              <td><%= p.co_art %></td>
+              <td><%= p.art_des %></td>
+              <td><%= p.modelo %></td>
+              <td>
+                <% if p.stock_act > 0.0 %>
+                  <span class="label label-success">Sí</span>
+                <% else %>
+                  <span class="label label-important">No</span>
+                <% end %>
+              </td>
+            </tr>
+            <% end %>
+          <% end %>            
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- modal-gallery is the modal dialog used for the image gallery -->
+<div id="modal-gallery" class="modal modal-gallery hide fade" tabindex="-1">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h3 class="modal-title"></h3>
+    </div>
+    <div class="modal-body"><div class="modal-image"></div></div>
+    <div class="modal-footer">
+        <a class="btn btn-primary" data-dismiss="modal">Cerrar</a>
+    </div>
+</div>

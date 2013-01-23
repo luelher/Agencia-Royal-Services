@@ -14,7 +14,7 @@
 *  BASE                                                                                                            
 *******************************************************************************************************************/
 html {background: #37363b url('/img/noise.png');}
-body {color: #71777d;font: normal 14px Arial, Tahoma, Verdana;background: url('/img/background-x.png') repeat-x;}
+body {color: #71777d;font: normal 14px Arial, Tahoma, Verdana;background: url('/img/background-x.png') repeat-x !important;}
 p {line-height: 1.7em;margin-bottom: 15px}
 address {font-style: normal;padding-bottom: 15px;}
 
@@ -39,7 +39,7 @@ h4 {font-size: 1.0em;}
 /*******************************************************************************************************************
 *  HEADER                                                                                                          
 *******************************************************************************************************************/
-#header {height: 98px;position: relative;} 
+#header {height: 98px;position: relative;margin-top: -60px;} 
 #header a#logo {font-size: 1.8em;font-weight: bold;display: block;line-height: 98px;position: absolute;top: 0;left: 0;color: #323338;font-family: "Lato", Arial;}
 #header a#logo span {color: #47a5e3} /* color */
 #header a#logo:hover {text-decoration: none;color: #000}
