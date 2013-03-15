@@ -91,7 +91,7 @@ class Ventas::PresupuestosController < ApplicationController
   end  
   
   def productos
-    @productos = Profit::Art.where("art_des like ? or co_art like ? and stock_act > 0", "%#{params[:q]}%", "#{params[:q]}%").limit(10)
+    @productos = Profit::Art.where("(art_des like ? or co_art like ?) and stock_act > 0.0 ", "%#{params[:q]}%", "#{params[:q]}%").limit(10)
     respond_to do |format|
       format.json { render :json => @productos.to_json(:only => [:art_des, :prec_vta5, :stock_act ], :methods => [:co_art]) }
     end
