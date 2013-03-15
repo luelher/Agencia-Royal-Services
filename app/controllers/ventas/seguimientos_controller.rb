@@ -4,7 +4,14 @@ class Ventas::SeguimientosController < ApplicationController
   # GET /ventas/seguimientos
   # GET /ventas/seguimientos.json
   def index
-    @ventas_seguimientos = Ventas::Seguimiento.all
+    if params[:ventas_seguimiento]
+      cliente_id = params[:ventas_seguimiento][:cliente_id]
+      @ventas_seguimientos = Ventas::Seguimiento.where("cliente_id = ?",cliente_id).order("created_at DESC")
+      @seguimientos = Ventas::Seguimiento.new(:cliente_id => cliente_id)
+    else
+      @ventas_seguimientos = Ventas::Seguimiento.order("created_at DESC").all
+      @seguimientos = Ventas::Seguimiento.new
+    end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -26,7 +33,7 @@ class Ventas::SeguimientosController < ApplicationController
   # GET /ventas/seguimientos/new
   # GET /ventas/seguimientos/new.json
   def new
-    @ventas_seguimiento = Ventas::Seguimiento.new
+    @ventas_seguimiento = Ventas::Seguimiento.new params[:ventas_seguimiento]
 
     respond_to do |format|
       format.html # new.html.erb

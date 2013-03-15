@@ -1,4 +1,16 @@
 <%= form_for @ventas_presupuesto, :html => { :class => 'form-horizontal' } do |f| %>
+
+  <% if @ventas_presupuesto.errors.any? %>  
+  <div id="errorExplanation">  
+    <h2><%= pluralize(@ventas_presupuesto.errors.count, "error") %> al guardar el registro:</h2>  
+    <ul>  
+    <% @ventas_presupuesto.errors.full_messages.each do |msg| %>  
+      <li><%= msg %></li>  
+    <% end %>  
+    </ul>  
+  </div>  
+  <% end %> 
+
   <div class="control-group">
     <%= f.label :cliente_id, :class => 'control-label' %>
     <div class="controls">
@@ -14,7 +26,7 @@
   <div class="control-group">
     <%= f.label :cantidad, :class => 'control-label' %>
     <div class="controls form-inline">
-      <%= text_field(:cantidad, :extra, :class => 'input-small') %>
+      <%= text_field(:cantidad, :extra, :class => 'input-small', :value => '1') %>
       <%= button_to_function "Agregar", "", :class => "btn", :id => "btn-agregar" %>
     </div>
   </div>
@@ -26,6 +38,7 @@
           <th>Producto</th>
           <th>Precio</th>
           <th>Cantidad</th>
+          <th>IVA</th>
           <th>Total</th>
           <th>Acciones</th>
         </tr>
@@ -41,15 +54,27 @@
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :cuota, :class => 'control-label' %>
+    <%= f.label :porcentaje_inicial, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :cuota, :class => 'text_field', :value => @ventas_presupuesto.cuota.nil? ? '0' : @ventas_presupuesto.cuota %>
+      <%= text_field :porcentaje_inicial, :extra, :class => 'text_field', :value => '0' %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :inicial, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :inicial, :class => 'text_field', :value => @ventas_presupuesto.inicial.nil? ? '0' : @ventas_presupuesto.inicial %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :giro_a_la_vista, :class => 'control-label' %>
+    <div class="controls">
+      <%= select :giro_a_la_vista, :extra, [12, 18], {:class => 'text_field', :include_blank => true} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :cuota, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :cuota, :class => 'text_field', :value => @ventas_presupuesto.cuota.nil? ? '0' : @ventas_presupuesto.cuota %>
     </div>
   </div>
   <div class="control-group">

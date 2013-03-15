@@ -4,15 +4,25 @@ class Profit::Factura < ActiveRecord::Base
 
   after_initialize :init
 
+
+
   has_many :docum_cc, {:foreign_key => 'nro_doc', :primary_key => 'fact_num'}
 
   has_one :condicio, {:foreign_key => 'co_cond', :primary_key => 'forma_pag'}
 
   has_one :cliente, {:foreign_key => 'co_cli', :primary_key => 'co_cli'}
 
+  has_one :cliente_venta, {:foreign_key => 'ci', :primary_key => 'co_cli', :class_name => 'Ventas::Cliente'}
+
   scope :all_facturas, joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = ? AND condicio.dias_cred > ? AND factura.fec_venc >= DATEADD(YEAR, -4, GETDATE())", 'FACT', 0).order("docum_cc.nro_doc ASC")
 
+  scope :all_facturas_of_client, lambda { |client| joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = 'FACT' AND condicio.dias_cred > 0 and clientes.co_cli = ? and factura.fec_emis > '2010-01-'",client).order("docum_cc.nro_doc ASC") }
+
   scope :solo_facturas_creditos, joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = ? AND condicio.dias_cred > ? ", 'FACT', 0).order("docum_cc.nro_doc ASC")  
+
+  scope :solo_facturas_creditos_by_dias_vencidos, lambda { |dias_desde, dias_hasta| joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = ? AND condicio.dias_cred > ? AND (SELECT TOP (1) DATEDIFF(DAY, dcc.fec_venc, GETDATE()) FROM [docum_cc] dcc WHERE (dcc.observa like ('%FACT ' + Cast(factura.fact_num as nvarchar(4000)) + '%')  AND dcc.tipo_doc='GIRO' and dcc.saldo > 0.0 and dcc.fec_venc <= GETDATE()) ORDER BY dcc.fec_venc ASC) BETWEEN ? and ? and factura.fec_emis > '2010-01-01' ", 'FACT', 0, dias_desde, dias_hasta).order("docum_cc.nro_doc ASC")  }
+
+# SELECT TOP (1) DATEDIFF(DAY, dcc.fec_venc, GETDATE()) FROM [docum_cc] dcc WHERE (dcc.observa like '%FACT 24919%' AND dcc.tipo_doc='GIRO' and dcc.saldo > 0.0 and dcc.fec_venc <= GETDATE()) ORDER BY dcc.fec_venc ASC
 
   def init
     @giros=nil
@@ -25,8 +35,12 @@ class Profit::Factura < ActiveRecord::Base
     @saldo_vencido_sin_cancelar=0.0    
     @experiencia=0
     @fecha_cancelacion=nil
+    @fecha_ultimo_pago=nil
+    @dias_sin_cancelar=0
     @nro_doc_cfxg=nil
     @count_giros=nil
+    @dias_desde_ultimo_pago=0
+    @factura_cfxg=nil
   end
 
 
@@ -34,6 +48,7 @@ class Profit::Factura < ActiveRecord::Base
     if @nro_doc_cfxg.nil?
       # docum_cc.tipo_doc = 'CFXG' AND docum_cc.fec_emis = '" + Convert.ToDateTime(dt.Rows[i]["FechaE"].ToString()).ToString("yyMMdd") + "' AND docum_cc.co_cli = '" + dt.Rows[i]["CodClie"].ToString() + "'
       factura_cfxg = Profit::DocumCc.where(:tipo_doc => 'CFXG', :fec_emis => fec_emis, :co_cli => co_cli).first
+      @factura_cfxg = factura_cfxg
       if factura_cfxg
         @nro_doc_cfxg = factura_cfxg.nro_doc
       else
@@ -45,15 +60,15 @@ class Profit::Factura < ActiveRecord::Base
   end
 
   def pago_mensual
-    @pago_mensual ||= @giros.sort_by{|item| item.monto_net}.first.monto_net unless count_giros.zero?
+    @pago_mensual ||= @giros.sort_by{|item| item.monto_net}.first.monto_net unless count_giros.zero? unless count_giros.nil?
   end
 
   def monto_total
-    @monto_total ||= @giros.inject(0){|sum,item| sum + item.monto_net} unless count_giros.zero?
+    @monto_total ||= @giros.inject(0){|sum,item| sum + item.monto_net} unless count_giros.zero? unless count_giros.nil?
   end
 
   def saldo
-    @saldo ||= @giros.inject(0){|sum,item| sum + item.saldo} unless count_giros.zero?
+    @saldo ||= @giros.inject(0){|sum,item| sum + item.saldo} unless count_giros.zero? unless count_giros.nil?
   end
 
   def detalle_giros
@@ -67,7 +82,11 @@ class Profit::Factura < ActiveRecord::Base
   end
 
   def cancelado?
-    saldo.zero?
+    if saldo.nil?
+      true
+    else
+      saldo.zero?
+    end
   end
 
   def experiencia
@@ -103,6 +122,8 @@ class Profit::Factura < ActiveRecord::Base
             @giros_vencidos_sin_cancelar += 1
             @saldo_vencido_sin_cancelar += g.saldo
           end
+        else
+          @fecha_ultimo_pago = g.fecha_ultimo_cobro
         end
 
         cuota += 1
@@ -138,10 +159,9 @@ class Profit::Factura < ActiveRecord::Base
             @experiencia = 1
             if cuota === count_giros && g.saldo == 0.0
               @fecha_cancelacion = g.fecha_ultimo_cobro
-            end          
+            end
           end
         end
-
       end
 
     end
@@ -154,6 +174,18 @@ class Profit::Factura < ActiveRecord::Base
     else
       false
     end
+  end
+
+  def fecha_ultimo_pago
+    @fecha_ultimo_pago
+  end
+
+  def dias_desde_ultimo_pago
+    @dias_desde_ultimo_pago
+  end
+
+  def factura_cfxg
+    @factura_cfxg
   end
 
 end

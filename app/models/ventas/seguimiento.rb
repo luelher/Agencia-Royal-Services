@@ -9,7 +9,7 @@ class Ventas::Seguimiento < ActiveRecord::Base
 
   before_validation :agregar_usuario
 
-  def agregar_usuario
+  def agregar_usuario # Agregar el nombre del usuario
     self.usuario = "Generico"
   end
 

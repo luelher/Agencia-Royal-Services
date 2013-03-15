@@ -5,11 +5,13 @@ class Profit::DocumCc < ActiveRecord::Base
 
   has_one :cliente, {:foreign_key => 'co_cli', :primary_key => 'co_cli'}
 
+  has_one :vendedor, {:foreign_key => 'co_ven', :primary_key => 'co_ven'}
+
   has_one :factura, {:foreign_key => 'fact_num', :primary_key => 'nro_doc'}
 
   has_one :condicio, {:through => :factura}
 
-  has_one :reng_cob, {:foreign_key => 'doc_num', :primary_key => 'nro_doc'}
+  has_many :reng_cob, {:foreign_key => 'doc_num', :primary_key => 'nro_doc'}
 
   # " FROM " +
   # " ((docum_cc INNER JOIN (clientes INNER JOIN zona ON clientes.co_zon=zona.co_zon ) ON docum_cc.co_cli = clientes.co_cli) " +
@@ -17,6 +19,8 @@ class Profit::DocumCc < ActiveRecord::Base
   # " WHERE " +
   # " docum_cc.tipo_doc = 'FACT' AND condicio.dias_cred > 0 " +
   scope :all_facturas, joins(:cliente, :factura, :condicio).where("docum_cc.tipo_doc = 'FACT' AND condicio.dias_cred > 0").order("docum_cc.nro_doc ASC")
+
+  scope :all_facturas_of_client, lambda { |client| joins(:cliente, :factura, :condicio).where("docum_cc.tipo_doc = 'FACT' AND condicio.dias_cred > 0 and clientes.co_cli = ?",client).order("docum_cc.nro_doc ASC") }
 
   scope :giros, lambda { |fact| joins(:cliente).where("Docum_cc.nro_orig = ? AND docum_cc.tipo_doc = 'GIRO' ", fact) unless fact.nil? }
 
@@ -31,7 +35,7 @@ class Profit::DocumCc < ActiveRecord::Base
   end
 
   def detalles_giros
-    @giros = giros(nro_doc_cfxg)
+    @giros = Profit::DocumCc.giros(nro_doc_cfxg)
   end
 
   def dias
@@ -39,8 +43,11 @@ class Profit::DocumCc < ActiveRecord::Base
   end
 
   def fecha_ultimo_cobro
-    reng_cob.cobro.fec_cob unless reng_cob.nil?
+    reng_cob.last.cobro.last.fec_cob unless reng_cob.empty?
   end
 
+  def dias_desde_ultimo_cobro
+    (((Time.now - reng_cob.last.cobro.last.fec_cob) / 3600 ) / 24).to_i unless reng_cob.empty?
+  end
 
 end

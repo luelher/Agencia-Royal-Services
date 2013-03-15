@@ -6,8 +6,8 @@ class CreateVentasPresupuestos < ActiveRecord::Migration
       t.float "inicial", :null => false
       t.integer "giros", :null => false
       t.float "cuota", :null => false
-      t.integer "giros_especiales", :null => false
-      t.float "cuota_especial", :null => false
+      t.integer "giros_especiales", :null => true
+      t.float "cuota_especial", :null => true
       t.integer "vendedor", :null => false
       t.integer "aprobado_por", :null => true
       t.timestamps

@@ -1,0 +1,12 @@
+development: &st
+  presupuesto_seq: '100'
+
+test:
+  <<: *st
+
+staging:
+  <<: *st
+
+production:
+  <<: *st
+

@@ -6,6 +6,11 @@ window.onload = ->
   format_cliente = (item) -> 
       "<li><p>" + item.co_cli + " <b style='color: red'>" + item.cli_des + "</b></p></li>"
 
+  if $('#ventas_seguimiento_cliente_id').val()
+    prePop = [ {co_cli: $('#ventas_seguimiento_cliente_id').val(), cli_des: ""}]
+  else 
+    prePop = null
+
   $("#ventas_seguimiento_cliente_id").tokenInput "/ventas/presupuestos/clientes.json", {
     crossDomain: false,
     tokenLimit: 1,
@@ -16,5 +21,6 @@ window.onload = ->
     minChars: 2,
     propertyToSearch: "co_cli",
     resultsFormatter: format_cliente,
-    tokenFormatter: format_cliente
+    tokenFormatter: format_cliente,
+    prePopulate: prePop
   }

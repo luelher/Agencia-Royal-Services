@@ -3,9 +3,14 @@ class Profit::Art < ActiveRecord::Base
   self.table_name = 'art'
   attr_accessible :co_art, :art_des, :prec_vta5, :stock_act
   has_one :detalle_presupuesto, {:foreign_key => 'co_art', :primary_key => 'codigo', :class_name => "Ventas::DetallePresupuesto"}
+  has_one :lin_art, {:foreign_key => 'co_lin', :primary_key => 'co_lin'}
 
   def to_string
-    self.co_art.strip + " - " + self.art_des.strip
+    self.co_art + " - " + self.art_des.strip
+  end
+
+  def co_art
+    attributes['co_art'].strip
   end
 
   def url_photo

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130111162624) do
+ActiveRecord::Schema.define(:version => 20130312183624) do
 
   create_table "acciones", :force => true do |t|
     t.integer  "servicios_id",                 :null => false
@@ -93,6 +93,10 @@ ActiveRecord::Schema.define(:version => 20130111162624) do
     t.datetime "avatar_updated_at"
     t.decimal  "latitude",                            :precision => 10, :scale => 6
     t.decimal  "longitude",                           :precision => 10, :scale => 6
+    t.string   "telefono2"
+    t.string   "telefono3"
+    t.string   "email"
+    t.string   "direccion2"
   end
 
   add_index "clientes", ["ci", "nombre"], :name => "index_clientes"
@@ -176,8 +180,8 @@ ActiveRecord::Schema.define(:version => 20130111162624) do
     t.float    "inicial",                        :null => false
     t.integer  "giros",                          :null => false
     t.float    "cuota",                          :null => false
-    t.integer  "giros_especiales",               :null => false
-    t.float    "cuota_especial",                 :null => false
+    t.integer  "giros_especiales"
+    t.float    "cuota_especial"
     t.integer  "vendedor",                       :null => false
     t.integer  "aprobado_por"
     t.datetime "created_at",                     :null => false

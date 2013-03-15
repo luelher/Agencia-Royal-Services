@@ -16,14 +16,12 @@
   <tbody>
     <% @ventas_presupuestos.each do |presupuesto| %>
       <tr>
-        <td><%= link_to presupuesto.cliente.nombre, ventas_presupuesto_path(presupuesto) %></td>
+        <td><%= link_to (presupuesto.cliente.nil? ? presupuesto.cliente_id : presupuesto.cliente.nombre), ventas_presupuesto_path(presupuesto) %></td>
         <td><%= presupuesto.instalacion %></td>
         <td><%= presupuesto.total %></td>
         <td><%= presupuesto.vendedor %></td>
         <td><%= presupuesto.aprobado_por %></td>
         <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_ventas_presupuesto_path(presupuesto), :class => 'btn btn-mini' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       ventas_presupuesto_path(presupuesto),
                       :method => :delete,

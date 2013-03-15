@@ -1,0 +1,62 @@
+<h2>Historial de Pago</h2>
+<div class="container offset1">
+  <div class="row span7 offset2">
+
+      <%= form_for Profit::Cliente.new, :url => historico_cobranzas_path, :method => 'get' do |f| %>
+
+        <div class="control-group">
+          <%= label_tag :co_cli, nil, :class => 'control-label' %>
+          <div class="controls">
+            <%= text_field nil, :co_cli, :class => 'input-medium search-query' %>
+          </div>
+        </div>          
+        
+        <%= submit_tag "Buscar", :class => 'bnt' %>
+        
+      <% end %>        
+      <div class="control-group">
+         <strong><%= label_tag "cedula", "Cedula", :class => 'control-label' %></strong> 
+        <div class="controls">
+          <%= label_tag "co_cli", @cliente.co_cli, :class => 'control-label' unless @cliente.nil? %>
+        </div>
+      </div>          
+      <div class="control-group">
+        <strong><%= label_tag "nombre", "Nombre", :class => 'control-label' %></strong>
+        <div class="controls">
+          <%= label_tag "cli_des", @cliente.cli_des, :class => 'control-label'  unless @cliente.nil? %>
+        </div>
+      </div>
+      <%= button_tag "Cerrar", :onclick => "javascript:alert('cerrando')", :class => 'bnt' %>
+  </div>
+  <div class="row" style="font-size:12px">
+    <div class="span7" data-toggle="modal-gallery" data-target="#modal-gallery">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nro. Pago</th>
+            <th>Fecha</th>
+            <th>Monto</th>
+            <th>Detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% unless @cobros.nil? %>
+            <% @cobros.each do |cobro| %>
+                <tr>
+                  <td> <%= cobro.cob_num %> </td>  
+                  <td> <%= cobro.fec_cob.to_date %> </td>
+                  <td> <%= cobro.monto.to_f %> </td>
+                  <td> 
+                    <% cobro.reng_cob.each do |reng| %>
+                      <p> <%= reng.docum_cc.last.observa  unless reng.docum_cc.empty? %> </p>
+                    <% end %>
+                  </td>
+                </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

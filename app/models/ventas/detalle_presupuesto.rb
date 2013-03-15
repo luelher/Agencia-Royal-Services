@@ -6,6 +6,8 @@ class Ventas::DetallePresupuesto < ActiveRecord::Base
   belongs_to :presupuesto, {:class_name => "Ventas::Presupuesto", :inverse_of => :detalle_presupuesto}
   attr_accessible :codigo, :cantidad, :precio
 
+  accepts_nested_attributes_for :presupuesto
+
   validates :codigo, :cantidad, :precio, :presence => true
 
   before_save :inicializar_save
@@ -16,6 +18,10 @@ class Ventas::DetallePresupuesto < ActiveRecord::Base
 
   def to_string
     self.codigo
+  end
+
+  def total
+    self.cantidad * self.precio unless self.cantidad.nil? or self.precio.nil?
   end
   
 end

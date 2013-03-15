@@ -1,7 +1,25 @@
 <%- model_class = Ventas::Seguimiento -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+
+  <div class="row span7 offset2">
+    <%= form_for @seguimientos, :url => ventas_seguimientos_path, :method => 'get' do |f| %>
+
+      <div class="control-group">
+        <%= f.label :cliente_id, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.text_field :cliente_id, :class => 'input-medium search-query' %>
+        </div>
+      </div>
+      
+      <%= submit_tag "Buscar", :class => 'bnt' %>
+      
+    <% end %>    
+  </div>
+
 </div>
+
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -20,7 +38,7 @@
         <td><%= seguimiento.motivo %></td>
         <td><%= seguimiento.observacion %></td>
         <td><%= seguimiento.usuario %></td>
-        <td><%=l seguimiento.created_at %></td>
+        <td><%=l seguimiento.created_at.to_date %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_ventas_seguimiento_path(seguimiento), :class => 'btn btn-mini' %>

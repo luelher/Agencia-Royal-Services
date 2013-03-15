@@ -1,0 +1,105 @@
+<h2>Gestión de Cobranzas</h2>
+<div class="container offset1">
+  <div class="row span7 offset2">
+    <%= form_for @factura, :url => show_cobranzas_path do |f| %>
+
+      <div class="control-group">
+        <%= f.label :co_cli, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.text_field :co_cli, :class => 'input-medium' %>
+        </div>
+      </div>          
+      <div class="control-group">
+        <%= label_tag :dias_vencidos, nil, :class => 'control-label' %>
+        <div class="controls">
+          <%= number_field_tag :otros, :dias_vencidos, :class => 'input-medium', :step => 30, :value => 0  %>
+        </div>
+      </div>          
+      <div class="control-group">
+        <%= label_tag :giros_vencidos, nil, :class => 'control-label' %>
+        <div class="controls">
+          <%= number_field_tag :otros, :giros_vencidos, :class => 'input-medium', :value => 0 %>
+        </div>
+      </div>          
+      <div class="control-group">
+        <%= label_tag :co_lin, nil, :class => 'control-label' %>
+        <div class="controls">
+          <%= select_tag :co_lin, options_from_collection_for_select(@lineas, "co_lin", "lin_des"), :class => 'input-medium' %>
+        </div>
+      </div>          
+      
+      <%= submit_tag "Buscar", :class => 'bnt' %>
+      
+    <% end %>    
+  </div>
+  <div class="row" style="font-size:12px">
+    <div class="span7" data-toggle="modal-gallery" data-target="#modal-gallery">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Cédula</th>
+            <th>Nombre</th>
+            <th>Teléfonos</th>
+            <th>Dirección</th>
+            <th></th>
+            <th>Nro. Factura</th>
+            <th>Fecha de Compra</th>
+            <th>Ultima Fecha Pago</th>
+            <th>Días sin cancelar</th>
+            <th>Giros Vencídos</th>
+            <th>Monto Vencído</th>
+            <th>Experiencia</th>
+            <th>Vendedora</th>
+            <th>Zona</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% unless @facturas.nil? %>
+            <% @facturas.each do |factu| %>
+              <% factu.generar_resumen Time.now %>
+              <% unless factu.cancelado? %>
+                <%= form_for factu, :url => update_cobranzas_path, :method => 'put', :remote => true do |f| %>
+                <tr>
+                  <td> <%= factu.cliente.co_cli %> </td>  
+                  <td> <%= factu.cliente.cli_des %> </td>
+                  <td> 
+                    <%= text_field :update, :tel1, :class => 'input-small', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono  %> <br>
+                    <%= text_field :update, :tel2, :class => 'input-small', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono2 %> 
+                  </td>
+                  <td> 
+                    <%= text_field :update, :dir1, :class => 'input-medium', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.direccion %> <br>
+                    <%= text_field :update, :dir2, :class => 'input-medium', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.direccion2 %> 
+                  </td>
+                  <td> 
+                    <p><%= submit_tag "Actualizar", :class => 'btn btn-mini btn-primary' %></p>
+                  </td>
+                  <td> <%= factu.fact_num %> </td>
+                  <td> <%= factu.fec_emis.to_date %> </td>
+                  <td class="span2"> 
+                    <%= factu.fecha_ultimo_pago.to_date unless factu.fecha_ultimo_pago.nil? %> 
+                    <p> <%= link_to "Pagos", historico_cobranzas_by_factura_path(factu), :class => "btn btn-mini btn-info", :target => '_blank' %> </p>
+                  </td>
+                  <td> <%= factu.dias_desde_ultimo_pago %> </td>
+                  <td> <%= factu.giros_vencidos_sin_cancelar %> </td>
+                  <td> <%= factu.saldo_vencido_sin_cancelar %> </td>
+                  <td> 
+                    <%= factu.experiencia %> 
+                    <p> <%= link_to "Seguimientos", ventas_seguimientos_path + "?ventas_seguimiento%5Bcliente_id%5D=#{factu.cliente.co_cli}", :class => "btn btn-mini btn-success", :target => '_blank' %> </p>
+                  </td>
+                  <td> <%= factu.factura_cfxg.vendedor.ven_des %> </td>
+                  <td> <%= factu.cliente.zona.zon_des %> </td>
+                  <td> 
+                    <p> <%= link_to "Nuevo Seguimiento", new_ventas_seguimiento_path + "?ventas_seguimiento%5Bcliente_id%5D=#{factu.cliente.co_cli}", :class => "btn btn-mini btn-inverse", :target => '_blank' %> </p>
+                  </td>
+                </tr>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

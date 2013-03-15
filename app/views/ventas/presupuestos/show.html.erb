@@ -5,28 +5,62 @@
 
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:cliente_id) %>:</strong></dt>
-  <dd><%= @ventas_presupuestos.cliente_id %></dd>
+  <dd><%= @ventas_presupuesto.cliente_id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:instalacion) %>:</strong></dt>
-  <dd><%= @ventas_presupuestos.instalacion %></dd>
+  <dd><%= @ventas_presupuesto.instalacion %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:total) %>:</strong></dt>
+  <dd><strong><%= @ventas_presupuesto.total %> Bs</strong></dd>
   <dt><strong><%= model_class.human_attribute_name(:inicial) %>:</strong></dt>
-  <dd><%= @ventas_presupuestos.inicial %></dd>
+  <dd><%= @ventas_presupuesto.inicial %></dd>
   <dt><strong><%= model_class.human_attribute_name(:giros) %>:</strong></dt>
-  <dd><%= @ventas_presupuestos.giros %></dd>
+  <dd><%= @ventas_presupuesto.giros %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:cuota) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.cuota %></dd>
   <dt><strong><%= model_class.human_attribute_name(:giros_especiales) %>:</strong></dt>
-  <dd><%= @ventas_presupuestos.giros_especiales %></dd>
+  <dd><%= @ventas_presupuesto.giros_especiales %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:cuota_especial) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.cuota_especial.nil? ? '0' : @ventas_presupuesto.cuota_especial  %></dd>
   <dt><strong><%= model_class.human_attribute_name(:vendedor) %>:</strong></dt>
-  <dd><%= @ventas_presupuestos.vendedor %></dd>
+  <dd><%= @ventas_presupuesto.vendedor %></dd>
   <dt><strong><%= model_class.human_attribute_name(:aprobado_por) %>:</strong></dt>
-  <dd><%= @ventas_presupuestos.aprobado_por %></dd>
+  <dd><%= @ventas_presupuesto.aprobado_por %></dd>
 </dl>
+
+<div class="control-group">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Codigo</th>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="detalle_tabla">
+        <% @ventas_presupuesto.detalle_presupuesto.each do |detalle| %>
+          <tr>
+            <td>
+              <%= detalle.codigo %>
+            </td>
+            <td><%= detalle.art.art_des unless detalle.art.nil? %></td>
+            <td><%= detalle.art.prec_vta5 unless detalle.art.nil? %> Bs
+            </td>
+            <td>
+              <%= detalle.cantidad %>
+            </td>
+            <td> <strong class=\"total\"><%= detalle.total %> </strong> Bs</td>
+          </tr>
+        <% end -%>
+      </tbody>
+    </table>
+  </div>  
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               ventas_presupuestos_path, :class => 'btn'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_ventas_presupuesto_path(@ventas_presupuestos), :class => 'btn' %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              ventas_presupuesto_path(@ventas_presupuestos),
+              ventas_presupuesto_path(@ventas_presupuesto),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
