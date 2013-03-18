@@ -5,7 +5,7 @@
       <%= form_for Profit::Cliente.new, :url => historico_cobranzas_path, :method => 'get' do |f| %>
 
         <div class="control-group">
-          <%= label_tag :co_cli, nil, :class => 'control-label' %>
+          <%= label_tag :cliente, nil, :class => 'control-label' %>
           <div class="controls">
             <%= text_field nil, :co_cli, :class => 'input-medium search-query' %>
           </div>

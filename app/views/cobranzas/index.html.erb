@@ -28,21 +28,21 @@
         </div>
         <div class="span3">
           <div class="control-group">
-            <%= label_tag :co_lin, nil, :class => 'control-label' %>
+            <%= label_tag :lineas, nil, :class => 'control-label' %>
             <div class="controls">
-              <%= select_tag :co_lin, options_from_collection_for_select(@lineas, "co_lin", "lin_des"), :class => 'input-medium' %>
+              <%= select_tag :co_lin, options_from_collection_for_select(@lineas, "co_lin", "lin_des"), :prompt => "", :class => 'input-medium' %>
             </div>
           </div>          
           <div class="control-group">
-            <%= label_tag :co_ven, nil, :class => 'control-label' %>
+            <%= label_tag :vendedores, nil, :class => 'control-label' %>
             <div class="controls">
-              <%= select_tag :co_ven, options_from_collection_for_select(@vendedores, "co_ven", "ven_des"), :class => 'input-medium' %>
+              <%= select_tag :co_ven, options_from_collection_for_select(@vendedores, "co_ven", "ven_des"), :prompt => "", :class => 'input-medium' %>
             </div>
           </div>          
           <div class="control-group">
-            <%= label_tag :co_zon, nil, :class => 'control-label' %>
+            <%= label_tag :zonas, nil, :class => 'control-label' %>
             <div class="controls">
-              <%= select_tag :co_zon, options_from_collection_for_select(@zonas, "co_zon", "zon_des"), :class => 'input-medium' %>
+              <%= select_tag :co_zon, options_from_collection_for_select(@zonas, "co_zon", "zon_des"), :prompt => "", :class => 'input-medium' %>
             </div>
           </div>
           <div class="control-group">
@@ -55,6 +55,8 @@
       </div>
 
       <%= submit_tag "Buscar", :class => 'bnt' %>
+
+      <strong><%= @facturas.count %> Facturas Encontradas</strong>
       
     <% end %>    
   </div>
@@ -108,7 +110,7 @@
                   </td>
                   <td> <%= factu.dias_desde_ultimo_pago %> </td>
                   <td> <%= factu.giros_vencidos_sin_cancelar %> </td>
-                  <td> <%= factu.saldo_vencido_sin_cancelar %> </td>
+                  <td> <%= factu.saldo_vencido_sin_cancelar.round 2 %> </td>
                   <td> 
                     <%= factu.experiencia %> 
                     <p> <%= link_to "Seguimientos", ventas_seguimientos_path + "?ventas_seguimiento%5Bcliente_id%5D=#{factu.cliente.co_cli}", :class => "btn btn-mini btn-success", :target => '_blank' %> </p>

@@ -75,7 +75,7 @@ class Profit::Factura < ActiveRecord::Base
 
   def detalle_giros
     fac = nro_doc_cfxg
-    @giros ||= Profit::DocumCc.includes(:reng_cob => :cobro).giros(fac) unless fac.nil?
+    @giros ||= Profit::DocumCc.giros(fac) unless fac.nil?
     @count_giros ||= @giros.length.to_i unless fac.nil?
   end
 
@@ -125,7 +125,7 @@ class Profit::Factura < ActiveRecord::Base
             @saldo_vencido_sin_cancelar += g.saldo
           end
         else
-          # @fecha_ultimo_pago = g.fecha_ultimo_cobro
+          @fecha_ultimo_pago = g.fecha_ultimo_cobro
         end
 
         cuota += 1
@@ -215,8 +215,8 @@ order by
   dcc.nro_orig    
     "
     facts = Profit::DocumCc.connection().select_all(sql)
-    facts.map{|f| f["observa"].split("FACT ")[1]}.uniq
-    Profit::Factura.includes(:docum_cc => {:reng_cob => :cobro }).where("fact_num IN (?)",facts)
+    f = facts.map{|f| f["observa"].split("FACT ")[1]}.uniq
+    Profit::Factura.includes(:cliente => :zona, :docum_cc => {:reng_cob => :cobro }).where("fact_num IN (?)",f)
   end
 
   def self.by_giros_vencidos(giros)
@@ -239,8 +239,8 @@ group by
 where xx.giros_vencidos = #{giros}    "
 
     facts = Profit::DocumCc.connection().select_all(sql)
-    facts.map{|f| f["observa"].split("FACT ")[1]}.uniq
-    Profit::Factura.includes(:docum_cc => {:reng_cob => :cobro }).where("fact_num IN (?)",facts)
+    f = facts.map{|f| f["observa"].split("FACT ")[1]}.uniq
+    Profit::Factura.includes(:cliente => :zona, :docum_cc => {:reng_cob => :cobro }).where("fact_num IN (?)",f)
   end
 
 end

@@ -1,6 +1,8 @@
 class CobranzasController < ApplicationController
   layout 'intranet'
 
+  caches_action :index, :expires_in => 1.day
+
   def index
     @factura = Profit::Factura.new
     @factura.co_cli = ''
@@ -24,10 +26,10 @@ class CobranzasController < ApplicationController
 
     if !co_cli.empty?
       @facturas = Profit::Factura.by_cliente co_cli
-    elsif dias_desde>=0 and dias_hasta > 0 and dias_desde <= dias_hasta
+    elsif dias_desde.to_i >= 0 and dias_hasta.to_i > 0 and dias_desde.to_i <= dias_hasta.to_i
       @facturas = Profit::Factura.by_dias_vencidos dias_desde, dias_hasta
-    elsif giros_vencidos > 0
-      @facturas = Profit::Factura.by_dias_vencidos giros_vencidos
+    elsif giros_vencidos.to_i > 0
+      @facturas = Profit::Factura.by_giros_vencidos giros_vencidos
     else
       @facturas = nil
     end
