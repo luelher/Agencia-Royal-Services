@@ -45,10 +45,10 @@
                 <tr>
                   <td> <%= cobro.cob_num %> </td>  
                   <td> <%= cobro.fec_cob.to_date %> </td>
-                  <td> <%= cobro.monto.to_f %> </td>
+                  <td> <strong><%= cobro.monto.to_f %></strong>  </td>
                   <td> 
                     <% cobro.reng_cob.each do |reng| %>
-                      <p> <%= reng.docum_cc.last.observa  unless reng.docum_cc.empty? %> </p>
+                      <p> <%= reng.docum_cc.last.observa + ". Monto: " + reng.neto.to_s  unless reng.docum_cc.empty? %> </p>
                     <% end %>
                   </td>
                 </tr>

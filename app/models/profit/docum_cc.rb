@@ -35,7 +35,7 @@ class Profit::DocumCc < ActiveRecord::Base
   end
 
   def detalles_giros
-    @giros = Profit::DocumCc.giros(nro_doc_cfxg)
+    @giros = Profit::DocumCc.includes(:reng_cob => :cobro).giros(nro_doc_cfxg)
   end
 
   def dias

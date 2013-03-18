@@ -27,7 +27,7 @@
       <th><%= model_class.human_attribute_name(:motivo) %></th>
       <th><%= model_class.human_attribute_name(:observacion) %></th>
       <th><%= model_class.human_attribute_name(:usuario) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%= model_class.human_attribute_name(:plazo_pago) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -38,7 +38,7 @@
         <td><%= seguimiento.motivo %></td>
         <td><%= seguimiento.observacion %></td>
         <td><%= seguimiento.usuario %></td>
-        <td><%=l seguimiento.created_at.to_date %></td>
+        <td><%= seguimiento.plazo_pago %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_ventas_seguimiento_path(seguimiento), :class => 'btn btn-mini' %>

@@ -1,33 +1,59 @@
 <h2>Gestión de Cobranzas</h2>
 <div class="container offset1">
-  <div class="row span7 offset2">
+  <div class="row span6 offset1">
     <%= form_for @factura, :url => show_cobranzas_path do |f| %>
+      <div class="row">
+        <div class="span3">
+          <div class="control-group">
+            <%= f.label :co_cli, :class => 'control-label' %>
+            <div class="controls">
+              <%= f.text_field :co_cli, :class => 'input-small' %>
+            </div>
+          </div>
+          <div class="control-group">
+            <%= label_tag :dias_vencidos_desde, nil, :class => 'control-label' %>
+            <div class="controls">
+              <%= number_field_tag :dias_vencidos_desde, 0, :class => 'input-small', :step => 30  %>
+            </div>
+            <div class="controls">
+              <%= number_field_tag :dias_vencidos_hasta, 0, :class => 'input-small', :step => 30  %>
+            </div>
+          </div>          
+          <div class="control-group">
+            <%= label_tag :giros_vencidos, nil, :class => 'control-label' %>
+            <div class="controls">
+              <%= number_field_tag :giros_vencidos, 0, :class => 'input-small' %>
+            </div>
+          </div>          
+        </div>
+        <div class="span3">
+          <div class="control-group">
+            <%= label_tag :co_lin, nil, :class => 'control-label' %>
+            <div class="controls">
+              <%= select_tag :co_lin, options_from_collection_for_select(@lineas, "co_lin", "lin_des"), :class => 'input-medium' %>
+            </div>
+          </div>          
+          <div class="control-group">
+            <%= label_tag :co_ven, nil, :class => 'control-label' %>
+            <div class="controls">
+              <%= select_tag :co_ven, options_from_collection_for_select(@vendedores, "co_ven", "ven_des"), :class => 'input-medium' %>
+            </div>
+          </div>          
+          <div class="control-group">
+            <%= label_tag :co_zon, nil, :class => 'control-label' %>
+            <div class="controls">
+              <%= select_tag :co_zon, options_from_collection_for_select(@zonas, "co_zon", "zon_des"), :class => 'input-medium' %>
+            </div>
+          </div>
+          <div class="control-group">
+            <%= label_tag :plazo_pago, nil, :class => 'control-label' %>
+            <div class="controls">
+              <%= text_field :plazo_pago, "", :class => 'input-small', "data-behaviour" => 'datepicker' %>
+            </div>
+          </div>          
+        </div>
+      </div>
 
-      <div class="control-group">
-        <%= f.label :co_cli, :class => 'control-label' %>
-        <div class="controls">
-          <%= f.text_field :co_cli, :class => 'input-medium' %>
-        </div>
-      </div>          
-      <div class="control-group">
-        <%= label_tag :dias_vencidos, nil, :class => 'control-label' %>
-        <div class="controls">
-          <%= number_field_tag :otros, :dias_vencidos, :class => 'input-medium', :step => 30, :value => 0  %>
-        </div>
-      </div>          
-      <div class="control-group">
-        <%= label_tag :giros_vencidos, nil, :class => 'control-label' %>
-        <div class="controls">
-          <%= number_field_tag :otros, :giros_vencidos, :class => 'input-medium', :value => 0 %>
-        </div>
-      </div>          
-      <div class="control-group">
-        <%= label_tag :co_lin, nil, :class => 'control-label' %>
-        <div class="controls">
-          <%= select_tag :co_lin, options_from_collection_for_select(@lineas, "co_lin", "lin_des"), :class => 'input-medium' %>
-        </div>
-      </div>          
-      
       <%= submit_tag "Buscar", :class => 'bnt' %>
       
     <% end %>    

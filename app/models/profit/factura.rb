@@ -8,6 +8,8 @@ class Profit::Factura < ActiveRecord::Base
 
   has_many :docum_cc, {:foreign_key => 'nro_doc', :primary_key => 'fact_num'}
 
+  has_many :reng_fac, {:foreign_key => 'fact_num', :primary_key => 'fact_num'}
+
   has_one :condicio, {:foreign_key => 'co_cond', :primary_key => 'forma_pag'}
 
   has_one :cliente, {:foreign_key => 'co_cli', :primary_key => 'co_cli'}
@@ -20,7 +22,7 @@ class Profit::Factura < ActiveRecord::Base
 
   scope :solo_facturas_creditos, joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = ? AND condicio.dias_cred > ? ", 'FACT', 0).order("docum_cc.nro_doc ASC")  
 
-  scope :solo_facturas_creditos_by_dias_vencidos, lambda { |dias_desde, dias_hasta| joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = ? AND condicio.dias_cred > ? AND (SELECT TOP (1) DATEDIFF(DAY, dcc.fec_venc, GETDATE()) FROM [docum_cc] dcc WHERE (dcc.observa like ('%FACT ' + Cast(factura.fact_num as nvarchar(4000)) + '%')  AND dcc.tipo_doc='GIRO' and dcc.saldo > 0.0 and dcc.fec_venc <= GETDATE()) ORDER BY dcc.fec_venc ASC) BETWEEN ? and ? and factura.fec_emis > '2010-01-01' ", 'FACT', 0, dias_desde, dias_hasta).order("docum_cc.nro_doc ASC")  }
+  scope :solo_facturas_creditos_by_dias_vencidos, lambda { |dias_desde, dias_hasta| joins(:cliente, :docum_cc, :condicio).where("factura.fec_emis > '2012-01-01' and docum_cc.tipo_doc = ? AND condicio.dias_cred > ? AND (SELECT TOP (1) DATEDIFF(DAY, dcc.fec_venc, GETDATE()) FROM [docum_cc] dcc WHERE (dcc.observa like ('%FACT ' + Cast(factura.fact_num as nvarchar(4000)) + '%')  AND dcc.tipo_doc='GIRO' and dcc.saldo > 0.0 and dcc.fec_venc <= GETDATE()) ORDER BY dcc.fec_venc ASC) BETWEEN ? and ? ", 'FACT', 0, dias_desde, dias_hasta).order("docum_cc.nro_doc ASC")  }
 
 # SELECT TOP (1) DATEDIFF(DAY, dcc.fec_venc, GETDATE()) FROM [docum_cc] dcc WHERE (dcc.observa like '%FACT 24919%' AND dcc.tipo_doc='GIRO' and dcc.saldo > 0.0 and dcc.fec_venc <= GETDATE()) ORDER BY dcc.fec_venc ASC
 
@@ -73,7 +75,7 @@ class Profit::Factura < ActiveRecord::Base
 
   def detalle_giros
     fac = nro_doc_cfxg
-    @giros ||= Profit::DocumCc.giros(fac) unless fac.nil?
+    @giros ||= Profit::DocumCc.includes(:reng_cob => :cobro).giros(fac) unless fac.nil?
     @count_giros ||= @giros.length.to_i unless fac.nil?
   end
 
@@ -123,7 +125,7 @@ class Profit::Factura < ActiveRecord::Base
             @saldo_vencido_sin_cancelar += g.saldo
           end
         else
-          @fecha_ultimo_pago = g.fecha_ultimo_cobro
+          # @fecha_ultimo_pago = g.fecha_ultimo_cobro
         end
 
         cuota += 1
@@ -186,6 +188,59 @@ class Profit::Factura < ActiveRecord::Base
 
   def factura_cfxg
     @factura_cfxg
+  end
+
+  def self.by_cliente(cliente)
+    Profit::Factura.solo_facturas_creditos.where('factura.co_cli like ?',"%#{cliente}%") 
+  end
+
+  def self.by_dias_vencidos(desde, hasta)
+    sql = "
+SELECT 
+  distinct
+  dcc.nro_orig,
+  max(DATEDIFF(DAY, dcc.fec_venc, GETDATE())) dias_vencidos,
+  dcc.observa
+FROM 
+  [docum_cc] dcc 
+WHERE 
+  dcc.observa like ('%FACT %')  
+  AND dcc.tipo_doc='GIRO' 
+  and dcc.saldo > 0.0 
+  and dcc.fec_venc <= GETDATE() 
+  and DATEDIFF(DAY, dcc.fec_venc, GETDATE()) BETWEEN #{desde} and #{hasta}
+group by 
+  dcc.nro_orig, dcc.observa
+order by 
+  dcc.nro_orig    
+    "
+    facts = Profit::DocumCc.connection().select_all(sql)
+    facts.map{|f| f["observa"].split("FACT ")[1]}.uniq
+    Profit::Factura.includes(:docum_cc => {:reng_cob => :cobro }).where("fact_num IN (?)",facts)
+  end
+
+  def self.by_giros_vencidos(giros)
+    sql = "
+select giros_vencidos, observa from 
+(SELECT 
+  distinct
+  dcc.nro_orig,
+  count(dcc.nro_orig) giros_vencidos,
+  max(dcc.observa) as observa
+FROM 
+  [docum_cc] dcc 
+WHERE 
+  dcc.observa like ('%FACT %')  
+  AND dcc.tipo_doc='GIRO' 
+  and dcc.saldo > 0.0 
+  and dcc.fec_venc <= GETDATE() 
+group by 
+  dcc.nro_orig) xx
+where xx.giros_vencidos = #{giros}    "
+
+    facts = Profit::DocumCc.connection().select_all(sql)
+    facts.map{|f| f["observa"].split("FACT ")[1]}.uniq
+    Profit::Factura.includes(:docum_cc => {:reng_cob => :cobro }).where("fact_num IN (?)",facts)
   end
 
 end

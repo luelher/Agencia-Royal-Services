@@ -1,23 +1,30 @@
 es:
-  helpers:
-    label:
-      ventas_cliente:
-          ci: "Cedula"
-  ventas:
-    clientes:
-      new:
-        title: "Nuevo Cliente"
-    presupuestos:
-      new:
-        title: "Nuevo Presupuesto"
-
+  co_cli: "Cedula"
   activerecord:
+    attributes:
+      ventas/cliente:
+        ci: "Cedula"
+        avatar: "Foto"
+        direccion: "Dirección"
+        telefono: "Teléfono"
+        latitude: "Dirección en Mapa"
+    models:
+      ventas/cliente: "Clientes"
+
     errors:
       models:
         experiencia:
           attributes:
             desde:
               blank: "Debe seleccionar una fecha"
+
+
+  ventas/clientes:
+    new:
+      title: "Nuevo Cliente"
+  ventas/presupuestos:
+    new:
+      title: "Nuevo Presupuesto"
   errors:
     messages:
       expired: "ha expirado, por favor pide una nueva"
@@ -204,6 +211,12 @@ es:
       create: Crear %{model}
       submit: Guardar %{model}
       update: Actualizar %{model}
+    links:
+      new: Nuevo Registro
+      edit: Editar
+      destroy: Eliminar
+      confirm: ¿Está seguro de eliminar el registro?
+      back: Volver
   number:
     currency:
       format:
@@ -265,20 +278,5 @@ es:
     pm: pm
   # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
   activemodel:
-    errors:
-      <<: *errors
-  activerecord:
-    attributes:
-      ventas_cliente:
-        ci: "Cedula"
-
-    models:
-      ventas_cliente:
-          ci: "Cedula"
-
-      cliente:
-        attributes:
-          co_cli:
-            label: Cedula  
     errors:
       <<: *errors

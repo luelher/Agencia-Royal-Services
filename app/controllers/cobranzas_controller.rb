@@ -1,17 +1,38 @@
 class CobranzasController < ApplicationController
   layout 'intranet'
+
   def index
     @factura = Profit::Factura.new
     @factura.co_cli = ''
     @facturas = nil
-    @lineas = Profit::LinArt.all
+    combos
   end
 
   def show
     @factura = Profit::Factura.new
     @factura.co_cli = ''
-    @facturas = Profit::Factura.solo_facturas_creditos.where('factura.co_cli like ?',"%#{params[:profit_factura][:co_cli]}%") 
-    @lineas = Profit::LinArt.all    
+
+    co_cli = params[:profit_factura][:co_cli]
+    dias_desde = params[:dias_vencidos_desde]
+    dias_hasta = params[:dias_vencidos_hasta]
+    giros_vencidos = params[:giros_vencidos]
+    co_lin = params[:co_lin]
+    co_ven = params[:co_ven]
+    co_zon = params[:co_zon]
+    plazo_pago = params[:plazo_pago]
+
+
+    if !co_cli.empty?
+      @facturas = Profit::Factura.by_cliente co_cli
+    elsif dias_desde>=0 and dias_hasta > 0 and dias_desde <= dias_hasta
+      @facturas = Profit::Factura.by_dias_vencidos dias_desde, dias_hasta
+    elsif giros_vencidos > 0
+      @facturas = Profit::Factura.by_dias_vencidos giros_vencidos
+    else
+      @facturas = nil
+    end
+
+    combos
     render :index
   end
 
@@ -29,4 +50,14 @@ class CobranzasController < ApplicationController
     @cliente = nil
     @cliente = @cobros[0].cliente unless @cobros.empty?
   end
+
+
+  private
+  
+  def combos
+    @lineas = Profit::LinArt.all
+    @vendedores = Profit::Vendedor.all
+    @zonas = Profit::Zona.all
+  end
+
 end

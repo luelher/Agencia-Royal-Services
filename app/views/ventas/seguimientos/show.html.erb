@@ -8,6 +8,8 @@
   <dd><%= @ventas_seguimiento.cliente_id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:motivo) %>:</strong></dt>
   <dd><%= @ventas_seguimiento.motivo %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:plazo_pago) %>:</strong></dt>
+  <dd><%= @ventas_seguimiento.plazo_pago.nil? ? "No Indicada" : @ventas_seguimiento.plazo_pago %></dd>
   <dt><strong><%= model_class.human_attribute_name(:observacion) %>:</strong></dt>
   <dd><%= @ventas_seguimiento.observacion %></dd>
 </dl>

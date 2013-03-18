@@ -24,3 +24,8 @@ window.onload = ->
     tokenFormatter: format_cliente,
     prePopulate: prePop
   }
+
+  $('[data-behaviour~=datepicker]').datepicker({
+    language: "es",
+    autoclose: true
+  })
