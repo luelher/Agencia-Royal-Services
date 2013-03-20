@@ -33,6 +33,17 @@
           </a>
           <a class="brand" href="#">Intranet V1.0</a>
           <a class="brand" href="/">Portal</a>
+
+<div class="brand_auth" id="user_nav">  
+  <% if user_signed_in? %>  
+    Hola, <%= current_user.name %>.
+    <%= link_to "Cerrar Sesión", destroy_user_session_path %>  
+  <% else %>  
+    <%= link_to "Registrar", new_user_registration_path %> or  
+    <%= link_to "Autenticar", new_user_session_path %>  
+  <% end %>  
+</div>
+
 <!--           <div class="container nav-collapse">
             <ul class="nav">
               <li><%= link_to "Clientes", "/clientes"  %></li>
@@ -58,6 +69,11 @@
                 <li><%= link_to "Gestión", "/cobranzas"  %></li>
                 <li><%= link_to "Seguimiento", "/ventas/seguimientos"  %></li>
                 <li><%= link_to "Históricos", "/cobranzas/historico"  %></li>
+              </ul>
+              <ul class="nav nav-list">
+                <li class="nav-header">Usuarios</li>
+                <li><%= link_to "Gestión", "/admin/users"  %></li>
+                <li><%= link_to "Contraseña", edit_password_path(current_user)  %></li>
               </ul>
             </div><!--/.well -->
           </div><!--/span-->

@@ -247,7 +247,7 @@ class Ventas::Presupuesto < ActiveRecord::Base
         new_art.tipo_doc2 = ' '
         new_art.des_art = ' '
         new_art.co_alma2 = ' '
-        new_art.aux2 = ' '
+        # new_art.aux2 = ' '
 
         new_art.save
         # cotizacion.reng_cac << new_art

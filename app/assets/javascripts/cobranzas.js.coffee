@@ -4,3 +4,11 @@
 
 window.onload = ->
   $('[data-behaviour~=datepicker]').datepicker()
+
+  jQuery("#btn_xls").click => 
+    $("#new_profit_factura")[0].action += ".xls"
+    return true
+
+  jQuery("#btn_html").click => 
+    $("#new_profit_factura")[0].action = "/cobranzas/show"
+    return true    

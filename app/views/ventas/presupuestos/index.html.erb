@@ -32,6 +32,7 @@
     <% end %>
   </tbody>
 </table>
+<%= will_paginate @ventas_presupuestos %>
 
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_ventas_presupuesto_path,

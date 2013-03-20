@@ -10,6 +10,8 @@ class Profit::Factura < ActiveRecord::Base
 
   has_many :reng_fac, {:foreign_key => 'fact_num', :primary_key => 'fact_num'}
 
+  has_one :vendedor, {:foreign_key => 'co_ven', :primary_key => 'co_ven'}
+
   has_one :condicio, {:foreign_key => 'co_cond', :primary_key => 'forma_pag'}
 
   has_one :cliente, {:foreign_key => 'co_cli', :primary_key => 'co_cli'}
@@ -111,6 +113,10 @@ class Profit::Factura < ActiveRecord::Base
     @saldo_restante
   end
 
+  def los_giros
+    @giros
+  end
+
   def generar_resumen(la_fecha)
     experiencia=false
     cuota=0
@@ -124,8 +130,6 @@ class Profit::Factura < ActiveRecord::Base
             @giros_vencidos_sin_cancelar += 1
             @saldo_vencido_sin_cancelar += g.saldo
           end
-        else
-          @fecha_ultimo_pago = g.fecha_ultimo_cobro
         end
 
         cuota += 1
@@ -167,6 +171,11 @@ class Profit::Factura < ActiveRecord::Base
       end
 
     end
+    pagados = nil
+    pagados = @giros.find_all{|d| d.saldo == 0.0} unless @giros.nil?
+    ultimo_giro_pagado = pagados.max_by{|f| f.fec_venc} unless pagados.nil?
+    @fecha_ultimo_pago = ultimo_giro_pagado.fecha_ultimo_cobro unless ultimo_giro_pagado.nil?
+    @dias_desde_ultimo_pago = (((Time.now - @fecha_ultimo_pago) / 3600 ) / 24).to_i unless @fecha_ultimo_pago.nil?
     true
   end
 
@@ -194,53 +203,63 @@ class Profit::Factura < ActiveRecord::Base
     Profit::Factura.solo_facturas_creditos.where('factura.co_cli like ?',"%#{cliente}%") 
   end
 
-  def self.by_dias_vencidos(desde, hasta)
+  def self.by_dias_vencidos(desde, hasta, co_lin, co_ven, co_zon)
     sql = "
-SELECT 
-  distinct
-  dcc.nro_orig,
-  max(DATEDIFF(DAY, dcc.fec_venc, GETDATE())) dias_vencidos,
-  dcc.observa
-FROM 
-  [docum_cc] dcc 
-WHERE 
-  dcc.observa like ('%FACT %')  
-  AND dcc.tipo_doc='GIRO' 
-  and dcc.saldo > 0.0 
-  and dcc.fec_venc <= GETDATE() 
-  and DATEDIFF(DAY, dcc.fec_venc, GETDATE()) BETWEEN #{desde} and #{hasta}
-group by 
-  dcc.nro_orig, dcc.observa
-order by 
-  dcc.nro_orig    
+      SELECT 
+        distinct
+        dcc.nro_orig,
+        max(DATEDIFF(DAY, dcc.fec_venc, GETDATE())) dias_vencidos,
+        dcc.observa
+      FROM 
+        [docum_cc] dcc 
+      WHERE 
+        dcc.observa like ('%FACT %')  
+        AND dcc.tipo_doc='GIRO' 
+        and dcc.saldo > 0.0 
+        and dcc.fec_venc <= GETDATE() 
+        and DATEDIFF(DAY, dcc.fec_venc, GETDATE()) BETWEEN #{desde} and #{hasta}
+      group by 
+        dcc.nro_orig, dcc.observa
+      order by 
+        dcc.nro_orig    
     "
-    facts = Profit::DocumCc.connection().select_all(sql)
-    f = facts.map{|f| f["observa"].split("FACT ")[1]}.uniq
-    Profit::Factura.includes(:cliente => :zona, :docum_cc => {:reng_cob => :cobro }).where("fact_num IN (?)",f)
+    Profit::Factura.search_facturas(sql, co_lin, co_ven, co_zon)
   end
 
-  def self.by_giros_vencidos(giros)
+  def self.by_giros_vencidos(giros, co_lin, co_ven, co_zon)
     sql = "
-select giros_vencidos, observa from 
-(SELECT 
-  distinct
-  dcc.nro_orig,
-  count(dcc.nro_orig) giros_vencidos,
-  max(dcc.observa) as observa
-FROM 
-  [docum_cc] dcc 
-WHERE 
-  dcc.observa like ('%FACT %')  
-  AND dcc.tipo_doc='GIRO' 
-  and dcc.saldo > 0.0 
-  and dcc.fec_venc <= GETDATE() 
-group by 
-  dcc.nro_orig) xx
-where xx.giros_vencidos = #{giros}    "
+      select giros_vencidos, observa from 
+      (SELECT 
+        distinct
+        dcc.nro_orig,
+        count(dcc.nro_orig) giros_vencidos,
+        max(dcc.observa) as observa
+      FROM 
+        [docum_cc] dcc 
+      WHERE 
+        dcc.observa like ('%FACT %')  
+        AND dcc.tipo_doc='GIRO' 
+        and dcc.saldo > 0.0 
+        and dcc.fec_venc <= GETDATE() 
+      group by 
+        dcc.nro_orig) xx
+      where xx.giros_vencidos = #{giros}    "
 
-    facts = Profit::DocumCc.connection().select_all(sql)
+    Profit::Factura.search_facturas(sql, co_lin, co_ven, co_zon)
+
+  end
+
+  private
+  def self.search_facturas(sql_facturas, co_lin, co_ven, co_zon)
+    facts = Profit::DocumCc.connection().select_all(sql_facturas)
     f = facts.map{|f| f["observa"].split("FACT ")[1]}.uniq
-    Profit::Factura.includes(:cliente => :zona, :docum_cc => {:reng_cob => :cobro }).where("fact_num IN (?)",f)
+    where = Hash.new
+    where[:fact_num] = f
+    where['art.co_lin'] = co_lin unless co_lin.empty?
+    where[:co_ven] = co_ven unless co_ven.empty?
+    where['clientes.co_zon'] = co_zon unless co_zon.empty?
+    
+    Profit::Factura.includes(:cliente => :zona, :docum_cc => {:reng_cob => :cobro }).joins({:reng_fac => :art}, :cliente).where(where)
   end
 
 end

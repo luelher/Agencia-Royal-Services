@@ -1,6 +1,6 @@
 class Ventas::Seguimiento < ActiveRecord::Base
   self.table_name = 'seguimientos'
-  attr_accessible :cliente_id, :motivo, :observacion, :usuario, :plazo_pago
+  attr_accessible :cliente_id, :motivo, :observacion, :usuario, :plazo_pago, :factura
 
   belongs_to :cliente, :class_name => "Ventas::Cliente"
 

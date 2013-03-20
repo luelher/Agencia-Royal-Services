@@ -1,7 +1,7 @@
 class Profit::Cliente < ActiveRecord::Base
   establish_connection "profit_#{Rails.env}"
   self.table_name = 'clientes'
-  attr_accessible :co_cli, :cli_des
+  attr_accessible :co_cli, :cli_des, :direc1, :telefonos
 
   has_many :docum_cc, {:foreign_key => 'co_cli', :primary_key => 'co_cli'}
 
@@ -61,6 +61,7 @@ class Profit::Cliente < ActiveRecord::Base
       # cliente.conyugue_sueldo = 
       # cliente.conyugue_cargo = 
       cliente.save
+      cliente
     end
 
 end

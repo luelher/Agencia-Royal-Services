@@ -8,6 +8,17 @@ profit_development:
   timeout: 100
   encoding: utf8
 
+adminprofit_development:
+  adapter: sqlserver
+  host: 10.10.2.4
+  dataserver: SERVER01\SERVER
+  database: MasterProfit
+  username: gescob
+  password: "797965"
+  timeout: 100
+  encoding: utf8
+
+
 development:
   adapter: mysql2
   database: arv2_development
@@ -29,6 +40,15 @@ test:
   pool: 5
   timeout: 5000
   encoding: utf8
+
+adminprofit_production:
+  adapter: sqlserver
+  host: 10.10.2.4
+  dataserver: SERVER01\SERVER
+  database: MasterProfit
+  username: gescob
+  password: "797965"
+  timeout: 100
 
 profit_production:
   adapter: sqlserver

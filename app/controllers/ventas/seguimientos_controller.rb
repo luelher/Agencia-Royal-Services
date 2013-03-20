@@ -1,5 +1,6 @@
 class Ventas::SeguimientosController < ApplicationController
   layout 'intranet'
+  before_filter :authenticate_user!
   
   # GET /ventas/seguimientos
   # GET /ventas/seguimientos.json

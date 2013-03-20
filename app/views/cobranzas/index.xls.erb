@@ -1,0 +1,56 @@
+
+      <table>
+        <thead>
+          <tr>
+            <th>Cédula</th>
+            <th>Nombre</th>
+            <th>Teléfonos</th>
+            <th>Dirección</th>
+            <th>Nro. Factura</th>
+            <th>Fecha de Compra</th>
+            <th>Ultima Fecha Pago</th>
+            <th>Días sin cancelar</th>
+            <th>Giros Vencídos</th>
+            <th>Monto Vencído</th>
+            <th>Experiencia</th>
+            <th>Vendedora</th>
+            <th>Zona</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% unless @facturas.nil? %>
+            <% @facturas.each do |factu| %>
+              <% factu.generar_resumen Time.now %>
+              <% unless factu.cancelado? %>
+                <%= form_for factu, :url => update_cobranzas_path, :method => 'put', :remote => true do |f| %>
+                <tr>
+                  <td> <%= factu.cliente.co_cli %> </td>  
+                  <td> <%= factu.cliente.cli_des %> </td>
+                  <td> 
+                    <%= factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono  %> <br>
+                    <%= factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono2 %> 
+                  </td>
+                  <td> 
+                    <%= factu.cliente_venta.nil? ? "" : factu.cliente_venta.direccion %> <br>
+                    <%= factu.cliente_venta.nil? ? "" : factu.cliente_venta.direccion2 %> 
+                  </td>
+                  <td> <%= factu.fact_num %> </td>
+                  <td> <%= factu.fec_emis.to_date %> </td>
+                  <td> 
+                    <%= factu.fecha_ultimo_pago.to_date unless factu.fecha_ultimo_pago.nil? %> 
+                  </td>
+                  <td> <%= factu.dias_desde_ultimo_pago %> </td>
+                  <td> <%= factu.giros_vencidos_sin_cancelar %> </td>
+                  <td> <%= factu.saldo_vencido_sin_cancelar.round 2 %> </td>
+                  <td> 
+                    <%= factu.experiencia %> 
+                  </td>
+                  <td> <%= factu.factura_cfxg.vendedor.ven_des %> </td>
+                  <td> <%= factu.cliente.zona.zon_des %> </td>
+                </tr>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>

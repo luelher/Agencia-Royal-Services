@@ -22,7 +22,7 @@ class Profit::DocumCc < ActiveRecord::Base
 
   scope :all_facturas_of_client, lambda { |client| joins(:cliente, :factura, :condicio).where("docum_cc.tipo_doc = 'FACT' AND condicio.dias_cred > 0 and clientes.co_cli = ?",client).order("docum_cc.nro_doc ASC") }
 
-  scope :giros, lambda { |fact| includes(:reng_cob => :cobro).where("Docum_cc.nro_orig = ? AND docum_cc.tipo_doc = 'GIRO' ", fact) unless fact.nil? }
+  scope :giros, lambda { |fact| includes(:reng_cob => :cobro).where("Docum_cc.nro_orig = ? AND docum_cc.tipo_doc = 'GIRO'", fact) unless fact.nil? }
 
   def nro_doc_cfxg
     # docum_cc.tipo_doc = 'CFXG' AND docum_cc.fec_emis = '" + Convert.ToDateTime(dt.Rows[i]["FechaE"].ToString()).ToString("yyMMdd") + "' AND docum_cc.co_cli = '" + dt.Rows[i]["CodClie"].ToString() + "'

@@ -54,9 +54,11 @@
         </div>
       </div>
 
-      <%= submit_tag "Buscar", :class => 'bnt' %>
+      <%= submit_tag "Buscar", :class => 'bnt',:id => 'btn_html' %>
+      <br><br>
+      <%= submit_tag 'Exportar XLS', :class => 'bnt', :id => 'btn_xls' %>
 
-      <strong><%= @facturas.count %> Facturas Encontradas</strong>
+      <strong><%= @facturas.count unless @facturas.nil?  %> Facturas Encontradas</strong>
       
     <% end %>    
   </div>
@@ -87,17 +89,23 @@
             <% @facturas.each do |factu| %>
               <% factu.generar_resumen Time.now %>
               <% unless factu.cancelado? %>
-                <%= form_for factu, :url => update_cobranzas_path, :method => 'put', :remote => true do |f| %>
+                <%= form_for factu, :url => update_cobranzas_path, :remote => true do |f| %>
                 <tr>
-                  <td> <%= factu.cliente.co_cli %> </td>  
+                  <td> 
+                    <%= factu.cliente.co_cli %> <br>
+                    <p> <%= link_to "Ficha", ventas_cliente_path(factu.cliente_venta), :class => "btn btn-mini btn-info", :target => '_blank' unless factu.cliente_venta.nil? %> </p>
+                    <%= hidden_field :update, :ci, :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.ci.to_s  %>
+                    <%= hidden_field :update, :co_cli, :value => factu.cliente.nil? ? "" : factu.cliente.co_cli  %>
+                  </td>  
                   <td> <%= factu.cliente.cli_des %> </td>
                   <td> 
                     <%= text_field :update, :tel1, :class => 'input-small', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono  %> <br>
                     <%= text_field :update, :tel2, :class => 'input-small', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono2 %> 
+                    <%= text_field :update, :tel3, :class => 'input-small', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono3 %> 
                   </td>
                   <td> 
-                    <%= text_field :update, :dir1, :class => 'input-medium', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.direccion %> <br>
-                    <%= text_field :update, :dir2, :class => 'input-medium', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.direccion2 %> 
+                    <%= text_area :update, :dir1, :cols => 30, :rows => 2, :class => 'input-large', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.direccion %> <br>
+                    <%= text_area :update, :dir2, :cols => 30, :rows => 2, :class => 'input-large', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.direccion2 %> 
                   </td>
                   <td> 
                     <p><%= submit_tag "Actualizar", :class => 'btn btn-mini btn-primary' %></p>
@@ -115,7 +123,7 @@
                     <%= factu.experiencia %> 
                     <p> <%= link_to "Seguimientos", ventas_seguimientos_path + "?ventas_seguimiento%5Bcliente_id%5D=#{factu.cliente.co_cli}", :class => "btn btn-mini btn-success", :target => '_blank' %> </p>
                   </td>
-                  <td> <%= factu.factura_cfxg.vendedor.ven_des %> </td>
+                  <td> <%= factu.vendedor.ven_des %> </td>
                   <td> <%= factu.cliente.zona.zon_des %> </td>
                   <td> 
                     <p> <%= link_to "Nuevo Seguimiento", new_ventas_seguimiento_path + "?ventas_seguimiento%5Bcliente_id%5D=#{factu.cliente.co_cli}", :class => "btn btn-mini btn-inverse", :target => '_blank' %> </p>

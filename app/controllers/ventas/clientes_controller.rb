@@ -1,10 +1,11 @@
 class Ventas::ClientesController < ApplicationController
   layout 'intranet'
+  before_filter :authenticate_user!
   
   # GET /ventas/clientes
   # GET /ventas/clientes.json
   def index
-    @ventas_clientes = Ventas::Cliente.all
+    @ventas_clientes = Ventas::Cliente.paginate(:page => params[:page], :per_page => 5)
 
     respond_to do |format|
       format.html # index.html.erb

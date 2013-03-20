@@ -1,4 +1,9 @@
 Arv2::Application.routes.draw do
+  devise_for :users, :controllers => { :passwords => "users/passwords", :sessions => "users/sessions" }
+  scope "/admin" do
+    resources :users
+  end  
+
   namespace :ventas do 
     resources :seguimientos
   end
@@ -16,8 +21,6 @@ Arv2::Application.routes.draw do
 
   # 
   # 
-
-  devise_for :users
 
   root :to => 'home#index'
 

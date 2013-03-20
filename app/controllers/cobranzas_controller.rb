@@ -1,5 +1,7 @@
 class CobranzasController < ApplicationController
   layout 'intranet'
+  before_filter :authenticate_user!
+
 
   caches_action :index, :expires_in => 1.day
 
@@ -27,20 +29,53 @@ class CobranzasController < ApplicationController
     if !co_cli.empty?
       @facturas = Profit::Factura.by_cliente co_cli
     elsif dias_desde.to_i >= 0 and dias_hasta.to_i > 0 and dias_desde.to_i <= dias_hasta.to_i
-      @facturas = Profit::Factura.by_dias_vencidos dias_desde, dias_hasta
+      @facturas = Profit::Factura.by_dias_vencidos dias_desde, dias_hasta, co_lin, co_ven, co_zon
     elsif giros_vencidos.to_i > 0
-      @facturas = Profit::Factura.by_giros_vencidos giros_vencidos
+      @facturas = Profit::Factura.by_giros_vencidos giros_vencidos, co_lin, co_ven, co_zon
     else
       @facturas = nil
     end
 
     combos
-    render :index
+
+    respond_to do |format|
+      format.html { render :index }
+      format.xls { render :index }
+    end    
+    
   end
 
   def update
+    if !params[:update][:ci].empty?
+      ventas_cliente = Ventas::Cliente.find params[:update][:ci]
+    else 
+      ventas_cliente = Ventas::Cliente.new
+    end
 
-    render :text => "alert('Guardado')",
+    if !params[:update][:co_cli].empty?
+      profit_cliente = Profit::Cliente.find_by_co_cli params[:update][:co_cli]
+    else 
+      profit_cliente = Profit::Cliente.new
+    end
+
+    profit_cliente.direc1 = params[:update][:dir1] + " / " + params[:update][:dir2] unless params[:update][:dir1].empty?
+    profit_cliente.telefonos = params[:update][:tel1] + " / " + params[:update][:tel2] + " / " + params[:update][:tel3] unless params[:update][:dir1].empty?
+
+    profit_cliente.save
+
+    if ventas_cliente.new_record?
+      ventas_cliente = profit_cliente.crear_ventas_cliente
+    end
+
+    ventas_cliente.direccion = params[:update][:dir1] unless params[:update][:dir1].empty?
+    ventas_cliente.direccion2 = params[:update][:dir2] unless params[:update][:dir2].empty?
+    ventas_cliente.telefono = params[:update][:tel1] unless params[:update][:tel1].empty?
+    ventas_cliente.telefono2 = params[:update][:tel2] unless params[:update][:tel2].empty?
+    ventas_cliente.telefono3 = params[:update][:tel3] unless params[:update][:tel3].empty?
+
+    ventas_cliente.save
+
+    render :text => "alert('Cliente Actualizado')",
          :content_type => "text/javascript"
   end
 

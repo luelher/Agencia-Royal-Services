@@ -5,6 +5,11 @@ es:
   co_zon: "Zona"
   activerecord:
     attributes:
+      user:
+        username: "Usuario"
+        name: "Nombre"
+        password: "Contraseña"
+        email: "Correo"
       profit/factura:
         co_cli: "Cedula"
       ventas/cliente:
@@ -16,6 +21,7 @@ es:
     models:
       ventas/cliente: "Clientes"
       profit/factura: "Facturas"
+      user: "Usuario"
 
     errors:
       models:

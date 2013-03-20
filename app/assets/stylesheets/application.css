@@ -12,3 +12,14 @@
  *= require bootstrap_and_overrides
  *= require bootstrap-datepicker
  */
+
+.navbar .brand_auth {
+float: right;
+display: block;
+padding: 10px 20px 10px;
+margin-left: -20px;
+font-size: 14px;
+font-weight: 150;
+color: #777777;
+text-shadow: 0 1px 0 #ffffff;
+}

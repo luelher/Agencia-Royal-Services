@@ -1,10 +1,11 @@
 class Ventas::PresupuestosController < ApplicationController
   layout 'intranet'
+  before_filter :authenticate_user!
 
   # GET /ventas/presupuestos
   # GET /ventas/presupuestos.json
   def index
-    @ventas_presupuestos = Ventas::Presupuesto.all
+    @ventas_presupuestos = Ventas::Presupuesto.paginate(:page => params[:page], :per_page => 5)
 
     respond_to do |format|
       format.html # index.html.erb
