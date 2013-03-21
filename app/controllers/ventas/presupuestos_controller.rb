@@ -44,6 +44,7 @@ class Ventas::PresupuestosController < ApplicationController
   # POST /ventas/presupuestos.json
   def create
     @ventas_presupuesto = Ventas::Presupuesto.new(params[:ventas_presupuesto])
+    @ventas_presupuesto.vendedor = current_user.id
 
     respond_to do |format|
       if @ventas_presupuesto.save

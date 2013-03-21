@@ -8,6 +8,8 @@ class Ventas::Presupuesto < ActiveRecord::Base
   belongs_to :cliente, :class_name => "Ventas::Cliente"
   has_many :detalle_presupuesto, {:class_name => "Ventas::DetallePresupuesto", :inverse_of => :presupuesto}
 
+  has_one :user, {:foreign_key => 'id', :primary_key => 'vendedor', :class_name => "User"}
+
   before_save :inicializar_save
   after_save :crear_presupuesto_profit
 
@@ -16,7 +18,7 @@ class Ventas::Presupuesto < ActiveRecord::Base
   validates :detalle_presupuesto, :instalacion, :inicial, :giros, :giros_especiales,  :presence => true
 
   def inicializar_save
-    self.vendedor = '17637071'
+    self.cuota_especial = 0
   end
 
   def total

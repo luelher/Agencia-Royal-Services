@@ -21,7 +21,7 @@
   <dt><strong><%= model_class.human_attribute_name(:cuota_especial) %>:</strong></dt>
   <dd><%= @ventas_presupuesto.cuota_especial.nil? ? '0' : @ventas_presupuesto.cuota_especial  %></dd>
   <dt><strong><%= model_class.human_attribute_name(:vendedor) %>:</strong></dt>
-  <dd><%= @ventas_presupuesto.vendedor %></dd>
+  <dd><%= @ventas_presupuesto.user.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:aprobado_por) %>:</strong></dt>
   <dd><%= @ventas_presupuesto.aprobado_por %></dd>
 </dl>

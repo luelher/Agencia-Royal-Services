@@ -1,6 +1,6 @@
 class Ventas::SeguimientosController < ApplicationController
   layout 'intranet'
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :current_user
   
   # GET /ventas/seguimientos
   # GET /ventas/seguimientos.json
@@ -51,6 +51,8 @@ class Ventas::SeguimientosController < ApplicationController
   # POST /ventas/seguimientos.json
   def create
     @ventas_seguimiento = Ventas::Seguimiento.new(params[:ventas_seguimiento])
+    @ventas_seguimiento.usuario = current_user.name
+    @ventas_seguimiento.user = current_user
 
     respond_to do |format|
       if @ventas_seguimiento.save
