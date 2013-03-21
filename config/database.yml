@@ -58,6 +58,7 @@ profit_production:
   username: gescob
   password: "797965"
   timeout: 100
+  enconding: utf8
 
 production:
   adapter: mysql2

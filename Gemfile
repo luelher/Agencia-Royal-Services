@@ -63,3 +63,6 @@ gem 'map-fields'
 gem 'gmaps4rails'
 
 #gem "rails_admin_map_field", :git => "git://github.com/jasonl/rails_admin_map_field.git"
+
+gem 'rb-readline'
+
