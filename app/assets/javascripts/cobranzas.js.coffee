@@ -3,10 +3,14 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 window.onload = ->
-  $('[data-behaviour~=datepicker]').datepicker()
+  $('[data-behaviour~=datepicker]').datepicker({
+    format: 'yyyy-mm-dd',
+    language: "es",
+    autoclose: true
+  })
 
   jQuery("#btn_xls").click => 
-    $("#new_profit_factura")[0].action += ".xls"
+    $("#new_profit_factura")[0].action = "/cobranzas/show.xls"
     return true
 
   jQuery("#btn_html").click => 

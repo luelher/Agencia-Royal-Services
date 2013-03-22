@@ -47,7 +47,7 @@ class CobranzasController < ApplicationController
 
   def update
     if !params[:update][:ci].empty?
-      ventas_cliente = Ventas::Cliente.find params[:update][:ci]
+      ventas_cliente = Ventas::Cliente.find_by_ci params[:update][:ci]
     else 
       ventas_cliente = Ventas::Cliente.new
     end

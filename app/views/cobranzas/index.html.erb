@@ -7,22 +7,28 @@
           <div class="control-group">
             <%= f.label :co_cli, :class => 'control-label' %>
             <div class="controls">
-              <%= f.text_field :co_cli, :class => 'input-small' %>
+              <%= f.text_field :co_cli, :class => 'input-small', :value => params[:profit_factura].nil? ? "" : params[:profit_factura][:co_cli] %>
             </div>
           </div>
           <div class="control-group">
             <%= label_tag :dias_vencidos_desde, nil, :class => 'control-label' %>
             <div class="controls">
-              <%= number_field_tag :dias_vencidos_desde, 0, :class => 'input-small', :step => 30  %>
+              <%= number_field_tag :dias_vencidos_desde, params[:dias_vencidos_desde].nil? ? "0" : params[:dias_vencidos_desde], :class => 'input-small', :step => 30  %>
             </div>
             <div class="controls">
-              <%= number_field_tag :dias_vencidos_hasta, 0, :class => 'input-small', :step => 30  %>
+              <%= number_field_tag :dias_vencidos_hasta, params[:dias_vencidos_hasta].nil? ? "0" : params[:dias_vencidos_hasta], :class => 'input-small', :step => 30  %>
             </div>
           </div>          
           <div class="control-group">
             <%= label_tag :giros_vencidos, nil, :class => 'control-label' %>
             <div class="controls">
-              <%= number_field_tag :giros_vencidos, 0, :class => 'input-small' %>
+              <%= number_field_tag :giros_vencidos, params[:giros_vencidos].nil? ? "0" : params[:giros_vencidos], :class => 'input-small' %>
+            </div>
+          </div>          
+          <div class="control-group">
+            <%= label_tag :plazo_pago, nil, :class => 'control-label' %>
+            <div class="controls">
+              <%= text_field :plazo_pago, "", :class => 'input-small', "data-behaviour" => 'datepicker', :value => (params[:plazo_pago].nil? ? "" : params[:plazo_pago][0]) %>
             </div>
           </div>          
         </div>
@@ -30,27 +36,21 @@
           <div class="control-group">
             <%= label_tag :lineas, nil, :class => 'control-label' %>
             <div class="controls">
-              <%= select_tag :co_lin, options_from_collection_for_select(@lineas, "co_lin", "lin_des"), :prompt => "", :class => 'input-medium' %>
+              <%= select_tag :co_lin, options_from_collection_for_select(@lineas, "co_lin", "lin_des", params[:co_lin].nil? ? "" : params[:co_lin]), :prompt => "", :class => 'input-medium' %>
             </div>
           </div>          
           <div class="control-group">
             <%= label_tag :vendedores, nil, :class => 'control-label' %>
             <div class="controls">
-              <%= select_tag :co_ven, options_from_collection_for_select(@vendedores, "co_ven", "ven_des"), :prompt => "", :class => 'input-medium' %>
+              <%= select_tag :co_ven, options_from_collection_for_select(@vendedores, "co_ven", "ven_des", params[:co_ven].nil? ? "" : params[:co_ven]), :prompt => "", :class => 'input-medium' %>
             </div>
           </div>          
           <div class="control-group">
             <%= label_tag :zonas, nil, :class => 'control-label' %>
             <div class="controls">
-              <%= select_tag :co_zon, options_from_collection_for_select(@zonas, "co_zon", "zon_des"), :prompt => "", :class => 'input-medium' %>
+              <%= select_tag :co_zon, options_from_collection_for_select(@zonas, "co_zon", "zon_des", params[:co_zon].nil? ? "" : params[:co_zon]), :prompt => "", :class => 'input-medium' %>
             </div>
           </div>
-          <div class="control-group">
-            <%= label_tag :plazo_pago, nil, :class => 'control-label' %>
-            <div class="controls">
-              <%= text_field :plazo_pago, "", :class => 'input-small', "data-behaviour" => 'datepicker' %>
-            </div>
-          </div>          
         </div>
       </div>
 
