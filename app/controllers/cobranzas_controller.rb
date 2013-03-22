@@ -32,6 +32,8 @@ class CobranzasController < ApplicationController
       @facturas = Profit::Factura.by_dias_vencidos dias_desde, dias_hasta, co_lin, co_ven, co_zon
     elsif giros_vencidos.to_i > 0
       @facturas = Profit::Factura.by_giros_vencidos giros_vencidos, co_lin, co_ven, co_zon
+    elsif !plazo_pago.empty?
+      @facturas = Profit::Factura.by_plazo_pago plazo_pago[0]
     else
       @facturas = nil
     end
