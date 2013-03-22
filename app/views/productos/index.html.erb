@@ -24,7 +24,7 @@
             <% @productos.each do |p| %>
             <tr>
               <td>
-                <a href="<%= p.url_photo %>" title="<%= p.art_des %>" data-gallery="gallery">
+                <a href="<%= p.url_photo %>" title="<%= p.art_des.encode("UTF-8") %>" data-gallery="gallery">
                   <%= image_tag p.url_small_photo %>
                 </a>              
               </td>

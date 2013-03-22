@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130320033844) do
+ActiveRecord::Schema.define(:version => 20130321152114) do
 
   create_table "acciones", :force => true do |t|
     t.integer  "servicios_id",                 :null => false
@@ -58,9 +58,9 @@ ActiveRecord::Schema.define(:version => 20130320033844) do
   add_index "admin_users", ["reset_password_token"], :name => "index_admin_users_on_reset_password_token", :unique => true
 
   create_table "cartas", :force => true do |t|
-    t.string   "co_zon",    :limit => 20, :null => false
-    t.string   "co_cli",    :limit => 20, :null => false
-    t.datetime "entregado",               :null => false
+    t.string "co_cli",    :limit => 20, :null => false
+    t.date   "entregado",               :null => false
+    t.string "co_zon",    :limit => 20, :null => false
   end
 
   create_table "clientes", :force => true do |t|
@@ -91,8 +91,8 @@ ActiveRecord::Schema.define(:version => 20130320033844) do
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
-    t.decimal  "latitude",                            :precision => 10, :scale => 6
-    t.decimal  "longitude",                           :precision => 10, :scale => 6
+    t.decimal  "latitude",                            :precision => 10, :scale => 0
+    t.decimal  "longitude",                           :precision => 10, :scale => 0
     t.string   "telefono2"
     t.string   "telefono3"
     t.string   "email"
@@ -171,21 +171,18 @@ ActiveRecord::Schema.define(:version => 20130320033844) do
     t.time      "not_after",                     :default => '2000-01-01 23:59:59', :null => false
     t.string    "co_cli",         :limit => 20,  :default => ""
     t.date      "fec_venc",                                                         :null => false
-    t.integer   "telefonos_id"
   end
 
   create_table "presupuestos", :force => true do |t|
-    t.integer  "cliente_id",                     :null => false
-    t.string   "instalacion",      :limit => 50, :null => false
-    t.float    "inicial",                        :null => false
-    t.integer  "giros",                          :null => false
-    t.float    "cuota",                          :null => false
-    t.integer  "giros_especiales"
-    t.float    "cuota_especial"
-    t.integer  "vendedor",                       :null => false
-    t.integer  "aprobado_por"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.integer  "cliente_id",                      :null => false
+    t.string   "instalacion",      :limit => 100, :null => false
+    t.float    "inicial",                         :null => false
+    t.integer  "giros",                           :null => false
+    t.integer  "giros_especiales",                :null => false
+    t.string   "vendedor",         :limit => 100, :null => false
+    t.string   "aprobado_por",     :limit => 100
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   create_table "profit_arts", :force => true do |t|
@@ -223,6 +220,7 @@ ActiveRecord::Schema.define(:version => 20130320033844) do
     t.datetime "updated_at",                 :null => false
     t.date     "plazo_pago"
     t.string   "factura"
+    t.integer  "user_id"
   end
 
   create_table "servicios", :force => true do |t|
