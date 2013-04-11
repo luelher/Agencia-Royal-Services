@@ -199,6 +199,10 @@ class Profit::Factura < ActiveRecord::Base
     @factura_cfxg
   end
 
+  def atendido_recientemente?(dias)
+    !Ventas::Seguimiento.where("created_at >= ? AND cliente_id = ?",dias.days.ago, self.cliente_venta.ci.to_s).empty?
+  end
+
   def self.by_cliente(cliente)
     Profit::Factura.solo_facturas_creditos.where('factura.co_cli like ?',"%#{cliente}%") 
   end

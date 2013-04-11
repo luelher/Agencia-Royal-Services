@@ -5,7 +5,11 @@ class Ventas::ClientesController < ApplicationController
   # GET /ventas/clientes
   # GET /ventas/clientes.json
   def index
-    @ventas_clientes = Ventas::Cliente.paginate(:page => params[:page], :per_page => 5)
+    if params[:ventas_cliente]
+      @ventas_clientes = Ventas::Cliente.where(:ci => params[:ventas_cliente][:ci]).paginate(:page => params[:page], :per_page => 5)
+    else
+      @ventas_clientes = Ventas::Cliente.paginate(:page => params[:page], :per_page => 5)
+    end
 
     respond_to do |format|
       format.html # index.html.erb

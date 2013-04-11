@@ -24,6 +24,8 @@ class CobranzasController < ApplicationController
     co_ven = params[:co_ven]
     co_zon = params[:co_zon]
     plazo_pago = params[:plazo_pago]
+    @recientes = params[:recientes].nil? ? "" : params[:recientes]
+
 
 
     if !co_cli.empty?

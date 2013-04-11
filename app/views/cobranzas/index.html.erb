@@ -51,6 +51,12 @@
               <%= select_tag :co_zon, options_from_collection_for_select(@zonas, "co_zon", "zon_des", params[:co_zon].nil? ? "" : params[:co_zon]), :prompt => "", :class => 'input-medium' %>
             </div>
           </div>
+          <div class="control-group">
+            <%= label_tag :sin_seguimientos_recientes, nil, :class => 'control-label' %>
+            <div class="controls">
+              <%= check_box_tag :recientes, "1", params[:recientes].nil? ? false : true %>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -64,33 +70,35 @@
   </div>
   <div class="row" style="font-size:12px">
     <div class="span7" data-toggle="modal-gallery" data-target="#modal-gallery">
-      <table class="table table-striped">
+      <table id="tfacturas" class="table table-striped tablesorter">
         <thead>
           <tr>
-            <th>Cédula</th>
-            <th>Nombre</th>
-            <th>Teléfonos</th>
-            <th>Dirección</th>
             <th></th>
-            <th>Nro. Factura</th>
-            <th>Fecha de Compra</th>
-            <th>Ultima Fecha Pago</th>
-            <th>Días sin cancelar</th>
-            <th>Giros Vencídos</th>
-            <th>Monto Vencído</th>
-            <th>Experiencia</th>
-            <th>Vendedora</th>
-            <th>Zona</th>
-            <th>Acciones</th>
+            <th>Cédula <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Nombre <i style="color:transparent" class="icon-resize-vertical"></i></th>
+            <th data-sorter="false">Teléfonos</th>
+            <th data-sorter="false">Dirección</th>
+            <th data-sorter="false"></th>
+            <th>Nro. Factura <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Fecha de Compra <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Ultima Fecha Pago <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Días sin cancelar <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Giros Vencídos <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Monto Vencído <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th data-sorter="false">Experiencia</th>
+            <th>Vendedora <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Zona <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th data-sorter="false">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <% unless @facturas.nil? %>
             <% @facturas.each do |factu| %>
               <% factu.generar_resumen Time.now %>
-              <% unless factu.cancelado? %>
+              <% unless factu.cancelado? or (factu.atendido_recientemente?(10) and !@recientes.empty?) %>
                 <%= form_for factu, :url => update_cobranzas_path, :remote => true do |f| %>
-                <tr>
+                <tr id="<%= factu.fact_num %>">
+                  <td> <a style="color:transparent" id="" href="javascript:$('#<%= factu.fact_num %>').remove();$('#tfacturas').trigger('updateAll');"><i class="icon-remove-circle"></i></a>  </td>
                   <td> 
                     <%= factu.cliente.co_cli %> <br>
                     <p> <%= link_to "Ficha", ventas_cliente_path(factu.cliente_venta), :class => "btn btn-mini btn-info", :target => '_blank' unless factu.cliente_venta.nil? %> </p>
@@ -135,7 +143,16 @@
           <% end %>
         </tbody>
       </table>
-    </div>
+      <div id="pager" class="pager">
+        <form>
+          <img src="/img/first.png" class="first"/>
+          <img src="/img/prev.png" class="prev"/>
+          <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+          <img src="/img/next.png" class="next"/>
+          <img src="/img/last.png" class="last"/>        
+        </form>
+      </div>    
 
+    </div>
   </div>
 </div>

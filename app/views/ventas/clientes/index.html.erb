@@ -1,6 +1,24 @@
 <%- model_class = Ventas::Cliente -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+
+  <div class="row span7 offset2">
+    <%= form_for Ventas::Cliente.new, :url => ventas_clientes_path, :method => 'get' do |f| %>
+
+      <div class="control-group">
+        <%= f.label :ci, :class => 'control-label' %>
+        <div class="controls">
+          <%= f.text_field :ci, :class => 'input-medium search-query' %>
+        </div>
+      </div>
+      
+      <%= submit_tag "Buscar", :class => 'bnt' %>
+      <%= link_to "Limpiar", ventas_clientes_path, :class => 'bnt-warning' %>
+      
+    <% end %>    
+  </div>
+
+
 </div>
 <table class="table table-striped">
   <thead>
