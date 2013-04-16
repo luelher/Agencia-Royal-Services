@@ -200,7 +200,7 @@ class Profit::Factura < ActiveRecord::Base
   end
 
   def atendido_recientemente?(dias)
-    !Ventas::Seguimiento.where("created_at >= ? AND cliente_id = ?",dias.days.ago, self.cliente_venta.ci.to_s).empty?
+    !Ventas::Seguimiento.where("created_at >= ? AND cliente_id = ?",dias.days.ago, self.cliente.co_cli).empty?
   end
 
   def self.by_cliente(cliente)
@@ -236,7 +236,7 @@ class Profit::Factura < ActiveRecord::Base
     Profit::Factura.search_facturas(sql, co_lin, co_ven, co_zon)
   end
 
-  def self.by_giros_vencidos(giros, co_lin, co_ven, co_zon)
+  def self.by_giros_vencidos(giros_desde, giros_hasta, co_lin, co_ven, co_zon)
     sql = "
       select giros_vencidos, observa from 
       (SELECT 
@@ -253,10 +253,14 @@ class Profit::Factura < ActiveRecord::Base
         and dcc.fec_venc <= GETDATE() 
       group by 
         dcc.nro_orig) xx
-      where xx.giros_vencidos = #{giros}    "
+      where xx.giros_vencidos >= #{giros_desde} and xx.giros_vencidos <= #{giros_hasta} "
 
     Profit::Factura.search_facturas(sql, co_lin, co_ven, co_zon)
 
+  end
+
+  def cobranza
+    Profit::Cobro.historial_by_f self.fact_num
   end
 
   private

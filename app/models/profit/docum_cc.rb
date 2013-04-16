@@ -50,4 +50,47 @@ class Profit::DocumCc < ActiveRecord::Base
     (((Time.now - reng_cob.last.cobro.last.fec_cob) / 3600 ) / 24).to_i unless reng_cob.empty?
   end
 
+  # Estado del giro, 0=Giro no vencido, 1=pagado, 2=por pagar reciente(menos de 30 días), 3=por pagar urgente(mas de 30 días)
+  def estado
+    cobros = []
+    cobros = Profit::Cobro.historial_by_factura_and_giro numero_factura, numero_giro
+    if cobros.empty?
+      if self.dias<0
+        0
+      elsif self.dias>30
+        3
+      elsif self.dias<=30
+        2
+      end
+    else
+      if self.saldo > 0 
+        if self.dias<=30
+          2
+        elsif self.dias>30
+          3
+        end        
+      else
+        if self.dias<0
+          0
+        else        
+          1
+        end
+      end
+    end
+  end
+
+  def pago
+    cobros = []
+    cobros = Profit::Cobro.historial_by_factura_and_giro numero_factura, numero_giro
+    cobros.first
+  end
+
+  def numero_factura
+    self.observa.split("FACT ").last.to_i
+  end
+
+  def numero_giro
+    self.observa.split("GIRO").last.split("/").first.to_i
+  end
+
 end

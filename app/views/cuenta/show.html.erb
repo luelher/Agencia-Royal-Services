@@ -8,28 +8,36 @@
     <thead>
       <tr>
         <th class="blue">Fecha Emisión</th> 
-        <th class="green">¿Cancelado?</th> 
-        <th class="blue">Giros</th> 
-        <th class="green">Monto Total</th> 
-        <th class="blue">Pago Mensual</th> 
-        <th class="green">Giros Vencidos Sin Cancelar</th> 
-        <th class="blue">Saldo Vecido Sin Cancelar</th> 
-        <th class="green">Saldo Restante</th> 
+        <th class="green">Fecha Vencimiento</th> 
+        <th class="blue">Fecha Pago</th> 
+        <th class="green">Giro</th> 
+        <th class="blue">Monto</th> 
+        <th class="green">Saldo</th> 
+        <th class="blue">Estado</th> 
       </tr>
     </thead>
     <tbody>
       <% @cliente.factura.solo_facturas_creditos.each do |fac| %>
-        <tr>
-          <% fac.generar_resumen Time.now %>
-          <td><%= fac.fec_emis.strftime "%d/%m/%Y" %></td>
-          <td><%= fac.cancelado? ? 'Sí' : 'No' %></td>
-          <td><%= fac.count_giros %></td>
-          <td><%= fac.monto_total %></td>
-          <td><%= fac.pago_mensual %></td>
-          <td><%= fac.giros_vencidos_sin_cancelar %></td>
-          <td><%= fac.saldo_vencido_sin_cancelar %></td>
-          <td><%= fac.saldo_restante %></td>
-        </tr>
+        <% fac.generar_resumen Time.now %>
+        <% unless fac.cancelado? %>
+          <% fac.los_giros.each do |giro| %>
+            <% estado = giro.estado %>
+            <tr class="<%= "error" if estado==2 or estado==3 %>" >
+              <td><%= giro.fec_emis.strftime "%d/%m/%Y" %></td>
+              <td><%= giro.fec_venc.strftime "%d/%m/%Y" %></td>
+              <td><%= giro.pago.nil? ? "Sin Cancelar" : giro.pago.fec_cob.strftime("%d/%m/%Y")  %></td>
+              <td><%= giro.observa %></td>
+              <td><%= giro.monto_net %></td>
+              <td><%= giro.saldo %></td>
+              <td>
+                <%= "<span class=\"label\">Sin Vencer</span>".html_safe if estado==0 %>
+                <%= "<span class=\"label label-success\">Cancelado</span>".html_safe if estado==1 %>
+                <%= "<span class=\"label label-warning\">Por Pagar</span>".html_safe if estado==2 %>
+                <%= "<span class=\"label label-important\">Por Pagar  (Urgente)</span>".html_safe if estado==3 %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
       <% end %>
     </tbody>
   </table>

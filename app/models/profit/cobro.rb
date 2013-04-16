@@ -11,10 +11,12 @@ class Profit::Cobro < ActiveRecord::Base
 
   scope :historial_by_cliente, lambda { |cli| joins(:reng_cob => :docum_cc).where("cobros.co_cli = ? and docum_cc.observa like ? AND reng_cob.tp_doc_cob='GIRO' AND docum_cc.tipo_doc='GIRO'",cli,"%FACT %").order("fec_cob DESC") }  
 
+  scope :historial_by_factura_and_giro, lambda { |fact, giro| joins(:reng_cob => :docum_cc).where("docum_cc.observa like ? AND reng_cob.tp_doc_cob='GIRO' AND docum_cc.tipo_doc='GIRO'","%GIRO #{giro}/%FACT #{fact}").order("fec_cob DESC") }  
+
   def self.historial_by_f(fact)
     cobros = self.historial_by_factura fact
     if cobros.nil?
-      nil?
+      nil
     else
       Hash[cobros.map{|x| [x.cob_num, x]}].values
     end
@@ -23,7 +25,7 @@ class Profit::Cobro < ActiveRecord::Base
   def self.historial_by_c(cli)
     cobros = self.historial_by_cliente cli
     if cobros.nil?
-      nil?
+      nil
     else
       Hash[cobros.map{|x| [x.cob_num, x]}].values
     end

@@ -22,7 +22,10 @@
           <div class="control-group">
             <%= label_tag :giros_vencidos, nil, :class => 'control-label' %>
             <div class="controls">
-              <%= number_field_tag :giros_vencidos, params[:giros_vencidos].nil? ? "0" : params[:giros_vencidos], :class => 'input-small' %>
+              <%= number_field_tag :giros_vencidos_desde, params[:giros_vencidos_desde].nil? ? "0" : params[:giros_vencidos_desde], :class => 'input-small' %>
+            </div>
+            <div class="controls">
+              <%= number_field_tag :giros_vencidos_hasta, params[:giros_vencidos_hasta].nil? ? "0" : params[:giros_vencidos_hasta], :class => 'input-small' %>
             </div>
           </div>          
           <div class="control-group">
