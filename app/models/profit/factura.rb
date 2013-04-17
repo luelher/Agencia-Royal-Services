@@ -273,7 +273,7 @@ class Profit::Factura < ActiveRecord::Base
     where[:co_ven] = co_ven unless co_ven.empty?
     where['clientes.co_zon'] = co_zon unless co_zon.empty?
     
-    Profit::Factura.includes(:cliente => :zona, :docum_cc => {:reng_cob => :cobro }).joins({:reng_fac => :art}, :cliente).where(where)
+    Profit::Factura.includes(:cliente => :zona, :docum_cc => {:reng_cob => :cobro }).joins({:reng_fac => :art}, :cliente).where(where).uniq_by{|f| f.id}
   end
 
 end
