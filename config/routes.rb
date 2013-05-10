@@ -51,6 +51,8 @@ Arv2::Application.routes.draw do
   get "/cobranzas/historico" => 'cobranzas#historico', :as => :historico_cobranzas
   post "/cobranzas/show" => 'cobranzas#show', :as => :show_cobranzas
   post "/cobranzas/update" => 'cobranzas#update', :as => :update_cobranzas
+  get "/cobranzas/experiencias" => 'cobranzas#experiencias', :as => :experiencias_cobranzas
+  post "/cobranzas/experiencias" => 'cobranzas#experiencias', :as => :experiencias_cobranzas
 
 
   # See how all your routes lay out with "rake routes"

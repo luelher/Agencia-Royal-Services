@@ -1,0 +1,21 @@
+<% @facturas.each do |f| %>
+<% f.generar_resumen Time.new %>
+<%= f.co_cli.strip + "\t" + f.cliente.cli_des.strip + "\t" + f.cliente.telefonos.strip + "\t" + "\t" + f.fact_num.to_s + "\t" + f.fec_emis.to_date.to_s + "\t" + f.monto_total.to_s + "\t" + f.pago_mensual.to_s + "\t" + f.count_giros.to_s + "\t" + (f.cancelado? ? f.fecha_cancelacion.to_s : "") + "\t" + f.experiencia.to_s %>
+<% end %>
+<% 
+
+    # string Cad = dt.Rows[i]["Cedula"].ToString() + Tab +
+    #                     dt.Rows[i]["Nombre"].ToString() + Tab +
+    #                     Tab +
+    #                     dt.Rows[i]["Telefono"].ToString() + Tab +
+    #                     Tab +
+    #                     Tab +
+    #                     dt.Rows[i]["Factura"].ToString() + Tab +
+    #                     FechaE.ToString("dd/MM/yyyy") + Tab +
+    #                     MontoT.ToString("#,##0.00;($#,##0.00);0") + Tab +
+    #                     Mensual.ToString("#,##0.00;($#,##0.00);0") + Tab +
+    #                     dt.Rows[i]["Giros"].ToString() + Tab +
+    #                     FechaV.ToString("dd/MM/yyyy") + Tab +
+    #                     dt.Rows[i]["Experiencia"].ToString() + Tab;
+
+ %>

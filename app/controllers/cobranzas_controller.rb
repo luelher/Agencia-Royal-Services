@@ -93,6 +93,16 @@ class CobranzasController < ApplicationController
     @cliente = @cobros[0].cliente unless @cobros.empty?
   end
 
+  def experiencias
+
+    @facturas = Profit::Factura.by_giros_vencidos(0, 999, "", "", "") if request.format == "text/plain"
+
+    respond_to do |format|
+      format.html { render :experiencias }
+      format.txt { render :experiencias }
+    end   
+  end
+
 
   private
   
