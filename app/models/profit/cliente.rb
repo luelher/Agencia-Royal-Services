@@ -64,6 +64,6 @@ class Profit::Cliente < ActiveRecord::Base
       cliente
     end
 
-end
+  end
 
 end

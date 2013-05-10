@@ -91,4 +91,14 @@ class Ventas::ClientesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def migrate
+    @migrados = 0
+    all_profit = Profit::Cliente.all
+
+    all_profit.each do |cli|
+      @migrados += 1 if cli.crear_ventas_cliente
+    end
+
+  end
 end

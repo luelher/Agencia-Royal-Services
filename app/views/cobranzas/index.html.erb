@@ -97,8 +97,9 @@
             <% @facturas.each do |factu| %>
               <% factu.generar_resumen Time.now %>
               <% unless factu.cancelado? or (factu.atendido_recientemente?(10) and !@recientes.empty?) %>
-                <%= form_for factu, :url => update_cobranzas_path, :remote => true do |f| %>
+                
                 <tr id="<%= factu.fact_num %>">
+                  <%= form_for factu, :url => update_cobranzas_path, :remote => true do |f| %>
                   <td> <a style="color:transparent" id="" href="javascript:$('#<%= factu.fact_num %>').remove();$('#tfacturas').trigger('updateAll');"><i class="icon-remove-circle"></i></a>  </td>
                   <td> 
                     <%= factu.cliente.co_cli %> <br>
@@ -117,7 +118,7 @@
                     <%= text_area :update, :dir2, :cols => 30, :rows => 2, :class => 'input-large', :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.direccion2 %> 
                   </td>
                   <td> 
-                    <p><%= submit_tag "Actualizar", :class => 'btn btn-mini btn-primary' %></p>
+                    <p><%= submit_tag "Actualizar", :class => 'btn btn-mini btn-primary', :id => "btn_update" %></p>
                   </td>
                   <td> <%= factu.fact_num %> </td>
                   <td> <%= factu.fec_emis.to_date %> </td>
@@ -137,8 +138,8 @@
                   <td> 
                     <p> <%= link_to "Nuevo Seguimiento", new_ventas_seguimiento_path + "?ventas_seguimiento%5Bcliente_id%5D=#{factu.cliente.co_cli}", :class => "btn btn-mini btn-inverse", :target => '_blank' %> </p>
                   </td>
+                  <% end %>
                 </tr>
-                <% end %>
               <% end %>
             <% end %>
           <% end %>

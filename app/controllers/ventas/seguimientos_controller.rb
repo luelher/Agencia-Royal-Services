@@ -5,12 +5,13 @@ class Ventas::SeguimientosController < ApplicationController
   # GET /ventas/seguimientos
   # GET /ventas/seguimientos.json
   def index
+
     if params[:ventas_seguimiento]
       cliente_id = params[:ventas_seguimiento][:cliente_id]
-      @ventas_seguimientos = Ventas::Seguimiento.where("cliente_id = ?",cliente_id).order("created_at DESC")
+      @ventas_seguimientos = Ventas::Seguimiento.where("cliente_id = ?",cliente_id).order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
       @seguimientos = Ventas::Seguimiento.new(:cliente_id => cliente_id)
     else
-      @ventas_seguimientos = Ventas::Seguimiento.order("created_at DESC").all
+      @ventas_seguimientos = Ventas::Seguimiento.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
       @seguimientos = Ventas::Seguimiento.new
     end
 

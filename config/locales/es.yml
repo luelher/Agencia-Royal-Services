@@ -1,4 +1,7 @@
 es:
+  will_paginate:
+    previous_label: "Anterior"
+    next_label: "Siguiente"
   co_cli: "Cedula"
   co_lin: "Línea"
   co_ven: "Vendedor"

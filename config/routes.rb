@@ -17,7 +17,13 @@ Arv2::Application.routes.draw do
     end
   end
 
-  namespace :ventas do resources :clientes end
+  namespace :ventas do 
+    resources :clientes do
+      collection do
+        get "migrate"
+      end
+    end 
+  end
 
   # 
   # 
@@ -44,7 +50,7 @@ Arv2::Application.routes.draw do
   get "/cobranzas/historico/:fac_num" => 'cobranzas#historico', :as => :historico_cobranzas_by_factura
   get "/cobranzas/historico" => 'cobranzas#historico', :as => :historico_cobranzas
   post "/cobranzas/show" => 'cobranzas#show', :as => :show_cobranzas
-  put "/cobranzas/update" => 'cobranzas#update', :as => :update_cobranzas
+  post "/cobranzas/update" => 'cobranzas#update', :as => :update_cobranzas
 
 
   # See how all your routes lay out with "rake routes"
