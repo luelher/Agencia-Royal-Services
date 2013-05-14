@@ -45,7 +45,8 @@ class Ventas::ClientesController < ApplicationController
   # GET /ventas/clientes/1/edit
   def edit
     @ventas_cliente = Ventas::Cliente.find(params[:id])
-    @gmap_json = @ventas_cliente.to_gmaps4rails
+    @gmap_json = '[{"lng": "' + @ventas_cliente.longitude.to_s + '", "lat": "' + @ventas_cliente.latitude.to_s + '", "draggable": true}]'
+    # @gmap_json = @ventas_cliente.to_gmaps4rails
   end
 
   # POST /ventas/clientes
