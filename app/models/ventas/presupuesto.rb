@@ -1,7 +1,7 @@
 class Ventas::Presupuesto < ActiveRecord::Base
   self.table_name = 'presupuestos'
 
-  attr_accessible :cliente_id, :instalacion, :inicial, :giros, :cuota, :giros_especiales, :cuota_especial, :vendedor, :aprobado_por
+  attr_accessible :cliente_id, :instalacion, :inicial, :giros, :cuota, :giros_especiales, :cuota_especial, :vendedor, :aprobado_por, :flete, :vendedor_id
   attr_accessible :detalle_presupuesto_attributes
   # attr_accessible :producto, :cantidad, :total
   
@@ -9,6 +9,8 @@ class Ventas::Presupuesto < ActiveRecord::Base
   has_many :detalle_presupuesto, {:class_name => "Ventas::DetallePresupuesto", :inverse_of => :presupuesto}
 
   has_one :user, {:foreign_key => 'id', :primary_key => 'vendedor', :class_name => "User"}
+
+  has_one :ven, {:foreign_key => 'co_ven', :primary_key => 'vendedor_id', :class_name => "Profit::Vendedor"}
 
   before_save :inicializar_save
   after_save :crear_presupuesto_profit
@@ -138,7 +140,7 @@ class Ventas::Presupuesto < ActiveRecord::Base
     cotizacion.fec_emis = Time.now
     cotizacion.fec_venc = Time.now + 2.days
     cotizacion.co_cli = self.cliente_id
-    cotizacion.co_ven = "07    " # Cambiar por el usuario actual que es el vendedor
+    cotizacion.co_ven = vendedor_id # Cambiar por el usuario actual que es el vendedor
     cotizacion.co_tran = '04 '
     cotizacion.forma_pag = '24 '
     cotizacion.tot_bruto = (total - (total * 0.12))
@@ -253,6 +255,44 @@ class Ventas::Presupuesto < ActiveRecord::Base
 
         new_art.save
         # cotizacion.reng_cac << new_art
+
+      end
+
+      if flete > 0 
+        art = Profit::Art.find_by_co_art "FLETE"
+        new_art = Profit::RengCac.new
+
+        new_art.fact_num = par_emp.cotc_num + 1
+        new_art.reng_num = detalle_presupuesto.length + 1
+        new_art.co_art = art.co_art
+        new_art.co_alma = '01 '
+        new_art.total_art = 1
+        new_art.stotal_art = 0.0
+        new_art.pendiente = 1
+        new_art.uni_venta = art.uni_venta
+        new_art.prec_vta = flete
+        new_art.porc_desc = 0.0
+        new_art.tipo_imp = '1'
+        new_art.reng_neto = flete
+        new_art.cos_pro_un = art.cos_pro_un
+        new_art.ult_cos_un = art.cos_pro_un
+        new_art.ult_cos_om = 0.0
+        new_art.cos_pro_om = 0.0
+        new_art.total_dev = 0.0
+        new_art.cant_imp = 0.0
+        new_art.comentario = ' '
+        new_art.total_uni = 1
+        new_art.nro_lote = ' '
+        new_art.fec_lote = Time.now.to_s
+        new_art.rowguid = Profit::RengCac.find_by_sql('Select NEWID() as rowid').collect(&:rowid)[0]
+
+        new_art.tipo_doc = ' '
+        new_art.tipo_doc2 = ' '
+        new_art.des_art = ' '
+        new_art.co_alma2 = ' '
+        # new_art.aux2 = ' '
+
+        new_art.save
 
       end
 

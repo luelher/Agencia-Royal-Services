@@ -128,7 +128,9 @@
                   </td>
                   <td> <%= factu.dias_desde_ultimo_pago %> </td>
                   <td> <%= factu.giros_vencidos_sin_cancelar %> </td>
-                  <td> <%= factu.saldo_vencido_sin_cancelar.round 2 %> </td>
+                  <td> <%= factu.saldo_vencido_sin_cancelar.round 2 %> 
+                    <p> <%= link_to "Cuenta", cuenta_cobranzas_path(factu.cliente), :class => "btn btn-mini btn-info", :target => '_blank' %> </p>
+                  </td>
                   <td> 
                     <%= factu.experiencia %> 
                     <p> <%= link_to "Seguimientos", ventas_seguimientos_path + "?ventas_seguimiento%5Bcliente_id%5D=#{factu.cliente.co_cli}", :class => "btn btn-mini btn-success", :target => '_blank' %> </p>

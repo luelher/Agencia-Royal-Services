@@ -48,6 +48,12 @@
     </table>
   </div>  
   <div class="control-group">
+    <%= f.label :flete, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :flete, :class => 'text_field', :value => '0' %>
+    </div>
+  </div>
+  <div class="control-group">
     <%= f.label :total_venta, :class => 'control-label' %>
     <div class="controls">
       <%= text_field(:total_venta, :extra, :class => 'text_field') %>
@@ -80,7 +86,7 @@
   <div class="control-group">
     <%= f.label :giros, :class => 'control-label' %>
     <div class="controls">
-      <%= f.number_field :giros, :class => 'number_field', :value => @ventas_presupuesto.giros.nil? ? '18' : @ventas_presupuesto.giros %>
+      <%= f.number_field :giros, :class => 'number_field', :value => @ventas_presupuesto.giros.nil? ? '12' : @ventas_presupuesto.giros %>
     </div>
   </div>
   <div class="control-group">
@@ -95,6 +101,12 @@
       <%= f.text_area :instalacion, :class => 'input-xxlarge', :size => "60x3"  %>
     </div>
   </div>
+  <div class="control-group">
+    <%= f.label :vendedor_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= select :ventas_presupuesto, :vendedor_id, options_from_collection_for_select(Profit::Vendedor.all, :id, :ven_des) , {:class => 'text_field', :include_blank => true} %>
+    </div>
+  </div>  
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

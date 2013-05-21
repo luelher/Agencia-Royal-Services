@@ -103,6 +103,12 @@ class CobranzasController < ApplicationController
     end   
   end
 
+  def cuenta
+    @cliente = Profit::Cliente.find_by_co_cli params[:co_cli]
+
+    render "cuenta/show"
+  end
+
 
   private
   

@@ -132,12 +132,15 @@ window.onload = ->
 
   update_total = ->
     total = $('.total')
-    suma = 0
+    suma = parseFloat($("#ventas_presupuesto_flete").val())
     for t in total
       do (t) ->
         suma += parseFloat(t.innerHTML,10)
     $('#total_venta_extra').val(suma.toFixed(2))
     update_presupuesto()
+
+  $("#ventas_presupuesto_flete").change ->
+    update_total()
 
   $("#giro_a_la_vista_extra").change ->
     update_presupuesto()

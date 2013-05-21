@@ -172,7 +172,7 @@ class Profit::Factura < ActiveRecord::Base
 
     end
     pagados = nil
-    pagados = @giros.find_all{|d| d.saldo == 0.0} unless @giros.nil?
+    pagados = @giros.find_all{|d| d.saldo < d.monto_net} unless @giros.nil?
     ultimo_giro_pagado = pagados.max_by{|f| f.fec_venc} unless pagados.nil?
     @fecha_ultimo_pago = ultimo_giro_pagado.fecha_ultimo_cobro unless ultimo_giro_pagado.nil?
     @dias_desde_ultimo_pago = (((Time.now - @fecha_ultimo_pago) / 3600 ) / 24).to_i unless @fecha_ultimo_pago.nil?
