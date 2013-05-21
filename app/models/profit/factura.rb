@@ -18,7 +18,7 @@ class Profit::Factura < ActiveRecord::Base
 
   has_one :cliente_venta, {:foreign_key => 'ci', :primary_key => 'co_cli', :class_name => 'Ventas::Cliente'}
 
-  scope :all_facturas, joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = ? AND condicio.dias_cred > ? AND factura.fec_venc >= DATEADD(YEAR, -4, GETDATE())", 'FACT', 0).order("docum_cc.nro_doc ASC")
+  scope :all_facturas, joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = ? AND condicio.dias_cred > ? AND factura.fec_venc >= DATEADD(YEAR, -3, GETDATE())", 'FACT', 0).order("docum_cc.nro_doc ASC")
 
   scope :all_facturas_of_client, lambda { |client| joins(:cliente, :docum_cc, :condicio).where("docum_cc.tipo_doc = 'FACT' AND condicio.dias_cred > 0 and clientes.co_cli = ? and factura.fec_emis > '2010-01-01'",client).order("docum_cc.nro_doc ASC") }
 

@@ -95,7 +95,7 @@ class CobranzasController < ApplicationController
 
   def experiencias
 
-    @facturas = Profit::Factura.by_giros_vencidos(0, 999, "", "", "") if request.format == "text/plain"
+    @facturas = Profit::Factura.all_facturas.includes(:cliente) if request.format == "text/plain"
 
     respond_to do |format|
       format.html { render :experiencias }
