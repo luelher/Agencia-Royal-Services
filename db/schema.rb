@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130321152114) do
+ActiveRecord::Schema.define(:version => 20130520202212) do
 
   create_table "acciones", :force => true do |t|
     t.integer  "servicios_id",                 :null => false
@@ -62,12 +62,12 @@ ActiveRecord::Schema.define(:version => 20130321152114) do
   end
 
   create_table "clientes", :force => true do |t|
-    t.string   "nombre",               :limit => 50,                                 :null => false
-    t.integer  "ci",                                                                 :null => false
-    t.string   "nacionalidad",         :limit => 50,                                 :null => false
-    t.string   "estado_civil",         :limit => 20,                                 :null => false
-    t.string   "direccion",            :limit => 500,                                :null => false
-    t.string   "telefono",             :limit => 15,                                 :null => false
+    t.string   "nombre",               :limit => 50,                                  :null => false
+    t.integer  "ci",                                                                  :null => false
+    t.string   "nacionalidad",         :limit => 50,                                  :null => false
+    t.string   "estado_civil",         :limit => 20,                                  :null => false
+    t.string   "direccion",            :limit => 500,                                 :null => false
+    t.string   "telefono",             :limit => 15,                                  :null => false
     t.string   "empleado_en",          :limit => 50
     t.string   "direccion_trabajo",    :limit => 500
     t.string   "telefono_trabajo",     :limit => 15
@@ -83,14 +83,14 @@ ActiveRecord::Schema.define(:version => 20130321152114) do
     t.integer  "conyugue_tiempo"
     t.integer  "conyugue_sueldo"
     t.string   "conyugue_cargo",       :limit => 50
-    t.datetime "created_at",                                                         :null => false
-    t.datetime "updated_at",                                                         :null => false
+    t.datetime "created_at",                                                          :null => false
+    t.datetime "updated_at",                                                          :null => false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
-    t.decimal  "latitude",                            :precision => 10, :scale => 0
-    t.decimal  "longitude",                           :precision => 10, :scale => 0
+    t.decimal  "latitude",                            :precision => 15, :scale => 10
+    t.decimal  "longitude",                           :precision => 15, :scale => 10
     t.string   "telefono2"
     t.string   "telefono3"
     t.string   "email"
@@ -172,17 +172,19 @@ ActiveRecord::Schema.define(:version => 20130321152114) do
   end
 
   create_table "presupuestos", :force => true do |t|
-    t.integer  "cliente_id",                     :null => false
-    t.string   "instalacion",      :limit => 50, :null => false
-    t.float    "inicial",                        :null => false
-    t.integer  "giros",                          :null => false
-    t.float    "cuota",                          :null => false
-    t.integer  "giros_especiales",               :null => false
-    t.float    "cuota_especial",                 :null => false
-    t.integer  "vendedor",                       :null => false
+    t.integer  "cliente_id",                                      :null => false
+    t.string   "instalacion",      :limit => 50,                  :null => false
+    t.float    "inicial",                                         :null => false
+    t.integer  "giros",                                           :null => false
+    t.float    "cuota",                                           :null => false
+    t.integer  "giros_especiales",                                :null => false
+    t.float    "cuota_especial",                                  :null => false
+    t.integer  "vendedor",                                        :null => false
     t.integer  "aprobado_por"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
+    t.float    "flete",                          :default => 0.0
+    t.string   "vendedor_id"
   end
 
   create_table "profit_arts", :force => true do |t|

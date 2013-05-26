@@ -68,3 +68,5 @@ gem 'gmaps4rails'
 gem 'rb-readline'
 
 gem 'jasper-rails'
+
+gem 'httparty'
