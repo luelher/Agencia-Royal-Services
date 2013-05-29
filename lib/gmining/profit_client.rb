@@ -164,10 +164,10 @@ class Gmining::ProfitClient
     
   end
 
-  def migrate_data
+  def self.migrate_data
 
-    from = "2010-01-01 06:00:00 0000".to_time
-    to = "2010-05-01 00:00:00 0000".to_time
+    from = "2013-01-01 06:00:00 0000".to_time
+    to = Time.now
 
     (1..(to.to_date.mjd - from.to_date.mjd)).each do |d|
       dia = (from + d.day)
@@ -179,5 +179,15 @@ class Gmining::ProfitClient
     end
 
   end
+
+  def self.run_mining(min)
+    from = Time.now - min.minutes 
+    to = Time.now
+
+    profit = Gmining::ProfitClient.new
+    profit.get_sales from, to
+    profit.send to
+  end
+
 
 end

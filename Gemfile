@@ -70,3 +70,5 @@ gem 'rb-readline'
 gem 'jasper-rails'
 
 gem 'httparty'
+
+gem 'whenever'

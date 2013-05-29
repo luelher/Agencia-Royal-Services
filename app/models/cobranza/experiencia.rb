@@ -7,14 +7,14 @@ class Cobranza::Experiencia < ActiveRecord::Base
 
   validates :desde, :presence => true
 
-  def calcular_experiencias
-    archivo = "experiencia" + self.desde.strftime("%Y-%m-%d") + ".csv"
+  def self.calcular_experiencias
+    archivo = "experiencia" + Time.now.strftime("%Y-%m-%d") + ".csv"
     dir_file = "public/uploads/" + archivo
     file = File.open(dir_file, 'w')
 
     facturas = Profit::Factura.all_facturas.includes(:cliente)
     facturas.each_with_index do |f, i|
-      f.generar_resumen self.desde
+      f.generar_resumen Time.now
       line = [f.cliente.co_cli, f.cliente.cli_des, f.cliente.telefonos, "", f.nro_doc_cfxg, f.fec_emis.strftime("%d/%m/%Y"), f.monto_total, f.pago_mensual, f.count_giros, f.fecha_cancelacion.nil? ? '' : f.fecha_cancelacion.strftime("%d/%m/%Y"), f.experiencia].join("\t") unless f.detalle_giros.nil?
       file.puts line
       GC.start if (i % 1000) == 0

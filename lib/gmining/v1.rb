@@ -1,7 +1,7 @@
 
 class Gmining::V1
   include HTTParty
-  base_uri 'localhost:3000'
+  base_uri 'gmining.herokuapp.com'
 
   def get(url)
     req = self.class.get url
