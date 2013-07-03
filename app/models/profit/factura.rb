@@ -259,6 +259,30 @@ class Profit::Factura < ActiveRecord::Base
 
   end
 
+  def self.by_fecha_vencidos(vencido_desde, vencido_hasta, co_lin, co_ven, co_zon)
+    sql = "
+      SELECT 
+        distinct
+        dcc.nro_orig,
+        max(DATEDIFF(DAY, dcc.fec_venc, GETDATE())) dias_vencidos,
+        dcc.observa
+      FROM 
+        [docum_cc] dcc 
+      WHERE 
+        dcc.observa like ('%FACT %')  
+        AND dcc.tipo_doc='GIRO' 
+        and dcc.saldo > 0.0 
+        and dcc.fec_venc >= '#{vencido_desde}'
+        and dcc.fec_venc <= '#{vencido_hasta}'
+      group by 
+        dcc.nro_orig, dcc.observa
+      order by 
+        dcc.nro_orig    
+    "
+    Profit::Factura.search_facturas(sql, co_lin, co_ven, co_zon)
+
+  end
+
   def cobranza
     Profit::Cobro.historial_by_f self.fact_num
   end

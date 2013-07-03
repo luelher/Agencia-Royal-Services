@@ -24,6 +24,8 @@ class CobranzasController < ApplicationController
     co_lin = params[:co_lin]
     co_ven = params[:co_ven]
     co_zon = params[:co_zon]
+    vencidos_desde = params[:vencidos_desde]["0"]
+    vencidos_hasta = params[:vencidos_hasta]["0"]   
     plazo_pago = params[:plazo_pago]
     @recientes = params[:recientes].nil? ? "" : params[:recientes]
 
@@ -35,6 +37,8 @@ class CobranzasController < ApplicationController
       @facturas = Profit::Factura.by_dias_vencidos dias_desde, dias_hasta, co_lin, co_ven, co_zon
     elsif giros_vencidos_desde.to_i > 0 and giros_vencidos_hasta.to_i > 0
       @facturas = Profit::Factura.by_giros_vencidos giros_vencidos_desde, giros_vencidos_hasta, co_lin, co_ven, co_zon
+    elsif !vencidos_desde.empty? and !vencidos_hasta.empty?
+      @facturas = Profit::Factura.by_fecha_vencidos vencidos_desde, vencidos_hasta, co_lin, co_ven, co_zon
     elsif !plazo_pago.empty?
       @facturas = Profit::Factura.by_plazo_pago plazo_pago[0]
     else

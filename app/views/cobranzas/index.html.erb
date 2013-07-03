@@ -29,6 +29,15 @@
             </div>
           </div>          
           <div class="control-group">
+            <%= label_tag :vencidos_desde, nil, :class => 'control-label' %>
+            <div class="controls">
+              <%= text_field :vencidos_desde, params[:vencidos_desde].nil? ? "0" : params[:vencidos_desde], :class => 'input-small', "data-behaviour" => 'datepicker' %>
+            </div>
+            <div class="controls">
+              <%= text_field :vencidos_hasta, params[:vencidos_hasta].nil? ? "0" : params[:vencidos_hasta], :class => 'input-small', "data-behaviour" => 'datepicker' %>
+            </div>
+          </div>          
+          <div class="control-group">
             <%= label_tag :plazo_pago, nil, :class => 'control-label' %>
             <div class="controls">
               <%= text_field :plazo_pago, "", :class => 'input-small', "data-behaviour" => 'datepicker', :value => (params[:plazo_pago].nil? ? "" : params[:plazo_pago][0]) %>
