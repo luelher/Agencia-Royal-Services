@@ -181,8 +181,8 @@ class Gmining::ProfitClient
   end
 
   def self.run_mining(min)
-    from = Time.now - min.minutes 
-    to = Time.now
+    from = Time.now.in_time_zone("Caracas") - min.minutes 
+    to = Time.now.in_time_zone("Caracas")
 
     profit = Gmining::ProfitClient.new
     profit.get_sales from, to

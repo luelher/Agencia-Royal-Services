@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130520202212) do
+ActiveRecord::Schema.define(:version => 20130701024956) do
 
   create_table "acciones", :force => true do |t|
     t.integer  "servicios_id",                 :null => false
@@ -62,39 +62,55 @@ ActiveRecord::Schema.define(:version => 20130520202212) do
   end
 
   create_table "clientes", :force => true do |t|
-    t.string   "nombre",               :limit => 50,                                  :null => false
-    t.integer  "ci",                                                                  :null => false
-    t.string   "nacionalidad",         :limit => 50,                                  :null => false
-    t.string   "estado_civil",         :limit => 20,                                  :null => false
-    t.string   "direccion",            :limit => 500,                                 :null => false
-    t.string   "telefono",             :limit => 15,                                  :null => false
-    t.string   "empleado_en",          :limit => 50
-    t.string   "direccion_trabajo",    :limit => 500
-    t.string   "telefono_trabajo",     :limit => 15
+    t.string   "nombre",                        :limit => 50,                                  :null => false
+    t.integer  "ci",                                                                           :null => false
+    t.string   "nacionalidad",                  :limit => 50,                                  :null => false
+    t.string   "estado_civil",                  :limit => 20,                                  :null => false
+    t.string   "direccion",                     :limit => 500,                                 :null => false
+    t.string   "telefono",                      :limit => 15,                                  :null => false
+    t.string   "empleado_en",                   :limit => 50
+    t.string   "direccion_trabajo",             :limit => 500
+    t.string   "telefono_trabajo",              :limit => 15
     t.integer  "tiempo"
     t.integer  "sueldo"
-    t.string   "cargo",                :limit => 50
+    t.string   "cargo",                         :limit => 50
     t.integer  "subordinados"
-    t.string   "otros_ingresos",       :limit => 50
-    t.string   "conyugue_nombre",      :limit => 50
+    t.string   "otros_ingresos",                :limit => 50
+    t.string   "conyugue_nombre",               :limit => 50
     t.integer  "conyugue_ci"
-    t.string   "conyugue_empleado_en", :limit => 50
-    t.string   "conyugue_telefono",    :limit => 15
+    t.string   "conyugue_empleado_en",          :limit => 50
+    t.string   "conyugue_telefono",             :limit => 15
     t.integer  "conyugue_tiempo"
     t.integer  "conyugue_sueldo"
-    t.string   "conyugue_cargo",       :limit => 50
-    t.datetime "created_at",                                                          :null => false
-    t.datetime "updated_at",                                                          :null => false
+    t.string   "conyugue_cargo",                :limit => 50
+    t.datetime "created_at",                                                                   :null => false
+    t.datetime "updated_at",                                                                   :null => false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
-    t.decimal  "latitude",                            :precision => 15, :scale => 10
-    t.decimal  "longitude",                           :precision => 15, :scale => 10
+    t.decimal  "latitude",                                     :precision => 15, :scale => 10
+    t.decimal  "longitude",                                    :precision => 15, :scale => 10
     t.string   "telefono2"
     t.string   "telefono3"
     t.string   "email"
     t.string   "direccion2"
+    t.integer  "parroquia_id"
+    t.string   "referencia_uno_nombre"
+    t.string   "referencia_uno_parentesco"
+    t.string   "referencia_uno_direccion"
+    t.string   "referencia_uno_telefono"
+    t.string   "referencia_uno_observaciones"
+    t.string   "referencia_dos_nombre"
+    t.string   "referencia_dos_parentesco"
+    t.string   "referencia_dos_direccion"
+    t.string   "referencia_dos_telefono"
+    t.string   "referencia_dos_observaciones"
+    t.string   "referencia_tres_nombre"
+    t.string   "referencia_tres_parentesco"
+    t.string   "referencia_tres_direccion"
+    t.string   "referencia_tres_telefono"
+    t.string   "referencia_tres_observaciones"
   end
 
   add_index "clientes", ["ci", "nombre"], :name => "index_clientes"
@@ -113,6 +129,12 @@ ActiveRecord::Schema.define(:version => 20130520202212) do
     t.integer  "servicios_id",                 :null => false
     t.string   "observacion",  :limit => 1000, :null => false
     t.datetime "fecha",                        :null => false
+  end
+
+  create_table "estados", :force => true do |t|
+    t.string   "descripcion"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "experiencia", :force => true do |t|
@@ -143,6 +165,13 @@ ActiveRecord::Schema.define(:version => 20130520202212) do
     t.integer   "curnum"
   end
 
+  create_table "municipios", :force => true do |t|
+    t.string   "descripcion"
+    t.integer  "estado_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "notificaciones", :force => true do |t|
     t.integer  "mes_desde"
     t.integer  "mes_hasta"
@@ -171,20 +200,53 @@ ActiveRecord::Schema.define(:version => 20130520202212) do
     t.date      "fec_venc",                                                         :null => false
   end
 
+  create_table "parroquia", :force => true do |t|
+    t.string   "descripcion"
+    t.integer  "municipio_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
   create_table "presupuestos", :force => true do |t|
-    t.integer  "cliente_id",                                      :null => false
-    t.string   "instalacion",      :limit => 50,                  :null => false
-    t.float    "inicial",                                         :null => false
-    t.integer  "giros",                                           :null => false
-    t.float    "cuota",                                           :null => false
-    t.integer  "giros_especiales",                                :null => false
-    t.float    "cuota_especial",                                  :null => false
-    t.integer  "vendedor",                                        :null => false
+    t.integer  "cliente_id",                                                 :null => false
+    t.string   "instalacion",                 :limit => 50,                  :null => false
+    t.float    "inicial",                                                    :null => false
+    t.integer  "giros",                                                      :null => false
+    t.float    "cuota",                                                      :null => false
+    t.integer  "giros_especiales",                                           :null => false
+    t.float    "cuota_especial",                                             :null => false
+    t.integer  "vendedor",                                                   :null => false
     t.integer  "aprobado_por"
-    t.datetime "created_at",                                      :null => false
-    t.datetime "updated_at",                                      :null => false
-    t.float    "flete",                          :default => 0.0
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
+    t.float    "flete",                                     :default => 0.0
     t.string   "vendedor_id"
+    t.string   "comercial_uno_nombre"
+    t.boolean  "comercial_uno_estado"
+    t.string   "comercial_uno_ano"
+    t.string   "comercial_dos_nombre"
+    t.boolean  "comercial_dos_estado"
+    t.string   "comercial_dos_ano"
+    t.string   "fiador_nombre"
+    t.string   "fiador_ci"
+    t.string   "fiador_nacionalidad"
+    t.string   "fiador_estado_civil"
+    t.string   "fiador_direccion"
+    t.string   "fiador_telefono"
+    t.string   "fiador_empleado_en"
+    t.string   "fiador_direccion_trabajo"
+    t.string   "fiador_tiempo_servicio"
+    t.string   "fiador_cargo"
+    t.string   "fiador_telefono_trabajo"
+    t.string   "fiador_sueldo"
+    t.string   "fiador_email"
+    t.string   "fiador_comercial_uno_nombre"
+    t.boolean  "fiador_comercial_uno_estado"
+    t.string   "fiador_comercial_uno_ano"
+    t.string   "fiador_comercial_dos_nombre"
+    t.boolean  "fiador_comercial_dos_estado"
+    t.string   "fiador_comercial_dos_ano"
+    t.string   "rowguid"
   end
 
   create_table "profit_arts", :force => true do |t|

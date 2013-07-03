@@ -1,0 +1,164 @@
+<h2>Referencias Comerciales</h2>
+<h3>Referencia 1</h3>
+  <div class="control-group">
+    <%= f.label :nombre, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :comercial_uno_nombre, {:class => 'input-xxlarge '} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :cancelada, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.check_box :comercial_uno_estado, {:class => "check_box"} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :año, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :comercial_uno_ano, ['2000', '2001', '2002', '2003', '2004' ,'2005' ,'2006' ,'2007','2008','2009' ,'2010', '2011', '2012', '2013'], {:class => 'text_field', :include_blank => true} %>
+    </div>
+  </div>
+<h3>Referencia 2</h3>
+  <div class="control-group">
+    <%= f.label :nombre, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :comercial_dos_nombre, {:class => 'input-xxlarge '} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :cancelada, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.check_box :comercial_dos_estado, {:class => "check_box"} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :año, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :comercial_dos_ano, ['2000', '2001', '2002', '2003', '2004' ,'2005' ,'2006' ,'2007','2008','2009' ,'2010', '2011', '2012', '2013'], {:class => 'text_field', :include_blank => true} %>
+    </div>
+  </div>
+
+<h2>Fiador</h2>
+  <div class="control-group">
+    <%= f.label :nombre, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_nombre, :class => 'input-xxlarge' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :ci, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :fiador_ci, :class => 'input-small' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :nacionalidad, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_nacionalidad, :class => 'input-small' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :estado_civil, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_estado_civil, :class => 'input-small' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :direccion, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_direccion, :class => 'input-xxlarge' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :empleado_en, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_empleado_en, :class => 'input-medium' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :telefono, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_telefono, :class => 'input-small' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :direccion_trabajo, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_direccion_trabajo, :class => 'input-xxlarge' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :tiempo, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :fiador_tiempo_servicio, :class => 'input-small' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :sueldo, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :fiador_sueldo, :class => 'input-small' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :cargo, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_cargo, :class => 'input-medium' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :telefono_trabajo, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_telefono_trabajo, :class => 'input-medium' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :sueldo, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_sueldo, :class => 'input-medium' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :email, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_email, :class => 'input-medium' %>
+    </div>
+  </div>
+<h2>Referencias Comerciales Fiador</h2>
+<h3>Referencia 1</h3>
+  <div class="control-group">
+    <%= f.label :nombre, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_comercial_uno_nombre, {:class => 'input-xxlarge '} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :cancelada, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.check_box :fiador_comercial_uno_estado, {:class => "check_box"} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :año, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :fiador_comercial_uno_ano, ['2000', '2001', '2002', '2003', '2004' ,'2005' ,'2006' ,'2007','2008','2009' ,'2010', '2011', '2012', '2013'], {:class => 'text_field', :include_blank => true} %>
+    </div>
+  </div>
+<h3>Referencia 2</h3>
+  <div class="control-group">
+    <%= f.label :nombre, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fiador_comercial_dos_nombre, {:class => 'input-xxlarge '} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :cancelada, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.check_box :fiador_comercial_dos_estado, {:class => "check_box"} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :año, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :fiador_comercial_dos_ano, ['2000', '2001', '2002', '2003', '2004' ,'2005' ,'2006' ,'2007','2008','2009' ,'2010', '2011', '2012', '2013'], {:class => 'text_field', :include_blank => true} %>
+    </div>
+  </div>

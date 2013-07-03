@@ -233,6 +233,7 @@ es:
       destroy: Eliminar
       confirm: ¿Está seguro de eliminar el registro?
       back: Volver
+      print: Imprimir
   number:
     currency:
       format:

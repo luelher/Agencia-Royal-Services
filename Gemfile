@@ -67,8 +67,11 @@ gem 'gmaps4rails'
 
 gem 'rb-readline'
 
-gem 'jasper-rails'
+# gem 'jasper-rails'
+gem 'thinreports-rails'
 
 gem 'httparty'
 
 gem 'whenever'
+
+gem "number_to_words"

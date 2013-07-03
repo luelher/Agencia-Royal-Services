@@ -1,4 +1,10 @@
 Arv2::Application.routes.draw do
+  resources :parroquia
+
+  resources :municipios
+
+  resources :estados
+
   devise_for :users, :controllers => { :passwords => "users/passwords", :sessions => "users/sessions" }
   scope "/admin" do
     resources :users
@@ -13,6 +19,8 @@ Arv2::Application.routes.draw do
       collection do
         get 'clientes'
         get 'productos'
+        get "print/:id" => 'presupuestos#printing', :as => :print
+        get "convenio/:id" => 'presupuestos#convenio', :as => :convenio        
       end
     end
   end
@@ -21,12 +29,10 @@ Arv2::Application.routes.draw do
     resources :clientes do
       collection do
         get "migrate"
+        get "print/:id" => 'clientes#printing', :as => :print
       end
     end 
   end
-
-  # 
-  # 
 
   root :to => 'home#index'
 
@@ -54,7 +60,6 @@ Arv2::Application.routes.draw do
   get "/cobranzas/experiencias" => 'cobranzas#experiencias', :as => :experiencias_cobranzas
   post "/cobranzas/experiencias" => 'cobranzas#experiencias', :as => :experiencias_cobranzas
   get "/cobranzas/cuenta/:co_cli" => 'cobranzas#cuenta', :as => :cuenta_cobranzas
-
 
   # See how all your routes lay out with "rake routes"
 

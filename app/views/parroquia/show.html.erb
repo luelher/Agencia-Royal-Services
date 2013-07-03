@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Descripcion:</b>
+  <%= @parroquia.descripcion %>
+</p>
+
+<p>
+  <b>Municipio:</b>
+  <%= @parroquia.municipio_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_parroquium_path(@parroquia) %> |
+<%= link_to 'Back', parroquia_path %>

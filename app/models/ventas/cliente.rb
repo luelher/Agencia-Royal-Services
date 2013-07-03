@@ -2,8 +2,12 @@ class Ventas::Cliente < ActiveRecord::Base
   acts_as_gmappable :callback => :save_geocode, :process_geocoding => false
 
   has_many :presupuesto, {:class_name => "Ventas::Presupuesto"}
-  attr_accessible :latitude, :longitude, :avatar, :nombre, :ci, :nacionalidad, :estado_civil, :direccion, :telefono, :empleado_en, :direccion_trabajo, :telefono_trabajo, :tiempo, :sueldo, :cargo, :subordinados, :otros_ingresos, :conyugue_nombre, :conyugue_ci, :conyugue_empleado_en, :conyugue_telefono, :conyugue_tiempo, :conyugue_sueldo, :conyugue_cargo, :telefono2, :telefono3, :direccion2, :email
+  
+  attr_accessible :latitude, :longitude, :avatar, :nombre, :ci, :nacionalidad, :estado_civil, :direccion, :telefono, :empleado_en, :direccion_trabajo, :telefono_trabajo, :tiempo, :sueldo, :cargo, :subordinados, :otros_ingresos, :conyugue_nombre, :conyugue_ci, :conyugue_empleado_en, :conyugue_telefono, :conyugue_tiempo, :conyugue_sueldo, :conyugue_cargo, :telefono2, :telefono3, :direccion2, :email, :parroquia_id
   has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }
+
+  attr_accessible :referencia_uno_nombre, :referencia_uno_direccion, :referencia_uno_telefono, :referencia_uno_parentesco, :referencia_dos_nombre, :referencia_dos_direccion, :referencia_dos_telefono, :referencia_dos_parentesco, :referencia_tres_nombre, :referencia_tres_direccion, :referencia_tres_telefono, :referencia_tres_parentesco
+
 
   validates :nombre, :presence => true
   # validates :latitude, :presence => true
@@ -23,7 +27,7 @@ class Ventas::Cliente < ActiveRecord::Base
   def crear_cliente_profit
 
     cliente_profit = Profit::Cliente.find_by_co_cli(self.ci.to_s)
-                                             
+
 # INSERT INTO clientes 
 # (
     # tipo_adi,
@@ -118,6 +122,12 @@ class Ventas::Cliente < ActiveRecord::Base
 
   def to_string
     self.ci.to_s + ' - ' + self.nombre
+  end
+
+  def estado
+  end
+
+  def municipio
   end
 
 end

@@ -1,0 +1,3 @@
+report.start_new_page
+report.page.values printed_at: Time.now.strftime("%d/%m/%Y")
+report.page.values nombre: @cliente.nombre

@@ -1,0 +1,31 @@
+report.start_new_page
+report.page.values fecha: Time.now.strftime("%d/%m/%Y")
+
+["inicial", "giros", "giros_especiales"].each do |e|
+  report.page.values e.to_sym => @ventas_presupuesto.send(e)
+end
+
+["nombre", "ci", "nacionalidad", "estado_civil", "direccion", "telefono", "empleado_en", "direccion_trabajo", "telefono_trabajo", "tiempo", "sueldo", "cargo", "subordinados", "otros_ingresos", "conyugue_nombre", "conyugue_ci", "conyugue_empleado_en", "conyugue_telefono", "conyugue_tiempo", "conyugue_sueldo", "conyugue_cargo", "email", "referencia_uno_nombre", "referencia_uno_parentesco", "referencia_uno_direccion", "referencia_uno_telefono", "referencia_dos_nombre", "referencia_dos_parentesco", "referencia_dos_direccion", "referencia_dos_telefono",  "referencia_tres_nombre", "referencia_tres_parentesco", "referencia_tres_direccion", "referencia_tres_telefono"].each do |e|
+  report.page.values e.to_sym => @ventas_presupuesto.cliente.send(e)
+end
+
+@ventas_presupuesto.detalle_presupuesto.each do |det|
+  report.list.add_row do |row|
+    row.item(:codigo).value(det.codigo)
+    row.item(:descripcion).value(det.art.art_des.strip)
+    row.item(:cantidad).value(det.cantidad)
+    row.item(:precio).value(det.precio)
+    row.item(:total).value(det.total)
+  end
+end
+
+if @ventas_presupuesto.flete > 0.0
+  art = Profit::Art.find_by_co_art "FLETE"
+  report.list.add_row do |row|
+    row.item(:codigo).value(art.co_art.strip)
+    row.item(:descripcion).value(art.art_des.strip)
+    row.item(:cantidad).value(1)
+    row.item(:precio).value(@ventas_presupuesto.flete)
+    row.item(:total).value(@ventas_presupuesto.flete)
+  end  
+end

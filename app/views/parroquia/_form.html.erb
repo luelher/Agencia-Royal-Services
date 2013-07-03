@@ -1,0 +1,25 @@
+<%= form_for(@parroquia, :url => parroquia_path) do |f| %>
+  <% if @parroquia.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@parroquia.errors.count, "error") %> prohibited this parroquia from being saved:</h2>
+
+      <ul>
+      <% @parroquia.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :descripcion %><br />
+    <%= f.text_field :descripcion %>
+  </div>
+  <div class="field">
+    <%= f.label :municipio_id %><br />
+    <%= f.select :municipio_id,  Municipio.all.collect {|p| [ p.descripcion, p.id ] }, { :include_blank => false } %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

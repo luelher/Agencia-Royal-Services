@@ -1,0 +1,61 @@
+<%- model_class = Ventas::Presupuesto -%>
+<h2>Presupuesto</h2>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:cliente_id) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.cliente_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:instalacion) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.instalacion %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:total) %>:</strong></dt>
+  <dd><strong><%= @ventas_presupuesto.total %> Bs</strong></dd>
+  <dt><strong><%= model_class.human_attribute_name(:inicial) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.inicial %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:giros) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.giros %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:cuota) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.cuota %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:giros_especiales) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.giros_especiales %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:cuota_especial) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.cuota_especial.nil? ? '0' : @ventas_presupuesto.cuota_especial  %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:flete) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.flete %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:vendedor) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.ven.ven_des %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:usuario) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.user.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:aprobado_por) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.aprobado_por %></dd>
+</dl>
+
+<div class="control-group">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Codigo</th>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="detalle_tabla">
+        <% @ventas_presupuesto.detalle_presupuesto.each do |detalle| %>
+          <tr>
+            <td>
+              <%= detalle.codigo %>
+            </td>
+            <td><%= detalle.art.art_des unless detalle.art.nil? %></td>
+            <td><%= detalle.art.prec_vta5 unless detalle.art.nil? %> Bs
+            </td>
+            <td>
+              <%= detalle.cantidad %>
+            </td>
+            <td> <strong class=\"total\"><%= detalle.total %> </strong> Bs</td>
+          </tr>
+        <% end -%>
+      </tbody>
+    </table>
+  </div>  
+
+<%= render :partial => 'fiador', locals: {:f => f}  %>

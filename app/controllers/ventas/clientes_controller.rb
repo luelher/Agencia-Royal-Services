@@ -1,4 +1,6 @@
 class Ventas::ClientesController < ApplicationController
+  respond_to :html, :xml, :pdf, :json
+
   layout 'intranet'
   before_filter :authenticate_user!
   
@@ -47,6 +49,12 @@ class Ventas::ClientesController < ApplicationController
     @ventas_cliente = Ventas::Cliente.find(params[:id])
     @gmap_json = '[{"lng": "' + @ventas_cliente.longitude.to_s + '", "lat": "' + @ventas_cliente.latitude.to_s + '", "draggable": true}]'
     # @gmap_json = @ventas_cliente.to_gmaps4rails
+  end
+
+  # GET /ventas/clientes/1/print
+  def printing
+    @ventas_cliente = Ventas::Cliente.find(params[:id])
+    respond_with @@ventas_cliente
   end
 
   # POST /ventas/clientes
@@ -101,5 +109,9 @@ class Ventas::ClientesController < ApplicationController
       @migrados += 1 if cli.crear_ventas_cliente
     end
 
+  end
+
+  def printing
+    @cliente = Ventas::Cliente.find(params[:id])
   end
 end

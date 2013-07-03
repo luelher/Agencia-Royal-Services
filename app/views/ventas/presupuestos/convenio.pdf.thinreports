@@ -1,0 +1,34 @@
+report.start_new_page
+report.page.values fecha: Time.now.strftime("%d/%m/%Y")
+# report.page.values vendedor: @ventas_presupuesto
+
+report.page.values nombre: @ventas_presupuesto.cliente.nombre
+report.page.values ci: @ventas_presupuesto.cliente.ci
+report.page.values dia_pago: @ventas_presupuesto.created_at.day
+report.page.values cuota_en_numeros: "(" + @ventas_presupuesto.cuota.to_s + ")"
+report.page.values cuota_en_letras: @ventas_presupuesto.cuota.to_words
+report.page.values total_en_numeros: "(" + @ventas_presupuesto.total.to_s + ")"
+report.page.values total_en_letras: @ventas_presupuesto.total.to_words
+
+report.page.values giros: @ventas_presupuesto.giros
+
+facturas = Profit::Factura.all_facturas_of_client(@ventas_presupuesto.cliente.ci.to_s)
+
+if @mas_de_uno > 1
+  report.page.values texto_final_1: "de igual manera continuar con la cancelación puntual de"
+  report.page.values texto_final_2: "#{@factura_pendiente.giros_vencidos_sin_cancelar} GIROS PENDIENTES de Bs #{@factura_pendiente.pago_mensual} con un total de #{@factura_pendiente.saldo} mensuales, quedando convenidos"
+  report.page.values texto_final_3: "de que de no cumplir con lo que aquí expongo, entregaré voluntariamente la mercancía(s), objeto de esta venta a AGENCIA ROYAL C.A."
+else
+  report.page.values texto_final_1: "quedando convenidos que de no cumplir con lo que aquí"
+  report.page.values texto_final_2: "expongo, entregaré voluntariamente la mercancía(s), objeto de esta venta a"
+  report.page.values texto_final_3: "AGENCIA ROYAL C.A."
+end
+
+#recibo
+report.page.values nro: "1/1"
+report.page.values dia: @ventas_presupuesto.created_at.day.to_s
+report.page.values mes: I18n.translate("date.month_names")[@ventas_presupuesto.created_at.month]
+report.page.values ano: @ventas_presupuesto.created_at.year.to_s
+report.page.values letra_a: "AGENCIA ROYAL 33 C.A."
+
+

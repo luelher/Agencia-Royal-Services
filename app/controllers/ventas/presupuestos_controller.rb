@@ -99,4 +99,24 @@ class Ventas::PresupuestosController < ApplicationController
     end
   end  
 
+  def printing
+    @ventas_presupuesto = Ventas::Presupuesto.find(params[:id])
+  end
+
+  def convenio
+    @ventas_presupuesto = Ventas::Presupuesto.find(params[:id])
+
+    if @ventas_presupuesto
+      @cliente = Profit::Cliente.find_by_co_cli(@ventas_presupuesto.cliente.ci.to_s)
+
+      @mas_de_uno = 0
+      @factura_pendiente = nil
+      @cliente.factura.solo_facturas_creditos.each do |fac|
+        fac.generar_resumen Time.now
+        @mas_de_uno += 1 unless fac.cancelado? 
+        @factura_pendiente = fac unless fac.cancelado? 
+      end
+    end
+
+  end
 end

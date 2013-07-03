@@ -13,3 +13,9 @@ window.onload = ->
   Gmaps.map.callback = ->
     google.maps.event.addListener Gmaps.map.markers[0].serviceObject, 'dragend', ->
       Gmaps.map.HandleDragend this.getPosition()
+
+  update_municipios = ->
+    alert("Actualizando Municipios")
+
+  $("#el_estado").change ->
+    update_municipios()

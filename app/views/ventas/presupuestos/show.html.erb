@@ -58,11 +58,67 @@
         <% end -%>
       </tbody>
     </table>
-  </div>  
+</div>  
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:comercial_uno_nombre) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.comercial_uno_nombre %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:comercial_uno_estado) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.comercial_uno_estado %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:comercial_uno_ano) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.comercial_uno_ano %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:comercial_dos_nombre) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.comercial_dos_nombre %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:comercial_dos_estado) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.comercial_dos_estado %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:comercial_dos_ano) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.comercial_dos_ano %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_nombre) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_nombre %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_ci) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_ci %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_nacionalidad) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_nacionalidad %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_estado_civil) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_estado_civil %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_direccion) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_direccion %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_telefono) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_telefono %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_empleado_en) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_empleado_en %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_direccion_trabajo) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_direccion_trabajo %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_tiempo_servicio) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_tiempo_servicio %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_cargo) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_cargo %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_telefono_trabajo) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_telefono_trabajo %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_sueldo) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_sueldo %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_email) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_email %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_comercial_uno_nombre) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_comercial_uno_nombre %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_comercial_uno_estado) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_comercial_uno_estado %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_comercial_uno_ano) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_comercial_uno_ano %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_comercial_dos_nombre) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_comercial_dos_nombre %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_comercial_dos_estado) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_comercial_dos_estado %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:fiador_comercial_dos_ano) %>:</strong></dt>
+  <dd><%= @ventas_presupuesto.fiador_comercial_dos_ano %></dd>
+</dl>
+
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               ventas_presupuestos_path, :class => 'btn'  %>
+  <%= link_to t('.back', :default => t("helpers.links.edit")),
+              edit_ventas_presupuesto_path(@ventas_presupuesto), :class => 'btn'  %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               ventas_presupuesto_path(@ventas_presupuesto),
               :method => 'delete',
