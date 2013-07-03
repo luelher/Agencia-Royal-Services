@@ -23,7 +23,7 @@
   <dt><strong><%= model_class.human_attribute_name(:flete) %>:</strong></dt>
   <dd><%= @ventas_presupuesto.flete %></dd>
   <dt><strong><%= model_class.human_attribute_name(:vendedor) %>:</strong></dt>
-  <dd><%= @ventas_presupuesto.ven.ven_des %></dd>
+  <dd><%= @ventas_presupuesto.ven.ven_des unless @ventas_presupuesto.ven.nil? %></dd>
   <dt><strong><%= model_class.human_attribute_name(:usuario) %>:</strong></dt>
   <dd><%= @ventas_presupuesto.user.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:aprobado_por) %>:</strong></dt>
