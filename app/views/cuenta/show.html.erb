@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @cliente.factura.solo_facturas_creditos.each do |fac| %>
+      <% Profit::Factura.by_cliente(@cliente.co_cli).each do |fac| %>
         <% fac.generar_resumen Time.now %>
         <% unless fac.cancelado? %>
           <% fac.los_giros.each do |giro| %>
@@ -25,7 +25,8 @@
             <tr class="<%= "error" if estado==2 or estado==3 %>" >
               <td><%= giro.fec_emis.strftime "%d/%m/%Y" %></td>
               <td><%= giro.fec_venc.strftime "%d/%m/%Y" %></td>
-              <td><%= giro.pago.nil? ? "Sin Cancelar" : giro.pago.fec_cob.strftime("%d/%m/%Y")  %></td>
+              <td><%= giro.pago.nil? ? "Sin Cancelar" : giro.pago.fec_cob.strftime("%d/%m/%Y")  %>
+              </td>
               <td><%= giro.observa %></td>
               <td><%= giro.monto_net %></td>
               <td><%= giro.saldo %></td>

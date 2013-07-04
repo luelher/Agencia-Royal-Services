@@ -7,7 +7,7 @@ class Profit::Cobro < ActiveRecord::Base
 
   has_one :cliente, {:foreign_key => 'co_cli', :primary_key => 'co_cli'}
 
-  scope :historial_by_factura, lambda { |fact| joins(:reng_cob => :docum_cc).where("docum_cc.observa like ? AND reng_cob.tp_doc_cob='GIRO' AND docum_cc.tipo_doc='GIRO'","%FACT #{fact}").order("fec_cob DESC") }
+  scope :historial_by_factura, lambda { |fact| joins(:reng_cob => :docum_cc).includes(:reng_cob => :docum_cc).where("docum_cc.observa like ? AND reng_cob.tp_doc_cob='GIRO' AND docum_cc.tipo_doc='GIRO'","%FACT #{fact}").order("fec_cob DESC") }
 
   scope :historial_by_cliente, lambda { |cli| joins(:reng_cob => :docum_cc).where("cobros.co_cli = ? and docum_cc.observa like ? AND reng_cob.tp_doc_cob='GIRO' AND docum_cc.tipo_doc='GIRO'",cli,"%FACT %").order("fec_cob DESC") }  
 

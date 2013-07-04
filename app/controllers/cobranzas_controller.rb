@@ -24,8 +24,8 @@ class CobranzasController < ApplicationController
     co_lin = params[:co_lin]
     co_ven = params[:co_ven]
     co_zon = params[:co_zon]
-    vencidos_desde = params[:vencidos_desde]["0"]
-    vencidos_hasta = params[:vencidos_hasta]["0"]   
+    vencidos_desde = params[:vencidos_desde].first
+    vencidos_hasta = params[:vencidos_hasta].first  
     plazo_pago = params[:plazo_pago]
     @recientes = params[:recientes].nil? ? "" : params[:recientes]
 

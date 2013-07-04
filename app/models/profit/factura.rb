@@ -287,6 +287,23 @@ class Profit::Factura < ActiveRecord::Base
     Profit::Cobro.historial_by_f self.fact_num
   end
 
+  def historial_cobros
+    @h_cobros ||= Profit::Cobro.historial_by_factura self.fact_num
+  end
+  
+  def historial_cobros_giro(giro)
+    self.historial_cobros
+    cobros = []
+    @h_cobros.each do |c|
+      c.reng_cob.each do |r|
+        r.docum_cc.each do |d|
+          cobros << c if d.observa.include?(giro.to_s + "/")
+        end
+      end
+    end
+    cobros 
+  end
+
   private
   def self.search_facturas(sql_facturas, co_lin, co_ven, co_zon)
     facts = Profit::DocumCc.connection().select_all(sql_facturas)
