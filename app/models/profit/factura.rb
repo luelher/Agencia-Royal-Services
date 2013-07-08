@@ -297,11 +297,14 @@ class Profit::Factura < ActiveRecord::Base
     @h_cobros.each do |c|
       c.reng_cob.each do |r|
         r.docum_cc.each do |d|
-          cobros << c if d.observa.include?(giro.to_s + "/")
+          if d.observa.include?(" "+ giro.to_s + "/") and d.observa.include?("FACT #{self.fact_num.to_s}") 
+            cobros << c
+            break
+          end
         end
       end
     end
-    cobros 
+    cobros.uniq
   end
 
   private
