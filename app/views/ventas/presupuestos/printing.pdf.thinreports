@@ -1,3 +1,4 @@
+
 report.start_new_page
 report.page.values fecha: Time.now.strftime("%d/%m/%Y")
 
@@ -29,3 +30,10 @@ if @ventas_presupuesto.flete > 0.0
     row.item(:total).value(@ventas_presupuesto.flete)
   end  
 end
+
+report.start_new_page :layout => Rails.root.to_s + '/app/views/ventas/presupuestos/printing2.tlf'
+
+
+["comercial_uno_nombre", "comercial_uno_estado", "comercial_dos_nombre", "comercial_dos_estado", "fiador_nombre", "fiador_ci", "fiador_telefono", "fiador_empleado_en", "fiador_tiempo_servicio", "fiador_cargo", "fiador_sueldo", "fiador_comercial_uno_nombre", "fiador_comercial_uno_estado", "fiador_comercial_dos_nombre", "fiador_comercial_dos_estado"].each do |e|
+    report.page.values e.to_sym => @ventas_presupuesto.send(e)
+ end

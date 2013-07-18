@@ -29,6 +29,12 @@ report.page.values nro: "1/1"
 report.page.values dia: @ventas_presupuesto.created_at.day.to_s
 report.page.values mes: I18n.translate("date.month_names")[@ventas_presupuesto.created_at.month]
 report.page.values ano: @ventas_presupuesto.created_at.year.to_s
-report.page.values letra_a: "AGENCIA ROYAL 33 C.A."
+report.page.values letra_beneficiario: "AGENCIA ROYAL 33 C.A."
+report.page.values letra_total: @ventas_presupuesto.total.to_s
+report.page.values letra_total_en_letras: @ventas_presupuesto.total.to_words
+
+report.page.values :letra_a1 => @ventas_presupuesto.cliente.nombre
+report.page.values :letra_a2 => @ventas_presupuesto.cliente.direccion
+
 
 
