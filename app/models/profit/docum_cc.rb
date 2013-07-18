@@ -51,8 +51,9 @@ class Profit::DocumCc < ActiveRecord::Base
   end
 
   # Estado del giro, 0=Giro no vencido, 1=pagado, 2=por pagar reciente(menos de 30 días), 3=por pagar urgente(mas de 30 días)
-  def estado
-    @cobros ||= Profit::Cobro.historial_by_factura_and_giro numero_factura, numero_giro
+  def estado(cobros)
+    # @cobros ||= Profit::Cobro.historial_by_factura_and_giro numero_factura, numero_giro
+    @cobros ||= cobros
     if @cobros.empty?
       if self.dias<0
         0

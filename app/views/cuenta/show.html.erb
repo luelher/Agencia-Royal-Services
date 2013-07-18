@@ -21,7 +21,7 @@
         <% fac.generar_resumen Time.now %>
         <% unless fac.cancelado? %>
           <% fac.los_giros.each do |giro| %>
-            <% estado = giro.estado %>
+            <% estado = giro.estado(fac.historial_cobros_giro(giro.numero_giro)) %>
             <tr class="<%= "error" if estado==2 or estado==3 %>" >
               <td><%= giro.fec_emis.strftime "%d/%m/%Y" %></td>
               <td><%= giro.fec_venc.strftime "%d/%m/%Y" %></td>
