@@ -22,4 +22,9 @@
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 ventas_presupuestos_path, :class => 'btn' %>
   </div>
+
+  <script type="text/javascript">
+    var factor = <%= APP_CONFIG['presupuesto_factor'].to_json.html_safe %>
+  </script> 
+
 <% end %>

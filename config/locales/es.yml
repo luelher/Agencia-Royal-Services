@@ -40,6 +40,9 @@ es:
   ventas/presupuestos:
     new:
       title: "Nuevo Presupuesto"
+  ventas/seguimientos:
+    new:
+      title: "Nuevo Seguimiento"
   errors:
     messages:
       expired: "ha expirado, por favor pide una nueva"

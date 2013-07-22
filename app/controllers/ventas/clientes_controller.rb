@@ -103,7 +103,7 @@ class Ventas::ClientesController < ApplicationController
 
   def migrate
     @migrados = 0
-    all_profit = Profit::Cliente.all
+    all_profit = Profit::Cliente.clientes_to_migrate
 
     all_profit.each do |cli|
       @migrados += 1 if cli.crear_ventas_cliente

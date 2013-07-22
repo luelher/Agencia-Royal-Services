@@ -13,9 +13,11 @@ class Profit::Cliente < ActiveRecord::Base
 
   has_one :condicio, {:through => :factura}
 
-  has_one :cliente_venta, {:foreign_key => 'ci', :primary_key => 'co_cli', :class_name => 'Ventas::Cliente'}
+  # has_one :cliente_venta, {:foreign_key => 'ci', :primary_key => 'co_cli', :class_name => 'Ventas::Cliente'}
 
   has_one :carta, {:foreign_key => 'co_cli', :primary_key => 'co_cli', :class_name => "Cobranza::Carta"}
+
+  scope :clientes_to_migrate, where("LTRIM(RTRIM(co_cli)) NOT IN (?)", Ventas::Cliente.select('ci').all.map{|c| c.ci.to_s})
 
   def to_string
     self.co_cli.strip + ' - ' + self.cli_des.strip unless self.co_cli.nil?
@@ -26,8 +28,16 @@ class Profit::Cliente < ActiveRecord::Base
     telfs.map{|t| t.strip}
   end
 
+  def exist_in_cliente_venta?
+    !Ventas::Cliente.find_by_ci(self.co_cli.strip).nil?
+  end
+
+  def cliente_venta
+    Ventas::Cliente.find_by_ci(self.co_cli.strip)
+  end
+
   def crear_ventas_cliente
-    unless self.cliente_venta
+    unless self.exist_in_cliente_venta?
 
       cliente = Ventas::Cliente.new
 
@@ -39,9 +49,11 @@ class Profit::Cliente < ActiveRecord::Base
       cliente.ci = self.co_cli
       cliente.nacionalidad = self.pais.nil? ? "Otros" : self.pais.pais_des.strip
       cliente.estado_civil = "OTROS"
-      cliente.direccion = self.direc1
+      cliente.direccion = "Sin Direccion"
+      cliente.direccion = self.direc1 unless self.direc1.strip.empty?
       cliente.direccion2 = self.direc1
-      cliente.telefono = telfs[0] unless telfs[0].nil?
+      cliente.telefono = "00000000000"
+      cliente.telefono = telfs[0] unless telfs[0].nil? || telfs[0].empty?
       cliente.telefono2 = telfs[1] unless telfs[1].nil?
       cliente.telefono3 = telfs[2] unless telfs[2].nil?
       cliente.email     =  self.email.strip 

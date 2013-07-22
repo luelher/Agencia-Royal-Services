@@ -41,7 +41,10 @@ window.onload = ->
   }
 
   update_presupuesto = (tipo) ->
-    D25 = 0.028333333;
+    if factor
+      D25 = factor[parseFloat($('#ventas_presupuesto_giros').val())];
+    else
+      D25 = 0.028333333;
 
     # $cal = $request->getParameter('calculadora');
 
