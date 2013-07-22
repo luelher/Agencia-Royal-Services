@@ -35,6 +35,9 @@ es:
 
 
   ventas/clientes:
+    helpers:
+      titles:
+        new: "Nuevo Cliente"
     new:
       title: "Nuevo Cliente"
   ventas/presupuestos:
