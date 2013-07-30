@@ -307,6 +307,209 @@ class Profit::Factura < ActiveRecord::Base
     cobros.uniq
   end
 
+  def self.ventas_by_day(day)
+
+    # Facturado
+    sql= "select distinct
+      sum(a.tot_bruto) as bruto, 
+            sum(a.tot_neto) as neto, 
+            SUM(a.iva) as iva,
+            count(a.fact_num) as contador,
+              fec_emis 
+            from 
+              factura a 
+            where 
+              a.fec_emis = '#{day.to_s('%Y-%m-%d')} 00:00:00'
+            group by 
+              a.fec_emis "
+    sum_all = Profit::Factura.connection().select_all(sql)
+
+    # Costo de lo facturado
+    sql="select distinct
+            SUM(b.ult_cos_un * b.total_art) as costo,
+              fec_emis 
+            from 
+              factura a 
+              inner join reng_fac b on a.fact_num=b.fact_num
+            where 
+              a.fec_emis = '#{day.to_s('%Y-%m-%d')} 00:00:00'
+            group by 
+              a.fec_emis "
+    sum_costo = Profit::Factura.connection().select_all(sql)
+
+    # Financiamiento de lo facturado
+    sql="select 
+            SUM(r.neto) as giros, 
+            SUM(d.monto_otr) as financiamiento,
+            c.fec_cob 
+          from 
+            reng_cob r inner join docum_cc d on r.doc_num=d.nro_doc inner join cobros c on r.cob_num=c.cob_num 
+          where 
+            r.tp_doc_cob='GIRO'
+            and c.fec_cob = '#{day.to_s('%Y-%m-%d')} 00:00:00' 
+          group by 
+            c.fec_cob
+          order by 
+            c.fec_cob desc"
+    sum_financiamiento = Profit::Factura.connection().select_all(sql)
+
+    # Costo de las devoluciones
+    sql="select distinct
+            SUM(b.ult_cos_un * b.total_art) as costo_dev,
+              b.fec_emis 
+            from 
+              devcli_reng b 
+            where 
+              b.fec_emis = '#{day.to_s('%Y-%m-%d')} 00:00:00'
+            group by 
+              b.fec_emis "
+    sum_costo_dev = Profit::Factura.connection().select_all(sql)
+
+    sum = {} 
+    sum.merge! sum_all.first unless sum_all.empty?
+    sum.merge! sum_costo.first unless sum_costo.empty?
+    sum.merge! sum_costo_dev.first unless sum_costo_dev.empty?
+    sum.merge! sum_financiamiento.first unless sum_financiamiento.empty?
+    sum
+  end
+
+  def self.ventas_vendedores_by_days(from, to)
+    sql = "select distinct
+              sum(a.tot_bruto) as neto, 
+              a.co_ven,
+              b.ven_des
+            from 
+              factura a inner join vendedor b on a.co_ven=b.co_ven
+            where 
+              a.fec_emis >= '#{from.to_s('%Y-%m-%d')} 00:00:00'
+              and
+              a.fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00'
+            group by 
+              a.co_ven, b.ven_des
+            order by 
+              neto desc"
+    vendedores = Profit::Factura.connection().select_all(sql)
+  end
+
+
+  def self.ingresos_by_day(day)
+
+    # Ingresos por Giros
+    sql = "select 
+            SUM(r.neto) as giros, 
+            c.fec_cob 
+          from 
+            reng_cob r inner join cobros c on r.cob_num=c.cob_num 
+          where 
+            r.tp_doc_cob='GIRO'
+            and c.fec_cob = '#{day.to_s('%Y-%m-%d')} 00:00:00' 
+          group by 
+            c.fec_cob
+          order by 
+            c.fec_cob desc"
+    sum_giros = Profit::Factura.connection().select_all(sql)
+
+    sql = "select 
+            SUM(c.monto) as iniciales, 
+            c.fec_cob 
+          from 
+            reng_cob r inner join cobros c on r.cob_num=c.cob_num 
+          where 
+            r.tp_doc_cob='ADEL'
+            and c.fec_cob = '#{day.to_s('%Y-%m-%d')} 00:00:00' 
+          group by 
+            c.fec_cob 
+          order by 
+            c.fec_cob desc"
+    sum_iniciales = Profit::Factura.connection().select_all(sql)
+
+    sql = "select distinct
+            sum(a.tot_neto) as contados, 
+              fec_emis 
+            from 
+              factura a 
+            where 
+              a.forma_pag = '01' and
+              a.fec_emis = '#{day.to_s('%Y-%m-%d')} 00:00:00'
+            group by 
+              a.fec_emis "
+    sum_otros = Profit::Factura.connection().select_all(sql)
+
+
+    sql = "select COUNT(x.cob_num) as contador from
+          (
+          select distinct
+          c.cob_num
+                    from 
+                      cobros c left outer join reng_cob r on c.cob_num=r.cob_num 
+                    where 
+                      r.tp_doc_cob='GIRO'
+                      and c.fec_cob = '#{day.to_s('%Y-%m-%d')} 00:00:00' 
+                    group by 
+                      c.cob_num
+          ) x"
+    sum_contador = Profit::Factura.connection().select_all(sql)
+
+    sum = {} 
+    sum.merge! sum_giros.first unless sum_giros.empty?
+    sum.merge! sum_iniciales.first unless sum_iniciales.empty?
+    sum.merge! sum_otros.first unless sum_otros.empty?
+    sum.merge! sum_contador.first unless sum_contador.empty?
+    sum
+  end
+
+  def self.cartera(from, to)
+    sql = "select 
+            SUM(monto_net) as neto
+          from 
+            docum_cc 
+          where 
+            tipo_doc='GIRO' 
+            and fec_venc >= '#{from.to_s('%Y-%m-%d')} 00:00:00' 
+            and fec_venc <= '#{to.to_s('%Y-%m-%d')} 00:00:00'
+          "
+    cartera = Profit::Factura.connection().select_all(sql)
+
+    sum = {} 
+    sum.merge! cartera.first unless cartera.empty?
+    sum
+  end
+
+  def self.cartera_vencida(from, to)
+    sql = "select 
+            SUM(saldo) as neto
+          from 
+            docum_cc 
+          where 
+            tipo_doc='GIRO' and saldo > 0 
+            and fec_venc >= '#{from.to_s('%Y-%m-%d')} 00:00:00' 
+            and fec_venc <= '#{to.to_s('%Y-%m-%d')} 00:00:00'
+          "
+    cartera = Profit::Factura.connection().select_all(sql)
+
+    sum = {} 
+    sum.merge! cartera.first unless cartera.empty?
+    sum
+  end
+
+  def self.devoluciones(from, to)
+    sql = "select 
+            SUM(tot_bruto - glob_desc) as bruto,
+            SUM(iva) as iva
+          from 
+            dev_cli 
+          where
+            fec_emis >= '#{from.to_s('%Y-%m-%d')} 00:00:00' 
+            and fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00'
+          "
+    devoluciones = Profit::Factura.connection().select_all(sql)
+
+    sum = {} 
+    sum.merge! devoluciones.first unless devoluciones.empty?
+    sum
+  end
+
+
   private
   def self.search_facturas(sql_facturas, co_lin, co_ven, co_zon)
     facts = Profit::DocumCc.connection().select_all(sql_facturas)

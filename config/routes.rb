@@ -41,6 +41,9 @@ Arv2::Application.routes.draw do
   get "/cuenta" => 'cuenta#index', :as => :cuenta
   post "/cuenta/show" => 'cuenta#show', :as => :show_cuenta
 
+  get "/informe" => 'informe#index', :as => :informe
+  post "/informe/show" => 'informe#show', :as => :show_informe
+
   get "/productos" => 'productos#index', :as => :productos
   post "/productos/show" => 'productos#show', :as => :show_productos
 

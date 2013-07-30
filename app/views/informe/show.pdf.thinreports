@@ -1,0 +1,157 @@
+report.start_new_page
+
+from = (Time.now.year.to_s + "-" + @month.to_s + "-01").to_date
+to =  (from + 1.month) - 1
+
+i=0
+neto=0
+costo=0
+financiamiento=0
+costo_dev=0
+iva=0
+bruto=0
+
+giros=0
+iniciales=0
+contados=0
+tingreso=0
+cliente=0
+
+(from..to).each do |d| 
+  if d.workday?
+    i+=1
+    report.page.values ("dia" + i.to_s).to_sym => i.to_s
+    report.page.values ("fecha" + i.to_s).to_sym => d.strftime('%d/%m')
+    ventas = Profit::Factura.ventas_by_day d
+    contador_clientes = 0    
+    unless ventas.empty?
+      report.page.values ("venta" + i.to_s).to_sym => ventas['neto'] unless ventas['neto'].nil?
+      neto += ventas['neto'] unless ventas['neto'].nil?
+
+      report.page.values ("costo" + i.to_s).to_sym => ventas['costo'] unless ventas['costo'].nil?
+      costo += ventas['costo'] unless ventas['costo'].nil?
+
+      report.page.values ("interes" + i.to_s).to_sym => ventas['financiamiento'] unless ventas['financiamiento'].nil?
+      financiamiento += ventas['financiamiento'] unless ventas['financiamiento'].nil?
+
+      report.page.values ("devol" + i.to_s).to_sym => ventas['costo_dev'] unless ventas['costo_dev'].nil?
+      costo_dev += ventas['costo_dev'] unless ventas['costo_dev'].nil?
+
+      report.page.values ("iva" + i.to_s).to_sym => ventas['iva'] unless ventas['iva'].nil?
+      iva += ventas['iva'] unless ventas['iva'].nil?
+
+      report.page.values ("vneta" + i.to_s).to_sym => ventas['bruto'] unless ventas['bruto'].nil?
+      bruto += ventas['bruto'] unless ventas['bruto'].nil?
+
+      contador_clientes += ventas['contador'] unless ventas['contador'].nil?
+    end
+
+    ingresos = Profit::Factura.ingresos_by_day d
+    total_ingresos = 0.0
+    unless ingresos.empty?
+      report.page.values ("gprofit" + i.to_s).to_sym => ingresos['giros'] unless ingresos['giros'].nil?
+      giros += ingresos['giros'] unless ingresos['giros'].nil?
+      total_ingresos += ingresos['giros'] unless ingresos['giros'].nil?
+
+      report.page.values ("inicial" + i.to_s).to_sym => ingresos['iniciales'] unless ingresos['iniciales'].nil?
+      iniciales += ingresos['iniciales'] unless ingresos['iniciales'].nil?
+      total_ingresos += ingresos['iniciales'] unless ingresos['iniciales'].nil?
+
+      report.page.values ("contado" + i.to_s).to_sym => ingresos['contados'] unless ingresos['contados'].nil?
+      contados += ingresos['contados'] unless ingresos['contados'].nil?
+      total_ingresos += ingresos['contados'] unless ingresos['contados'].nil?
+
+      contador_clientes += ingresos['contador'] unless ingresos['contador'].nil?
+
+      report.page.values ("tingreso" + i.to_s).to_sym => total_ingresos
+      tingreso += total_ingresos
+    end
+    report.page.values ("cliente" + i.to_s).to_sym => contador_clientes
+    cliente += contador_clientes
+
+  end
+
+  report.page.values :tventa => neto
+  report.page.values :tcosto => costo
+  report.page.values :tinteres => financiamiento
+  report.page.values :tdevol => costo_dev
+  report.page.values :tiva => iva
+  report.page.values :tvneta => bruto
+
+  report.page.values :tgprofit => giros
+  report.page.values :tinicial => iniciales
+  report.page.values :tcontado => contados
+  report.page.values :ttingreso => tingreso
+  report.page.values :tcliente => cliente
+  #puts d.to_s + ": " + d.workday?.to_s
+end
+
+vendedores = Profit::Factura.ventas_vendedores_by_days from, to
+venta_neta = 0
+vendedores.each_with_index do |v,i|
+  if i < 6
+    report.page.values ("vendedor" + (i+1).to_s).to_sym => v['ven_des'] unless v['ven_des'].nil?
+    report.page.values ("vn" + (i+1).to_s).to_sym => v['neto'] unless v['neto'].nil?
+  end
+  venta_neta += v['neto'] unless v['neto'].nil?
+end
+report.page.values :totalvn => venta_neta
+
+# Por vencer
+total_cartera_por_vencer=0
+cartera_0_30_por_vencer = Profit::Factura.cartera Date.today, (Date.today + 1.month)
+cartera_30_60_por_vencer = Profit::Factura.cartera Date.today + 1.month + 1.day, (Date.today + 2.month)
+cartera_60_90_por_vencer = Profit::Factura.cartera Date.today + 2.month + 1.day, (Date.today + 3.month)
+cartera_90_120_por_vencer = Profit::Factura.cartera Date.today + 3.month + 1.day, (Date.today + 4.month)
+cartera_120_150_por_vencer = Profit::Factura.cartera Date.today + 4.month + 1.day, (Date.today + 5.month)
+cartera_mayor_150_por_vencer = Profit::Factura.cartera Date.today + 5.month + 1.day, (Date.today + 24.month)
+
+
+report.page.values :pvencer1 => cartera_0_30_por_vencer['neto'] unless cartera_0_30_por_vencer['neto'].nil?
+report.page.values :pvencer2 => cartera_30_60_por_vencer['neto'] unless cartera_30_60_por_vencer['neto'].nil?
+report.page.values :pvencer3 => cartera_60_90_por_vencer['neto'] unless cartera_60_90_por_vencer['neto'].nil?
+report.page.values :pvencer4 => cartera_90_120_por_vencer['neto'] unless cartera_90_120_por_vencer['neto'].nil?
+report.page.values :pvencer5 => cartera_120_150_por_vencer['neto'] unless cartera_120_150_por_vencer['neto'].nil?
+report.page.values :pvencer6 => cartera_mayor_150_por_vencer['neto'] unless cartera_mayor_150_por_vencer['neto'].nil?
+
+total_cartera_por_vencer += cartera_0_30_por_vencer['neto'] unless cartera_0_30_por_vencer['neto'].nil?
+total_cartera_por_vencer += cartera_30_60_por_vencer['neto'] unless cartera_30_60_por_vencer['neto'].nil?
+total_cartera_por_vencer += cartera_60_90_por_vencer['neto'] unless cartera_60_90_por_vencer['neto'].nil?
+total_cartera_por_vencer += cartera_90_120_por_vencer['neto'] unless cartera_90_120_por_vencer['neto'].nil?
+total_cartera_por_vencer += cartera_120_150_por_vencer['neto'] unless cartera_120_150_por_vencer['neto'].nil?
+total_cartera_por_vencer += cartera_mayor_150_por_vencer['neto'] unless cartera_mayor_150_por_vencer['neto'].nil?
+
+report.page.values :tpvencer => total_cartera_por_vencer
+
+
+# Vencida
+total_cartera_vencida=0
+cartera_0_30_vencida = Profit::Factura.cartera_vencida (Date.today - 1.month), Date.today
+cartera_30_60_vencida = Profit::Factura.cartera_vencida (Date.today - 2.month), Date.today - 1.month - 1.day
+cartera_60_90_vencida = Profit::Factura.cartera_vencida (Date.today - 3.month), Date.today - 2.month - 1.day
+cartera_90_120_vencida = Profit::Factura.cartera_vencida (Date.today - 4.month), Date.today - 3.month - 1.day
+cartera_120_150_vencida = Profit::Factura.cartera_vencida (Date.today - 5.month), Date.today - 4.month - 1.day
+cartera_mayor_150_vencida = Profit::Factura.cartera_vencida (Date.today - 24.month), Date.today - 5.month - 1.day
+
+
+report.page.values :vencida1 => cartera_0_30_vencida['neto'] unless cartera_0_30_vencida['neto'].nil?
+report.page.values :vencida2 => cartera_30_60_vencida['neto'] unless cartera_30_60_vencida['neto'].nil?
+report.page.values :vencida3 => cartera_60_90_vencida['neto'] unless cartera_60_90_vencida['neto'].nil?
+report.page.values :vencida4 => cartera_90_120_vencida['neto'] unless cartera_90_120_vencida['neto'].nil?
+report.page.values :vencida5 => cartera_120_150_vencida['neto'] unless cartera_120_150_vencida['neto'].nil?
+report.page.values :vencida6 => cartera_mayor_150_vencida['neto'] unless cartera_mayor_150_vencida['neto'].nil?
+
+total_cartera_vencida += cartera_0_30_vencida['neto'] unless cartera_0_30_vencida['neto'].nil?
+total_cartera_vencida += cartera_30_60_vencida['neto'] unless cartera_30_60_vencida['neto'].nil?
+total_cartera_vencida += cartera_60_90_vencida['neto'] unless cartera_60_90_vencida['neto'].nil?
+total_cartera_vencida += cartera_90_120_vencida['neto'] unless cartera_90_120_vencida['neto'].nil?
+total_cartera_vencida += cartera_120_150_vencida['neto'] unless cartera_120_150_vencida['neto'].nil?
+total_cartera_vencida += cartera_mayor_150_vencida['neto'] unless cartera_mayor_150_vencida['neto'].nil?
+
+report.page.values :tvencida => total_cartera_vencida
+
+report.page.values :tcartera=> total_cartera_vencida + total_cartera_por_vencer
+
+
+
+

@@ -1,0 +1,13 @@
+<h1>Informe Gerencial</h1>
+
+<%= form_tag show_informe_path + ".pdf", :method => :post, :class => 'form-horizontal' do |f| %>
+  <div class="control-group">
+    <%= label_tag :mes, "Mes",:class => 'control-label' %>
+    <div class="controls">
+      <%= select_month_tag %>
+    </div>
+  </div>  
+  <div class="form-actions">
+    <%= submit_tag nil, :class => 'btn btn-primary' %>
+  </div>
+<% end %>

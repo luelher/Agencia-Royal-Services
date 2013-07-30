@@ -68,7 +68,7 @@ class Gmining::ProfitClient
           from 
             reng_cob r inner join cobros c on r.cob_num=c.cob_num 
           where 
-            r.tp_doc_cob='CFXG' 
+            r.tp_doc_cob='ADEL' 
             and c.fe_us_in > '#{desde.strftime("%Y-%m-%d %H:%M:%S")}' 
             and c.fe_us_in <= '#{hasta.strftime("%Y-%m-%d %H:%M:%S")}' 
           group by 

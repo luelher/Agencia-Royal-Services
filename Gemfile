@@ -75,3 +75,7 @@ gem 'httparty'
 gem 'whenever'
 
 gem "number_to_words"
+
+gem "holidays"
+
+gem "business_time"
