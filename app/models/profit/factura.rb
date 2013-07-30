@@ -338,24 +338,30 @@ class Profit::Factura < ActiveRecord::Base
     sum_costo = Profit::Factura.connection().select_all(sql)
 
     # Financiamiento de lo facturado
-    sql="select 
-            SUM(r.neto) as giros, 
-            SUM(d.monto_otr) as financiamiento,
-            c.fec_cob 
-          from 
-            reng_cob r inner join docum_cc d on r.doc_num=d.nro_doc inner join cobros c on r.cob_num=c.cob_num 
-          where 
-            r.tp_doc_cob='GIRO'
-            and c.fec_cob = '#{day.to_s('%Y-%m-%d')} 00:00:00' 
-          group by 
-            c.fec_cob
-          order by 
-            c.fec_cob desc"
+    sql = "select distinct fact_num from factura d where d.fec_emis = '#{day.to_s('%Y-%m-%d')} 00:00:00'"
+    fact_nums = Profit::Factura.connection().select_all(sql)
+    likes = fact_nums.map{|m| "observa LIKE '%GIRO%FACT " + m['fact_num'].to_s + "%'"}
+    likes_or = likes.join(' OR ')
+
+    sql = "select
+              sum(monto_net) as giros ,
+              sum(monto_otr) as financiamiento ,
+              fec_emis 
+            from 
+              docum_cc 
+            where 
+              tipo_doc='GIRO' and 
+              (#{likes_or}) 
+            group by 
+              fec_emis 
+            order by fec_emis desc"
     sum_financiamiento = Profit::Factura.connection().select_all(sql)
 
     # Costo de las devoluciones
     sql="select distinct
             SUM(b.ult_cos_un * b.total_art) as costo_dev,
+            sum(b.tot_bruto) as bruto_dev,
+            sum(b.iva) as iva_dev,
               b.fec_emis 
             from 
               devcli_reng b 
@@ -409,6 +415,7 @@ class Profit::Factura < ActiveRecord::Base
             c.fec_cob desc"
     sum_giros = Profit::Factura.connection().select_all(sql)
 
+    # Iniciales
     sql = "select 
             SUM(c.monto) as iniciales, 
             c.fec_cob 
@@ -423,6 +430,7 @@ class Profit::Factura < ActiveRecord::Base
             c.fec_cob desc"
     sum_iniciales = Profit::Factura.connection().select_all(sql)
 
+    # Contados
     sql = "select distinct
             sum(a.tot_neto) as contados, 
               fec_emis 
@@ -435,7 +443,7 @@ class Profit::Factura < ActiveRecord::Base
               a.fec_emis "
     sum_otros = Profit::Factura.connection().select_all(sql)
 
-
+    # Contador de Clientes
     sql = "select COUNT(x.cob_num) as contador from
           (
           select distinct
@@ -490,6 +498,26 @@ class Profit::Factura < ActiveRecord::Base
     sum = {} 
     sum.merge! cartera.first unless cartera.empty?
     sum
+  end
+
+  def self.lineas(from, to)
+    sql = "select 
+              count(b.co_lin) as contador, 
+              b.co_lin, 
+              b.lin_des 
+            from 
+              art a inner join lin_art b on a.co_lin=b.co_lin inner join reng_fac c on a.co_art=c.co_art inner join factura d on c.fact_num=d.fact_num 
+            where 
+              d.fec_emis>='#{from.to_s('%Y-%m-%d')} 00:00:00' 
+              and d.fec_emis<='#{to.to_s('%Y-%m-%d')} 00:00:00' 
+              and b.co_lin<>'23' 
+              and b.co_lin<>'SERV.' 
+            group by 
+              b.co_lin, 
+              b.lin_des 
+            order 
+              by b.co_lin"
+    lineas = Profit::Factura.connection().select_all(sql)
   end
 
   def self.devoluciones(from, to)

@@ -3,11 +3,16 @@ report.start_new_page
 from = (Time.now.year.to_s + "-" + @month.to_s + "-01").to_date
 to =  (from + 1.month) - 1
 
+report.page.values :titulo_ingresos => "RELACION DE INGRESOS #{from.strftime("%^B")} #{from.strftime("%Y")}"
+report.page.values :titulo_ventas => "RELACION DE VENTAS #{from.strftime("%^B")} #{from.strftime("%Y")}"
+
 i=0
 neto=0
 costo=0
 financiamiento=0
 costo_dev=0
+bruto_dev=0
+iva_dev=0
 iva=0
 bruto=0
 
@@ -28,14 +33,20 @@ cliente=0
       report.page.values ("venta" + i.to_s).to_sym => ventas['neto'] unless ventas['neto'].nil?
       neto += ventas['neto'] unless ventas['neto'].nil?
 
-      report.page.values ("costo" + i.to_s).to_sym => ventas['costo'] unless ventas['costo'].nil?
-      costo += ventas['costo'] unless ventas['costo'].nil?
+      report.page.values ("devol" + i.to_s).to_sym => ventas['bruto_dev'] unless ventas['bruto_dev'].nil?
+      costo_dev += ventas['costo_dev'] unless ventas['costo_dev'].nil?
+      bruto_dev += ventas['bruto_dev'] unless ventas['bruto_dev'].nil?
+      iva_dev += ventas['iva_dev'] unless ventas['iva_dev'].nil?
+
+      cos = 0
+      cos = ventas['costo'] unless ventas['costo'].nil?
+      cos -= ventas['costo_dev'] unless ventas['costo_dev'].nil?
+
+      report.page.values ("costo" + i.to_s).to_sym => cos
+      costo += cos
 
       report.page.values ("interes" + i.to_s).to_sym => ventas['financiamiento'] unless ventas['financiamiento'].nil?
       financiamiento += ventas['financiamiento'] unless ventas['financiamiento'].nil?
-
-      report.page.values ("devol" + i.to_s).to_sym => ventas['costo_dev'] unless ventas['costo_dev'].nil?
-      costo_dev += ventas['costo_dev'] unless ventas['costo_dev'].nil?
 
       report.page.values ("iva" + i.to_s).to_sym => ventas['iva'] unless ventas['iva'].nil?
       iva += ventas['iva'] unless ventas['iva'].nil?
@@ -71,18 +82,33 @@ cliente=0
 
   end
 
+  # Totales Ingresos
   report.page.values :tventa => neto
   report.page.values :tcosto => costo
   report.page.values :tinteres => financiamiento
-  report.page.values :tdevol => costo_dev
+  report.page.values :tdevol => bruto_dev
   report.page.values :tiva => iva
   report.page.values :tvneta => bruto
 
+  report.page.values :mdviva => iva - iva_dev
+  report.page.values :mdvneta => bruto - bruto_dev
+
+  # Totales Ventas
   report.page.values :tgprofit => giros
   report.page.values :tinicial => iniciales
   report.page.values :tcontado => contados
   report.page.values :ttingreso => tingreso
   report.page.values :tcliente => cliente
+
+  # Resumen de Devoluciones
+  report.page.values :devolucm => bruto_dev
+  devol_meses_anteriores = Profit::Factura.devoluciones  (Time.now.year.to_s + "-01-01").to_date, from - 1.day 
+  report.page.values :devolucea => devol_meses_anteriores['bruto'] unless devol_meses_anteriores['bruto'].nil?
+  devol_ano_anterior = Profit::Factura.devoluciones  ((Time.now.year - 1).to_s + "-01-01").to_date, ((Time.now.year - 1).to_s + "-12-31").to_date
+  report.page.values :devoluca => devol_meses_anteriores['bruto'] unless devol_meses_anteriores['bruto'].nil?
+  report.page.values :ano_anterior_devol => (Time.now.year - 1).to_s
+
+
   #puts d.to_s + ": " + d.workday?.to_s
 end
 
@@ -99,12 +125,12 @@ report.page.values :totalvn => venta_neta
 
 # Por vencer
 total_cartera_por_vencer=0
-cartera_0_30_por_vencer = Profit::Factura.cartera Date.today, (Date.today + 1.month)
-cartera_30_60_por_vencer = Profit::Factura.cartera Date.today + 1.month + 1.day, (Date.today + 2.month)
-cartera_60_90_por_vencer = Profit::Factura.cartera Date.today + 2.month + 1.day, (Date.today + 3.month)
-cartera_90_120_por_vencer = Profit::Factura.cartera Date.today + 3.month + 1.day, (Date.today + 4.month)
-cartera_120_150_por_vencer = Profit::Factura.cartera Date.today + 4.month + 1.day, (Date.today + 5.month)
-cartera_mayor_150_por_vencer = Profit::Factura.cartera Date.today + 5.month + 1.day, (Date.today + 24.month)
+cartera_0_30_por_vencer = Profit::Factura.cartera_vencida Date.today, (Date.today + 1.month)
+cartera_30_60_por_vencer = Profit::Factura.cartera_vencida Date.today + 1.month + 1.day, (Date.today + 2.month)
+cartera_60_90_por_vencer = Profit::Factura.cartera_vencida Date.today + 2.month + 1.day, (Date.today + 3.month)
+cartera_90_120_por_vencer = Profit::Factura.cartera_vencida Date.today + 3.month + 1.day, (Date.today + 4.month)
+cartera_120_150_por_vencer = Profit::Factura.cartera_vencida Date.today + 4.month + 1.day, (Date.today + 5.month)
+cartera_mayor_150_por_vencer = Profit::Factura.cartera_vencida Date.today + 5.month + 1.day, (Date.today + 24.month)
 
 
 report.page.values :pvencer1 => cartera_0_30_por_vencer['neto'] unless cartera_0_30_por_vencer['neto'].nil?
@@ -152,6 +178,12 @@ report.page.values :tvencida => total_cartera_vencida
 
 report.page.values :tcartera=> total_cartera_vencida + total_cartera_por_vencer
 
+# Lineas
+lineas = Profit::Factura.lineas from, to
+lineas.each_with_index do |l,i|
+  report.page.values ("linea" + (i+1).to_s).to_sym => l['lin_des'] unless l['lin_des'].nil?
+  report.page.values ("cant" + (i+1).to_s).to_sym => l['contador'] unless l['contador'].nil?
+end
 
 
 
