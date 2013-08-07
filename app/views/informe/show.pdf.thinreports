@@ -181,7 +181,7 @@ report.page.values :tcartera=> total_cartera_vencida + total_cartera_por_vencer
 # Lineas
 lineas = Profit::Factura.lineas from, to
 lineas.each_with_index do |l,i|
-  report.page.values ("linea" + (i+1).to_s).to_sym => l['lin_des'] unless l['lin_des'].nil?
+  report.page.values ("linea" + (i+1).to_s).to_sym => l['lin_des'].strip unless l['lin_des'].nil?
   report.page.values ("cant" + (i+1).to_s).to_sym => l['contador'] unless l['contador'].nil?
 end
 

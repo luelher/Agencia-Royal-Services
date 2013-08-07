@@ -394,7 +394,32 @@ class Profit::Factura < ActiveRecord::Base
               a.co_ven, b.ven_des
             order by 
               neto desc"
-    vendedores = Profit::Factura.connection().select_all(sql)
+    ventas_vendedores = Profit::Factura.connection().select_all(sql)
+
+    sql = "select distinct
+              sum(a.tot_bruto) as neto, 
+              a.co_ven,
+              b.ven_des
+            from 
+              devcli_reng a inner join vendedor b on a.co_ven=b.co_ven
+            where 
+              a.fec_emis >= '#{from.to_s('%Y-%m-%d')} 00:00:00'
+              and
+              a.fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00'
+            group by 
+              a.co_ven, b.ven_des
+            order by 
+              neto desc"
+    devoluciones_vendedores = Profit::Factura.connection().select_all(sql)
+
+    ventas_vendedores.each do |v|
+      devoluciones_vendedores.each do |d|
+        if d['co_ven'] == v['co_ven']
+          v['neto'] = v['neto'] - d['neto']
+        end
+      end      
+    end    
+    ventas_vendedores
   end
 
 
@@ -409,6 +434,7 @@ class Profit::Factura < ActiveRecord::Base
           where 
             r.tp_doc_cob='GIRO'
             and c.fec_cob = '#{day.to_s('%Y-%m-%d')} 00:00:00' 
+            and c.anulado = 0 and c.monto<>0
           group by 
             c.fec_cob
           order by 
@@ -453,6 +479,7 @@ class Profit::Factura < ActiveRecord::Base
                     where 
                       r.tp_doc_cob='GIRO'
                       and c.fec_cob = '#{day.to_s('%Y-%m-%d')} 00:00:00' 
+                      and c.anulado = 0 and c.monto<>0
                     group by 
                       c.cob_num
           ) x"
