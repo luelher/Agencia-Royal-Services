@@ -516,7 +516,7 @@ class Profit::Factura < ActiveRecord::Base
           from 
             docum_cc 
           where 
-            tipo_doc='GIRO' and saldo > 0 and anulado = 0
+            (tipo_doc='GIRO' or tipo_doc='FACT' or tipo_doc='CHEQ' or tipo_doc='ADEL') and saldo > 0 and anulado = 0
             and fec_venc >= '#{from.to_s('%Y-%m-%d')} 00:00:00' 
             and fec_venc <= '#{to.to_s('%Y-%m-%d')} 00:00:00'
           "
