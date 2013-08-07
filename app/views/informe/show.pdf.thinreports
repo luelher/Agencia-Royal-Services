@@ -125,12 +125,12 @@ report.page.values :totalvn => venta_neta
 
 # Por vencer
 total_cartera_por_vencer=0
-cartera_0_30_por_vencer = Profit::Factura.cartera_vencida Date.today, (Date.today + 1.month)
-cartera_30_60_por_vencer = Profit::Factura.cartera_vencida Date.today + 1.month + 1.day, (Date.today + 2.month)
-cartera_60_90_por_vencer = Profit::Factura.cartera_vencida Date.today + 2.month + 1.day, (Date.today + 3.month)
-cartera_90_120_por_vencer = Profit::Factura.cartera_vencida Date.today + 3.month + 1.day, (Date.today + 4.month)
-cartera_120_150_por_vencer = Profit::Factura.cartera_vencida Date.today + 4.month + 1.day, (Date.today + 5.month)
-cartera_mayor_150_por_vencer = Profit::Factura.cartera_vencida Date.today + 5.month + 1.day, (Date.today + 24.month)
+cartera_0_30_por_vencer = Profit::Factura.cartera_vencida Date.today, (Date.today + 30.days)
+cartera_30_60_por_vencer = Profit::Factura.cartera_vencida Date.today + 30.days + 1.day, (Date.today + 60.days)
+cartera_60_90_por_vencer = Profit::Factura.cartera_vencida Date.today + 60.days + 1.day, (Date.today + 90.days)
+cartera_90_120_por_vencer = Profit::Factura.cartera_vencida Date.today + 90.days + 1.day, (Date.today + 120.days)
+cartera_120_150_por_vencer = Profit::Factura.cartera_vencida Date.today + 120.days + 1.day, (Date.today + 150.days)
+cartera_mayor_150_por_vencer = Profit::Factura.cartera_vencida Date.today + 150.days + 1.day, (Date.today + 3650.days)
 
 
 report.page.values :pvencer1 => cartera_0_30_por_vencer['neto'] unless cartera_0_30_por_vencer['neto'].nil?
@@ -152,12 +152,12 @@ report.page.values :tpvencer => total_cartera_por_vencer
 
 # Vencida
 total_cartera_vencida=0
-cartera_0_30_vencida = Profit::Factura.cartera_vencida (Date.today - 1.month), Date.today
-cartera_30_60_vencida = Profit::Factura.cartera_vencida (Date.today - 2.month), Date.today - 1.month - 1.day
-cartera_60_90_vencida = Profit::Factura.cartera_vencida (Date.today - 3.month), Date.today - 2.month - 1.day
-cartera_90_120_vencida = Profit::Factura.cartera_vencida (Date.today - 4.month), Date.today - 3.month - 1.day
-cartera_120_150_vencida = Profit::Factura.cartera_vencida (Date.today - 5.month), Date.today - 4.month - 1.day
-cartera_mayor_150_vencida = Profit::Factura.cartera_vencida (Date.today - 24.month), Date.today - 5.month - 1.day
+cartera_0_30_vencida = Profit::Factura.cartera_vencida (Date.today - 30.days), Date.today
+cartera_30_60_vencida = Profit::Factura.cartera_vencida (Date.today - 60.days), Date.today - 30.days - 1.day
+cartera_60_90_vencida = Profit::Factura.cartera_vencida (Date.today - 90.days), Date.today - 60.days - 1.day
+cartera_90_120_vencida = Profit::Factura.cartera_vencida (Date.today - 120.days), Date.today - 90.days - 1.day
+cartera_120_150_vencida = Profit::Factura.cartera_vencida (Date.today - 150.days), Date.today - 120.days - 1.day
+cartera_mayor_150_vencida = Profit::Factura.cartera_vencida (Date.today - 3650.days), Date.today - 150.days - 1.day
 
 
 report.page.values :vencida1 => cartera_0_30_vencida['neto'] unless cartera_0_30_vencida['neto'].nil?
