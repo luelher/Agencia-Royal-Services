@@ -1,41 +1,32 @@
-<%= form_for(@goal) do |f| %>
-  <% if @goal.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@goal.errors.count, "error") %> prohibited this goal from being saved:</h2>
-
-      <ul>
-      <% @goal.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= form_for @goal, :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
-    <%= label_tag :mes, "Año",:class => 'control-label' %>
-    <div class="controls">
-      <%= select_year(Date.today, start_year: 2013, end_year: 2015, field_name: 'year') %>
-    </div>
-  </div>  
-  <div class="control-group">
-    <%= label_tag :mes, "Mes",:class => 'control-label' %>
+    <%= f.label :month, :class => 'control-label' %>
     <div class="controls">
       <%= select_month(Date.today, field_name: 'month') %>
     </div>
-  </div>  
+  </div>
   <div class="control-group">
-    <%= label_tag :mes, "Meta de Ventas del Mes",:class => 'control-label' %>
+    <%= f.label :year, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :sales %>
+      <%= select_year(Date.today, start_year: 2013, end_year: 2015, field_name: 'year') %>
     </div>
-  </div>  
+  </div>
   <div class="control-group">
-    <%= label_tag :mes, "Meta de Cobranza del Mes",:class => 'control-label' %>
+    <%= f.label :sales, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :billing %>
+      <%= f.text_field :sales, :class => 'text_field' %>
     </div>
-  </div>  
+  </div>
+  <div class="control-group">
+    <%= f.label :billing, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :billing, :class => 'text_field' %>
+    </div>
+  </div>
 
-  <div class="actions">
-    <%= f.submit %>
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                goals_path, :class => 'btn' %>
   </div>
 <% end %>

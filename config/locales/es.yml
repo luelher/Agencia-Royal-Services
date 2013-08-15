@@ -7,6 +7,11 @@ es:
   co_ven: "Vendedor"
   co_zon: "Zona"
   activerecord:
+    # helpers:
+    #   goal:
+    #     titles:
+    #       new: 
+    #         title: "nuevoooo"
     attributes:
       user:
         username: "Usuario"
@@ -21,11 +26,17 @@ es:
         direccion: "Dirección"
         telefono: "Teléfono"
         latitude: "Dirección en Mapa"
+      goal:
+        year: "Año"
+        month: "Mes"
+        billing: "Cobranza"
+        sales: "Ventas"
+
     models:
       ventas/cliente: "Clientes"
       profit/factura: "Facturas"
       user: "Usuario"
-
+      goal: "Metas"
     errors:
       models:
         experiencia:

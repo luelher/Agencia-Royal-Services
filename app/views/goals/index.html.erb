@@ -1,26 +1,38 @@
-<h1>Listing goals</h1>
-
-<table>
-  <tr>
-    <th>Año</th>
-    <th>Mes</th>
-    <th>Ventas</th>
-    <th>Cobranza</th>
-  </tr>
-
-<% @goals.each do |goal| %>
-  <tr>
-    <td><%= goal.year %></td>
-    <td><%= goal.month %></td>
-    <td><%= goal.sales %></td>
-    <td><%= goal.billing %></td>
-    <td><%= link_to 'Show', goal %></td>
-    <td><%= link_to 'Edit', edit_goal_path(goal) %></td>
-    <td><%= link_to 'Destroy', goal, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
+<%- model_class = Goal -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Mes</th>
+      <th>Año</th>
+      <th>Ventas</th>
+      <th>Cobranza</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @goals.each do |goal| %>
+      <tr>
+        <td><%= link_to goal.month, goal_path(goal) %></td>
+        <td><%= goal.year %></td>
+        <td><%= goal.sales %></td>
+        <td><%= goal.billing %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_goal_path(goal), :class => 'btn btn-mini' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      goal_path(goal),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-mini btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 
-<br />
-
-<%= link_to 'New Goal', new_goal_path %>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_goal_path,
+            :class => 'btn btn-primary' %>
