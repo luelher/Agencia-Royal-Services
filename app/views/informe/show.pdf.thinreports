@@ -271,14 +271,18 @@ report.page.values :diferenpm => diferenpm if diferenpm > 0
 
 # Titulos acumulados
 
-report.page.values :titulo_acumulado_cobranza => "ACUMULADO COMPARATIVO COBRANZA #{from.strftime("%Y")}"
-report.page.values :titulo_acumulado_anteriores_cobranza => "ACUMULADOS #{(from-2.year).strftime("%Y")} #{(from-1.year).strftime("%Y")}"
+report.page.values :titulo_acumulado_cobranza => "ACUMULADO COMPARATIVO COBRANZA 
+#{from.strftime("%Y")}"
+report.page.values :titulo_acumulado_anteriores_cobranza => "ACUMULADOS 
+#{(from-2.year).strftime("%Y")} #{(from-1.year).strftime("%Y")}"
 report.page.values :cano1 => (from-2.year).strftime("%Y")
 report.page.values :cano2 => (from-1.year).strftime("%Y")
 
 
-report.page.values :titulo_acumulado_ventas => "ACUMULADO COMPARATIVO VENTAS #{from.strftime("%Y")}"
-report.page.values :titulo_acumulado_anteriores_ventas => "ACUMULADOS #{(from-3.year).strftime("%Y")} #{(from-2.year).strftime("%Y")} #{(from-1.year).strftime("%Y")}"
+report.page.values :titulo_acumulado_ventas => "ACUMULADO COMPARATIVO VENTAS
+#{from.strftime("%Y")}"
+report.page.values :titulo_acumulado_anteriores_ventas => "ACUMULADOS 
+#{(from-3.year).strftime("%Y")} #{(from-2.year).strftime("%Y")} #{(from-1.year).strftime("%Y")}"
 report.page.values :vano1 => (from-3.year).strftime("%Y")
 report.page.values :vano2 => (from-2.year).strftime("%Y")
 report.page.values :vano3 => (from-1.year).strftime("%Y")
@@ -329,7 +333,7 @@ report.page.values :vano3 => (from-1.year).strftime("%Y")
     report.page.values ("adiferen" + (mes).to_s).to_sym => (meta_v - ventas['neto']).round(2) unless ventas['neto'].nil?
 
     report.page.values ("porcen" + (mes).to_s).to_sym => ((cobranza['giros'] * 100) / meta_c).round(2).to_s + "%" unless cobranza['giros'].nil?
-    report.page.values ("aporcen" + (mes).to_s).to_sym => ((ventas['neto'] * 100) / meta_v).round(2) unless ventas['neto'].nil?
+    report.page.values ("aporcen" + (mes).to_s).to_sym => ((ventas['neto'] * 100) / meta_v).round(2).to_s + "%" unless ventas['neto'].nil?
     
 
     ing = 0

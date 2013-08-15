@@ -520,7 +520,7 @@ class Profit::Factura < ActiveRecord::Base
 
   def self.lineas(from, to)
     sql = "select 
-              count(c.total_art) as contador, 
+              sum(c.total_art) as contador, 
               b.co_lin, 
               b.lin_des 
             from 
