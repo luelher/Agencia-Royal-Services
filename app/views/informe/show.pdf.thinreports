@@ -3,10 +3,11 @@ report.start_new_page
 from = (Time.now.year.to_s + "-" + @month.to_s + "-01").to_date
 to =  (from + 1.month) - 1
 
-report.page.values :titulo_ingresos => "RELACION DE INGRESOS #{from.strftime("%^B")} #{from.strftime("%Y")}"
-report.page.values :titulo_ventas => "RELACION DE VENTAS #{from.strftime("%^B")} #{from.strftime("%Y")}"
+report.page.values :titulo_ingresos => "RELACION DE INGRESOS #{I18n::translate('date.month_names')[from.month-1]} #{from.strftime("%Y")}"
+report.page.values :titulo_ventas => "RELACION DE VENTAS #{I18n::translate('date.month_names')[from.month-1]} #{from.strftime("%Y")}"
 
 i=0
+wd=0
 neto=0
 costo=0
 financiamiento=0
@@ -23,7 +24,8 @@ tingreso=0
 cliente=0
 
 (from..to).each do |d| 
-  if d.workday?
+  wd+=1 if d.workday?
+  if d.workday? and d <= Date.today
     i+=1
     report.page.values ("dia" + i.to_s).to_sym => i.to_s
     report.page.values ("fecha" + i.to_s).to_sym => d.strftime('%d/%m')
@@ -118,6 +120,12 @@ vendedores.each_with_index do |v,i|
   if i < 6
     report.page.values ("vendedor" + (i+1).to_s).to_sym => v['ven_des'] unless v['ven_des'].nil?
     report.page.values ("vn" + (i+1).to_s).to_sym => v['neto'] unless v['neto'].nil?
+
+    if i<3
+      report.page.values ("metav" + (i+1).to_s).to_sym => (@meta_ventas.to_f * 0.3).round(2)
+    else
+      report.page.values ("metav" + (i+1).to_s).to_sym => (@meta_ventas.to_f * 0.05).round(2)
+    end
   end
   venta_neta += v['neto'] unless v['neto'].nil?
 end
@@ -185,5 +193,128 @@ lineas.each_with_index do |l,i|
   report.page.values ("cant" + (i+1).to_s).to_sym => l['contador'] unless l['contador'].nil?
 end
 
+# Estadisticas Cobranza
+
+#Promedio de Ingreso hasta el momento
+pdingreso = 0
+pdingreso = (tingreso / i).round(2) if tingreso > 0
+report.page.values :pdingreso => pdingreso
+
+#Ingreso estimado en base al promedio diario
+eimes = 0
+eimes = (pdingreso * wd).round(2) if pdingreso > 0
+report.page.values :eimes => eimes
+
+#Promedio de Giros hasta el momento
+pprofit = 0
+pprofit = (giros / i).round(2) if giros > 0
+report.page.values :pprofit => pprofit
+
+#Meta del mes de cobranza de giros
+mprofit = @meta_cobranza.to_f
+report.page.values :mprofit => mprofit if mprofit > 0
+
+#Ingreso estimado de giros en base al promedio diario
+pcubrir = 0
+pcubrir = (mprofit / wd).round(2) if mprofit > 0
+report.page.values :pcubrir => pcubrir
+
+#Diferencia entre promedio diario y promedio a cubrir
+ddiaria = 0
+ddiaria = (pprofit - pcubrir).abs.round(2) if (pprofit+pcubrir).abs > 0
+report.page.values :ddiaria => ddiaria
+
+#Acumulado del diferencial entre promedio diario y promedio a cubrir
+dacumu = 0
+dacumu = (ddiaria * i).round(2) if ddiaria > 0
+report.page.values :dacumu => dacumu
+
+#Total cobrado
+tcobrado = 0
+tcobrado = giros if giros > 0
+report.page.values :tcobrado => tcobrado
+
+#Porcentaje cobrado
+pcobrado = 0
+pcobrado = (giros * 100) / mprofit if giros > 0 and pprofit > 0
+report.page.values :pcobrado => pcobrado.round(2).to_s + "%"
 
 
+# Estadisticas Ventas
+
+#Meta de venta del mes
+mensual3 = @meta_ventas.to_f
+report.page.values :mensual3 => mensual3 if mensual3 > 0
+
+#Promedio diario de la meta del mes de venta 
+diario3 = 0
+diario3 = (mensual3 / wd) if mensual3 > 0
+report.page.values :diario3 => diario3 if diario3 > 0
+
+#Total Meta Venta
+totalmv = @meta_ventas.to_f
+report.page.values :totalmv => totalmv if totalmv > 0
+
+#venta del mes
+mensual2 = venta_neta
+report.page.values :mensual2 => mensual2 if mensual2 > 0
+
+#Promedio diario de la venta del mes
+diario2 = 0
+diario2 = (venta_neta / i) if venta_neta > 0
+report.page.values :diario2 => diario2 if diario2 > 0
+
+#Diferencia de la meta de venta y lo vendido
+diferenpm = 0
+diferenpm = (mensual2 - mensual3).abs if mensual2 > 0 and mensual3 > 0
+report.page.values :diferenpm => diferenpm if diferenpm > 0
+
+
+# Acumulados Comparativos Cobranza
+(1..12).each do |mes|
+
+  if mes <= Date.today.month
+    meta = Goal.find_by_month_and_year(mes, Date.today.year)
+    if meta
+      meta_v = meta.sales
+      meta_c = meta.billing
+    else
+      meta_v = 0
+      meta_c = 0
+    end
+
+    mes_inicio = (Time.now.year.to_s + "-" + mes.to_s + "-01").to_date
+    mes_fin =  (mes_inicio + 1.month) - 1
+
+    cobranza = Profit::Factura.ingresos_by_day(mes_inicio, mes_fin)
+    ventas = Profit::Factura.ventas_by_day(mes_inicio, mes_fin)
+
+
+    report.page.values ("mes" + (mes).to_s).to_sym => I18n::translate('date.month_names')[mes_inicio.month-1]
+    report.page.values ("ames" + (mes).to_s).to_sym => I18n::translate('date.month_names')[mes_inicio.month-1]
+
+    report.page.values ("meta" + (mes).to_s).to_sym => meta_c
+    report.page.values ("ameta" + (mes).to_s).to_sym => meta_v
+
+    report.page.values ("logrado" + (mes).to_s).to_sym => cobranza['giros'] unless cobranza['giros'].nil?
+    report.page.values ("alogrado" + (mes).to_s).to_sym => ventas['neto'] unless ventas['neto'].nil?
+
+    report.page.values ("diferen" + (mes).to_s).to_sym => (meta_c - cobranza['giros']).round(2) unless cobranza['giros'].nil?
+    report.page.values ("adiferen" + (mes).to_s).to_sym => (meta_v - ventas['neto']).round(2) unless ventas['neto'].nil?
+
+    report.page.values ("porcen" + (mes).to_s).to_sym => ((cobranza['giros'] * 100) / meta_c).round(2).to_s + "%" unless cobranza['giros'].nil?
+    report.page.values ("aporcen" + (mes).to_s).to_sym => ((ventas['neto'] * 100) / meta_v).round(2) unless ventas['neto'].nil?
+    
+
+    ing = 0
+    ing += cobranza['giros'] unless cobranza['giros'].nil?
+    ing += cobranza['iniciales'] unless cobranza['iniciales'].nil?
+    ing += cobranza['contados'] unless cobranza['contados'].nil?
+    report.page.values ("ingresos" + (mes).to_s).to_sym => ing
+    
+  end
+
+
+
+
+end

@@ -307,68 +307,68 @@ class Profit::Factura < ActiveRecord::Base
     cobros.uniq
   end
 
-  def self.ventas_by_day(day)
+  def self.ventas_by_day(from, to=nil)
+    
+    to = from if to.nil?
 
     # Facturado
     sql= "select distinct
       sum(a.tot_bruto) as bruto, 
             sum(a.tot_neto) as neto, 
             SUM(a.iva) as iva,
-            count(a.fact_num) as contador,
-              fec_emis 
+            count(a.fact_num) as contador
             from 
               factura a 
             where 
-              a.fec_emis = '#{day.to_s('%Y-%m-%d')} 00:00:00'
-            group by 
-              a.fec_emis "
+              a.fec_emis >= '#{from.to_s('%Y-%m-%d')} 00:00:00'
+              and 
+              a.fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00'"
     sum_all = Profit::Factura.connection().select_all(sql)
 
     # Costo de lo facturado
     sql="select distinct
-            SUM(b.ult_cos_un * b.total_art) as costo,
-              fec_emis 
+              SUM(b.ult_cos_un * b.total_art) as costo
             from 
               factura a 
               inner join reng_fac b on a.fact_num=b.fact_num
             where 
-              a.fec_emis = '#{day.to_s('%Y-%m-%d')} 00:00:00'
-            group by 
-              a.fec_emis "
+              a.fec_emis >= '#{from.to_s('%Y-%m-%d')} 00:00:00'
+              and 
+              a.fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00'"
     sum_costo = Profit::Factura.connection().select_all(sql)
 
     # Financiamiento de lo facturado
-    sql = "select distinct fact_num from factura d where d.fec_emis = '#{day.to_s('%Y-%m-%d')} 00:00:00'"
+    sql = "select distinct fact_num from factura d 
+              where 
+                d.fec_emis >= '#{from.to_s('%Y-%m-%d')} 00:00:00'
+              and 
+                d.fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00'"
     fact_nums = Profit::Factura.connection().select_all(sql)
     likes = fact_nums.map{|m| "observa LIKE '%GIRO%FACT " + m['fact_num'].to_s + "%'"}
     likes_or = likes.join(' OR ')
+    likes_or = '1=1' if likes_or.empty?
 
     sql = "select
               sum(monto_net) as giros ,
-              sum(monto_otr) as financiamiento ,
-              fec_emis 
+              sum(monto_otr) as financiamiento
             from 
               docum_cc 
             where 
               tipo_doc='GIRO' and 
-              (#{likes_or}) 
-            group by 
-              fec_emis 
-            order by fec_emis desc"
+              (#{likes_or}) "
     sum_financiamiento = Profit::Factura.connection().select_all(sql)
 
     # Costo de las devoluciones
     sql="select distinct
             SUM(b.ult_cos_un * b.total_art) as costo_dev,
             sum(b.tot_bruto) as bruto_dev,
-            sum(b.iva) as iva_dev,
-              b.fec_emis 
+            sum(b.iva) as iva_dev
             from 
               devcli_reng b 
             where 
-              b.fec_emis = '#{day.to_s('%Y-%m-%d')} 00:00:00'
-            group by 
-              b.fec_emis "
+              b.fec_emis >= '#{from.to_s('%Y-%m-%d')} 00:00:00'
+              and 
+              b.fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00'"
     sum_costo_dev = Profit::Factura.connection().select_all(sql)
 
     sum = {} 
@@ -423,50 +423,43 @@ class Profit::Factura < ActiveRecord::Base
   end
 
 
-  def self.ingresos_by_day(day)
+  def self.ingresos_by_day(from, to=nil)
+
+    to = from if to.nil?
 
     # Ingresos por Giros
     sql = "select 
-            SUM(r.neto) as giros, 
-            c.fec_cob 
+            SUM(r.neto) as giros
           from 
             reng_cob r inner join cobros c on r.cob_num=c.cob_num 
           where 
             r.tp_doc_cob='GIRO'
-            and c.fec_cob = '#{day.to_s('%Y-%m-%d')} 00:00:00' 
-            and c.anulado = 0 and c.monto<>0
-          group by 
-            c.fec_cob
-          order by 
-            c.fec_cob desc"
+            and c.fec_cob >= '#{from.to_s('%Y-%m-%d')} 00:00:00' 
+            and c.fec_cob <= '#{to.to_s('%Y-%m-%d')} 00:00:00' 
+            and c.anulado = 0 and c.monto<>0"
     sum_giros = Profit::Factura.connection().select_all(sql)
 
     # Iniciales
     sql = "select 
-            SUM(c.monto) as iniciales, 
-            c.fec_cob 
+            SUM(c.monto) as iniciales
           from 
             reng_cob r inner join cobros c on r.cob_num=c.cob_num 
           where 
             r.tp_doc_cob='ADEL'
-            and c.fec_cob = '#{day.to_s('%Y-%m-%d')} 00:00:00' 
-          group by 
-            c.fec_cob 
-          order by 
-            c.fec_cob desc"
+            and c.fec_cob >= '#{from.to_s('%Y-%m-%d')} 00:00:00' 
+            and c.fec_cob <= '#{to.to_s('%Y-%m-%d')} 00:00:00'"
     sum_iniciales = Profit::Factura.connection().select_all(sql)
 
     # Contados
     sql = "select distinct
-            sum(a.tot_neto) as contados, 
-              fec_emis 
+              sum(a.tot_neto) as contados
             from 
               factura a 
             where 
               a.forma_pag = '01' and
-              a.fec_emis = '#{day.to_s('%Y-%m-%d')} 00:00:00'
-            group by 
-              a.fec_emis "
+              a.fec_emis >= '#{from.to_s('%Y-%m-%d')} 00:00:00'
+              and 
+              a.fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00'"
     sum_otros = Profit::Factura.connection().select_all(sql)
 
     # Contador de Clientes
@@ -478,7 +471,8 @@ class Profit::Factura < ActiveRecord::Base
                       cobros c left outer join reng_cob r on c.cob_num=r.cob_num 
                     where 
                       r.tp_doc_cob='GIRO'
-                      and c.fec_cob = '#{day.to_s('%Y-%m-%d')} 00:00:00' 
+                      and c.fec_cob >= '#{from.to_s('%Y-%m-%d')} 00:00:00' 
+                      and c.fec_cob <= '#{to.to_s('%Y-%m-%d')} 00:00:00' 
                       and c.anulado = 0 and c.monto<>0
                     group by 
                       c.cob_num
@@ -501,8 +495,7 @@ class Profit::Factura < ActiveRecord::Base
           where 
             tipo_doc='GIRO' 
             and fec_venc >= '#{from.to_s('%Y-%m-%d')} 00:00:00' 
-            and fec_venc <= '#{to.to_s('%Y-%m-%d')} 00:00:00'
-          "
+            and fec_venc <= '#{to.to_s('%Y-%m-%d')} 00:00:00'"
     cartera = Profit::Factura.connection().select_all(sql)
 
     sum = {} 

@@ -1,4 +1,6 @@
 Arv2::Application.routes.draw do
+  resources :goals
+
   resources :parroquia
 
   resources :municipios

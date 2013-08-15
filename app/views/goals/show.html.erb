@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Año:</b>
+  <%= @goal.year %>
+</p>
+
+<p>
+  <b>Mes:</b>
+  <%= @goal.month %>
+</p>
+
+<p>
+  <b>Ventas:</b>
+  <%= @goal.sales %>
+</p>
+
+<p>
+  <b>Cobranza:</b>
+  <%= @goal.billing %>
+</p>
+
+<%= link_to 'Edit', edit_goal_path(@goal) %> |
+<%= link_to 'Back', goals_path %>

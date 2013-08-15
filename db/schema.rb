@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130701024956) do
+ActiveRecord::Schema.define(:version => 20130814155128) do
 
   create_table "acciones", :force => true do |t|
     t.integer  "servicios_id",                 :null => false
@@ -140,6 +140,15 @@ ActiveRecord::Schema.define(:version => 20130701024956) do
   create_table "experiencia", :force => true do |t|
     t.date     "desde"
     t.string   "resultado"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "goals", :force => true do |t|
+    t.integer  "month"
+    t.integer  "year"
+    t.float    "sales"
+    t.float    "billing"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

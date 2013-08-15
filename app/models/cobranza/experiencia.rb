@@ -10,7 +10,7 @@ class Cobranza::Experiencia < ActiveRecord::Base
   def self.calcular_experiencias(el_limit, el_offset)
     archivo = "experiencia" + Time.now.strftime("%Y-%m-%d") + ".csv"
     dir_file = "public/uploads/" + archivo
-    file = File.open(dir_file, 'w')
+    file = File.open(dir_file, 'a')
 
     facturas = Profit::Factura.all_facturas.includes(:cliente).limit(el_limit).offset(el_offset)
     facturas.each_with_index do |f, i|
