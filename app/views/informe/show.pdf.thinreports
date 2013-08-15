@@ -3,8 +3,8 @@ report.start_new_page
 from = (Time.now.year.to_s + "-" + @month.to_s + "-01").to_date
 to =  (from + 1.month) - 1
 
-report.page.values :titulo_ingresos => "RELACION DE INGRESOS #{I18n::translate('date.month_names')[from.month-1]} #{from.strftime("%Y")}"
-report.page.values :titulo_ventas => "RELACION DE VENTAS #{I18n::translate('date.month_names')[from.month-1]} #{from.strftime("%Y")}"
+report.page.values :titulo_ingresos => "RELACION DE INGRESOS #{I18n::translate('date.month_names')[from.month]} #{from.strftime("%Y")}"
+report.page.values :titulo_ventas => "RELACION DE VENTAS #{I18n::translate('date.month_names')[from.month]} #{from.strftime("%Y")}"
 
 i=0
 wd=0
@@ -269,6 +269,20 @@ diferenpm = 0
 diferenpm = (mensual2 - mensual3).abs if mensual2 > 0 and mensual3 > 0
 report.page.values :diferenpm => diferenpm if diferenpm > 0
 
+# Titulos acumulados
+
+report.page.values :titulo_acumulado_cobranza => "ACUMULADO COMPARATIVO COBRANZA #{from.strftime("%Y")}"
+report.page.values :titulo_acumulado_anteriores_cobranza => "ACUMULADOS #{(from-2.year).strftime("%Y")} #{(from-1.year).strftime("%Y")}"
+report.page.values :cano1 => (from-2.year).strftime("%Y")
+report.page.values :cano2 => (from-1.year).strftime("%Y")
+
+
+report.page.values :titulo_acumulado_ventas => "ACUMULADO COMPARATIVO VENTAS #{from.strftime("%Y")}"
+report.page.values :titulo_acumulado_anteriores_ventas => "ACUMULADOS #{(from-3.year).strftime("%Y")} #{(from-2.year).strftime("%Y")} #{(from-1.year).strftime("%Y")}"
+report.page.values :vano1 => (from-3.year).strftime("%Y")
+report.page.values :vano2 => (from-2.year).strftime("%Y")
+report.page.values :vano3 => (from-1.year).strftime("%Y")
+
 
 # Acumulados Comparativos Cobranza
 (1..12).each do |mes|
@@ -287,17 +301,29 @@ report.page.values :diferenpm => diferenpm if diferenpm > 0
     mes_fin =  (mes_inicio + 1.month) - 1
 
     cobranza = Profit::Factura.ingresos_by_day(mes_inicio, mes_fin)
+    cobranza_ano1 = Profit::Factura.ingresos_by_day(mes_inicio - 2.year, mes_fin - 2.year)
+    cobranza_ano2 = Profit::Factura.ingresos_by_day(mes_inicio - 1.year, mes_fin - 1.year)
+
     ventas = Profit::Factura.ventas_by_day(mes_inicio, mes_fin)
+    ventas_ano1 = Profit::Factura.ventas_by_day(mes_inicio - 3.year, mes_fin - 3.year)
+    ventas_ano2 = Profit::Factura.ventas_by_day(mes_inicio - 2.year, mes_fin - 2.year)
+    ventas_ano3 = Profit::Factura.ventas_by_day(mes_inicio - 1.year, mes_fin - 1.year)
 
 
-    report.page.values ("mes" + (mes).to_s).to_sym => I18n::translate('date.month_names')[mes_inicio.month-1]
-    report.page.values ("ames" + (mes).to_s).to_sym => I18n::translate('date.month_names')[mes_inicio.month-1]
+    report.page.values ("mes" + (mes).to_s).to_sym => I18n::translate('date.month_names')[mes]
+    report.page.values ("ames" + (mes).to_s).to_sym => I18n::translate('date.month_names')[mes]
 
     report.page.values ("meta" + (mes).to_s).to_sym => meta_c
     report.page.values ("ameta" + (mes).to_s).to_sym => meta_v
 
     report.page.values ("logrado" + (mes).to_s).to_sym => cobranza['giros'] unless cobranza['giros'].nil?
+    report.page.values ("2011" + (mes).to_s).to_sym => cobranza_ano1['giros'] unless cobranza_ano1['giros'].nil?
+    report.page.values ("2012" + (mes).to_s).to_sym => cobranza_ano2['giros'] unless cobranza_ano2['giros'].nil?
+
     report.page.values ("alogrado" + (mes).to_s).to_sym => ventas['neto'] unless ventas['neto'].nil?
+    report.page.values ("2010" + (mes).to_s).to_sym => ventas_ano1['neto'] unless ventas_ano1['neto'].nil?
+    report.page.values ("a2011" + (mes).to_s).to_sym => ventas_ano2['neto'] unless ventas_ano2['neto'].nil?
+    report.page.values ("a2012" + (mes).to_s).to_sym => ventas_ano3['neto'] unless ventas_ano3['neto'].nil?
 
     report.page.values ("diferen" + (mes).to_s).to_sym => (meta_c - cobranza['giros']).round(2) unless cobranza['giros'].nil?
     report.page.values ("adiferen" + (mes).to_s).to_sym => (meta_v - ventas['neto']).round(2) unless ventas['neto'].nil?

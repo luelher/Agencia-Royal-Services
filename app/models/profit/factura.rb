@@ -470,10 +470,8 @@ class Profit::Factura < ActiveRecord::Base
                     from 
                       cobros c left outer join reng_cob r on c.cob_num=r.cob_num 
                     where 
-                      r.tp_doc_cob='GIRO'
-                      and c.fec_cob >= '#{from.to_s('%Y-%m-%d')} 00:00:00' 
+                      c.fec_cob >= '#{from.to_s('%Y-%m-%d')} 00:00:00' 
                       and c.fec_cob <= '#{to.to_s('%Y-%m-%d')} 00:00:00' 
-                      and c.anulado = 0 and c.monto<>0
                     group by 
                       c.cob_num
           ) x"
@@ -522,7 +520,7 @@ class Profit::Factura < ActiveRecord::Base
 
   def self.lineas(from, to)
     sql = "select 
-              count(b.co_lin) as contador, 
+              count(c.total_art) as contador, 
               b.co_lin, 
               b.lin_des 
             from 
