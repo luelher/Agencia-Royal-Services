@@ -1,5 +1,6 @@
 class GoalsController < ApplicationController
   layout 'intranet'
+  before_filter :authenticate_user!
 
   # GET /goals
   # GET /goals.json

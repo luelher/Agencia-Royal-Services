@@ -1,5 +1,6 @@
 class ParroquiaController < ApplicationController
   layout 'intranet'
+  before_filter :authenticate_user!
 
   # GET /parroquia
   # GET /parroquia.json

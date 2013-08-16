@@ -1,5 +1,7 @@
 class MunicipiosController < ApplicationController
   layout 'intranet'
+  before_filter :authenticate_user!
+
 
   # GET /municipios
   # GET /municipios.json

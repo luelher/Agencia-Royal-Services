@@ -1,5 +1,6 @@
 class EstadosController < ApplicationController
   layout 'intranet'
+  before_filter :authenticate_user!
 
   # GET /estados
   # GET /estados.json
