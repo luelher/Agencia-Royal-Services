@@ -518,6 +518,16 @@ class Profit::Factura < ActiveRecord::Base
     sum
   end
 
+  def self.inventario_vigente
+
+    sql = "select sum(stock_act * ult_cos_un) as inventario from art"
+    inventario = Profit::Factura.connection().select_all(sql)
+
+    sum = {} 
+    sum.merge! inventario.first unless inventario.empty?
+    sum    
+  end
+
   def self.lineas(from, to)
     sql = "select 
               sum(c.total_art) as contador, 

@@ -81,7 +81,8 @@ cliente=0
     end
     report.page.values ("cliente" + i.to_s).to_sym => contador_clientes
     cliente += contador_clientes
-
+  elsif d.workday?
+    report.page.values ("dia" + wd.to_s).to_sym => wd.to_s
   end
 
   # Totales Ingresos
@@ -190,7 +191,7 @@ report.page.values :tcartera=> total_cartera_vencida + total_cartera_por_vencer
 lineas = Profit::Factura.lineas from, to
 lineas.each_with_index do |l,i|
   report.page.values ("linea" + (i+1).to_s).to_sym => l['lin_des'].strip unless l['lin_des'].nil?
-  report.page.values ("cant" + (i+1).to_s).to_sym => l['contador'] unless l['contador'].nil?
+  report.page.values ("cant" + (i+1).to_s).to_sym => l['contador'].to_i unless l['contador'].nil?
 end
 
 # Estadisticas Cobranza
@@ -255,14 +256,14 @@ report.page.values :diario3 => diario3 if diario3 > 0
 totalmv = @meta_ventas.to_f
 report.page.values :totalmv => totalmv if totalmv > 0
 
-#venta del mes
-mensual2 = venta_neta
-report.page.values :mensual2 => mensual2 if mensual2 > 0
-
 #Promedio diario de la venta del mes
 diario2 = 0
 diario2 = (venta_neta / i) if venta_neta > 0
 report.page.values :diario2 => diario2 if diario2 > 0
+
+#venta del mes
+mensual2 = (diario2 * wd).round(2)
+report.page.values :mensual2 => mensual2 if mensual2 > 0
 
 #Diferencia de la meta de venta y lo vendido
 diferenpm = 0
@@ -329,8 +330,8 @@ report.page.values :vano3 => (from-1.year).strftime("%Y")
     report.page.values ("a2011" + (mes).to_s).to_sym => ventas_ano2['neto'] unless ventas_ano2['neto'].nil?
     report.page.values ("a2012" + (mes).to_s).to_sym => ventas_ano3['neto'] unless ventas_ano3['neto'].nil?
 
-    report.page.values ("diferen" + (mes).to_s).to_sym => (meta_c - cobranza['giros']).round(2) unless cobranza['giros'].nil?
-    report.page.values ("adiferen" + (mes).to_s).to_sym => (meta_v - ventas['neto']).round(2) unless ventas['neto'].nil?
+    report.page.values ("diferen" + (mes).to_s).to_sym => (cobranza['giros'] - meta_c).round(2) unless cobranza['giros'].nil?
+    report.page.values ("adiferen" + (mes).to_s).to_sym => (ventas['neto'] - meta_v).round(2) unless ventas['neto'].nil?
 
     report.page.values ("porcen" + (mes).to_s).to_sym => ((cobranza['giros'] * 100) / meta_c).round(2).to_s + "%" unless cobranza['giros'].nil?
     report.page.values ("aporcen" + (mes).to_s).to_sym => ((ventas['neto'] * 100) / meta_v).round(2).to_s + "%" unless ventas['neto'].nil?
@@ -344,7 +345,8 @@ report.page.values :vano3 => (from-1.year).strftime("%Y")
     
   end
 
-
+  inventario = Profit::Factura.inventario_vigente
+  report.page.values :inventario => inventario['inventario'] unless inventario['inventario'].nil?
 
 
 end
