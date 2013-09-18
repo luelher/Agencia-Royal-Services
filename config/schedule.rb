@@ -56,3 +56,31 @@ end
 every :sunday, :at => '04pm' do
   runner "Cobranza::Experiencia.calcular_experiencias(1000,7000)"
 end
+
+every :sunday, :at => '05pm' do
+  runner "Cobranza::Experiencia.calcular_experiencias(1000,8000)"
+end
+
+every :sunday, :at => '06pm' do
+  runner "Cobranza::Experiencia.calcular_experiencias(1000,9000)"
+end
+
+every :sunday, :at => '07pm' do
+  runner "Cobranza::Experiencia.calcular_experiencias(1000,9000)"
+end
+
+every :sunday, :at => '08pm' do
+  runner "Cobranza::Experiencia.calcular_experiencias(1000,10000)"
+end
+
+every :sunday, :at => '09pm' do
+  runner "Cobranza::Experiencia.calcular_experiencias(1000,11000)"
+end
+
+every :sunday, :at => '10pm' do
+  runner "Cobranza::Experiencia.calcular_experiencias(1000,12000)"
+end
+
+
+
+
