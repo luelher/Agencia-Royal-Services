@@ -379,21 +379,38 @@ class Profit::Factura < ActiveRecord::Base
     sum
   end
 
+
+
   def self.ventas_vendedores_by_days(from, to)
-    sql = "select distinct
-              sum(a.tot_bruto) as neto, 
-              a.co_ven,
-              b.ven_des
-            from 
-              factura a inner join vendedor b on a.co_ven=b.co_ven
-            where 
+    sql = "select distinct sum(x.neto) as neto, x.co_ven, x.ven_des from (
+            select 
+             sum(a.tot_bruto) as neto, 
+             a.co_ven,
+             b.ven_des
+             from 
+             factura a inner join vendedor b on a.co_ven=b.co_ven
+             where 
               a.fec_emis >= '#{from.to_s('%Y-%m-%d')} 00:00:00'
               and
-              a.fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00'
-            group by 
-              a.co_ven, b.ven_des
-            order by 
-              neto desc"
+              a.fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00' and 
+             b.co_ven in ('01', '02', '03', '06', '07', '11')
+             group by 
+             a.co_ven, b.ven_des
+
+            union 
+
+            select 
+              0 as neto,  
+              a.co_ven,
+              a.ven_des
+            from vendedor a
+            where 
+            a.co_ven in ('01', '02', '03', '06', '07', '11')
+            ) x
+             group by 
+             x.co_ven, x.ven_des
+             order by 
+             x.neto desc"
     ventas_vendedores = Profit::Factura.connection().select_all(sql)
 
     sql = "select distinct
@@ -463,17 +480,17 @@ class Profit::Factura < ActiveRecord::Base
     sum_otros = Profit::Factura.connection().select_all(sql)
 
     # Contador de Clientes
-    sql = "select COUNT(x.cob_num) as contador from
+    sql = "select COUNT(x.co_cli) as contador from
           (
           select distinct
-          c.cob_num
+          c.co_cli
                     from 
                       cobros c left outer join reng_cob r on c.cob_num=r.cob_num 
                     where 
                       c.fec_cob >= '#{from.to_s('%Y-%m-%d')} 00:00:00' 
                       and c.fec_cob <= '#{to.to_s('%Y-%m-%d')} 00:00:00' 
                     group by 
-                      c.cob_num
+                      c.co_cli
           ) x"
     sum_contador = Profit::Factura.connection().select_all(sql)
 

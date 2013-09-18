@@ -56,7 +56,7 @@ cliente=0
       report.page.values ("vneta" + i.to_s).to_sym => ventas['bruto'] unless ventas['bruto'].nil?
       bruto += ventas['bruto'] unless ventas['bruto'].nil?
 
-      contador_clientes += ventas['contador'] unless ventas['contador'].nil?
+      # contador_clientes += ventas['contador'] unless ventas['contador'].nil?
     end
 
     ingresos = Profit::Factura.ingresos_by_day d
@@ -288,11 +288,29 @@ report.page.values :vano1 => (from-3.year).strftime("%Y")
 report.page.values :vano2 => (from-2.year).strftime("%Y")
 report.page.values :vano3 => (from-1.year).strftime("%Y")
 
+meses = 0
+
+acum_meta_cobranza = 0
+acum_logrado_cobranza = 0
+acum_total_cobranza = 0
+acum_diferencia_cobranza = 0
+acum_2011_cobranza = 0
+acum_2012_cobranza = 0
+
+acum_meta_ventas = 0
+acum_logrado_ventas = 0
+acum_total_ventas = 0
+acum_diferencia_ventas = 0
+acum_2011_ventas = 0
+acum_2012_ventas = 0
+acum_2013_ventas = 0
+
 
 # Acumulados Comparativos Cobranza
 (1..12).each do |mes|
 
   if mes <= Date.today.month
+    meses += 1
     meta = Goal.find_by_month_and_year(mes, Date.today.year)
     if meta
       meta_v = meta.sales
@@ -319,19 +337,36 @@ report.page.values :vano3 => (from-1.year).strftime("%Y")
     report.page.values ("ames" + (mes).to_s).to_sym => I18n::translate('date.month_names')[mes]
 
     report.page.values ("meta" + (mes).to_s).to_sym => meta_c
+    acum_meta_cobranza += meta_c
     report.page.values ("ameta" + (mes).to_s).to_sym => meta_v
+    acum_meta_ventas += meta_v
 
     report.page.values ("logrado" + (mes).to_s).to_sym => cobranza['giros'] unless cobranza['giros'].nil?
+    acum_logrado_cobranza += cobranza['giros'] unless cobranza['giros'].nil?
     report.page.values ("2011" + (mes).to_s).to_sym => cobranza_ano1['giros'] unless cobranza_ano1['giros'].nil?
+    acum_2011_cobranza += cobranza_ano1['giros'] unless cobranza_ano1['giros'].nil?
     report.page.values ("2012" + (mes).to_s).to_sym => cobranza_ano2['giros'] unless cobranza_ano2['giros'].nil?
+    acum_2012_cobranza += cobranza_ano2['giros'] unless cobranza_ano2['giros'].nil?
+
 
     report.page.values ("alogrado" + (mes).to_s).to_sym => ventas['neto'] unless ventas['neto'].nil?
+    acum_logrado_ventas += ventas['neto'] unless ventas['neto'].nil?
     report.page.values ("2010" + (mes).to_s).to_sym => ventas_ano1['neto'] unless ventas_ano1['neto'].nil?
+    acum_2011_ventas += ventas_ano1['neto'] unless ventas_ano1['neto'].nil?
     report.page.values ("a2011" + (mes).to_s).to_sym => ventas_ano2['neto'] unless ventas_ano2['neto'].nil?
+    acum_2012_ventas += ventas_ano2['neto'] unless ventas_ano2['neto'].nil?
     report.page.values ("a2012" + (mes).to_s).to_sym => ventas_ano3['neto'] unless ventas_ano3['neto'].nil?
+    acum_2013_ventas += ventas_ano3['neto'] unless ventas_ano3['neto'].nil?
 
-    report.page.values ("diferen" + (mes).to_s).to_sym => (cobranza['giros'] - meta_c).round(2) unless cobranza['giros'].nil?
-    report.page.values ("adiferen" + (mes).to_s).to_sym => (ventas['neto'] - meta_v).round(2) unless ventas['neto'].nil?
+    dif = 0
+    dif = (cobranza['giros'] - meta_c).round(2) unless cobranza['giros'].nil?
+    report.page.values ("diferen" + (mes).to_s).to_sym => dif
+    acum_diferencia_cobranza += dif
+
+    dif = 0
+    dif = (ventas['neto'] - meta_v).round(2) unless ventas['neto'].nil?
+    report.page.values ("adiferen" + (mes).to_s).to_sym => dif
+    acum_diferencia_ventas += dif
 
     report.page.values ("porcen" + (mes).to_s).to_sym => ((cobranza['giros'] * 100) / meta_c).round(2).to_s + "%" unless cobranza['giros'].nil?
     report.page.values ("aporcen" + (mes).to_s).to_sym => ((ventas['neto'] * 100) / meta_v).round(2).to_s + "%" unless ventas['neto'].nil?
@@ -342,11 +377,62 @@ report.page.values :vano3 => (from-1.year).strftime("%Y")
     ing += cobranza['iniciales'] unless cobranza['iniciales'].nil?
     ing += cobranza['contados'] unless cobranza['contados'].nil?
     report.page.values ("ingresos" + (mes).to_s).to_sym => ing
+    acum_total_cobranza += ing
     
   end
-
-  inventario = Profit::Factura.inventario_vigente
-  report.page.values :inventario => inventario['inventario'] unless inventario['inventario'].nil?
-
-
 end
+
+# Acumulado de meta de cobranza y ventas
+report.page.values :ameta => acum_meta_cobranza
+report.page.values :aameta => acum_meta_ventas
+
+# Promedio de meta de cobranza y ventas
+report.page.values :pmeta => (acum_meta_cobranza / meses).round(2)
+report.page.values :ppmeta => (acum_meta_ventas / meses).round(2)
+
+# Acumulado de lo logrado de cobranza y ventas
+report.page.values :alogrado => acum_logrado_cobranza
+report.page.values :aalogrado => acum_logrado_ventas
+
+# Promedio de lo logrado de cobranza y ventas
+report.page.values :plogrado => (acum_logrado_cobranza / meses).round(2)
+report.page.values :pplogrado => (acum_logrado_ventas / meses).round(2)
+
+
+# Acumulado de diferencias meta/logrado
+report.page.values :adiferen => acum_diferencia_cobranza
+report.page.values :aadiferen => acum_diferencia_ventas
+
+# Promedio de diferencias meta/logrado
+report.page.values :pdiferen => (acum_diferencia_cobranza / meses).round(2)
+report.page.values :ppdiferen => (acum_diferencia_ventas / meses).round(2)
+
+
+# Acumulado de totales de cobranza
+report.page.values :aingresos => acum_total_cobranza
+
+# Promedio de totales de cobranza
+report.page.values :pingresos => (acum_total_cobranza / meses).round(2)
+
+# Acumulado años anteriores
+report.page.values :a2011 => acum_2011_cobranza
+report.page.values :a2012 => acum_2012_cobranza
+
+# Promedio años anteriores
+report.page.values :p2011 => (acum_2011_cobranza / meses).round(2)
+report.page.values :p2012 => (acum_2012_cobranza / meses).round(2)
+
+
+# Acumulado de años anteriores
+report.page.values :aa2010 => acum_2011_ventas
+report.page.values :aa2011 => acum_2012_ventas
+report.page.values :aa2012 => acum_2013_ventas
+
+# Promedio de años anteriores
+report.page.values :pp2010 => (acum_2011_ventas / meses).round(2)
+report.page.values :pp2011 => (acum_2012_ventas / meses).round(2)
+report.page.values :pp2012 => (acum_2013_ventas / meses).round(2)
+
+# Costo del inventario actual
+inventario = Profit::Factura.inventario_vigente
+report.page.values :inventario => inventario['inventario'] unless inventario['inventario'].nil?
