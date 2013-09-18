@@ -18,7 +18,7 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-set :output, Rails.root.join('config', 'schedule.log')
+set :output, File.join(Whenever.path, "config", "schedule.log")
 
 
 every 10.minutes do
