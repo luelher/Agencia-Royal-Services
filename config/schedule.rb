@@ -25,6 +25,10 @@ every 10.minutes do
   runner "Gmining::ProfitClient.run_mining(10)"
 end
 
+every 5.seconds do
+  runner "Sms.run_sms_server()"
+end
+
 every :sunday, :at => '08am' do
   runner "Cobranza::Experiencia.calcular_experiencias(1000,0)"
 end
