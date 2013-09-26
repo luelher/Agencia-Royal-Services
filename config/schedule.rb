@@ -25,7 +25,7 @@ every 10.minutes do
   runner "Gmining::ProfitClient.run_mining(10)"
 end
 
-every 5.seconds do
+every 1.minute do
   runner "Sms.run_sms_server()"
 end
 
