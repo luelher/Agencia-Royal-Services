@@ -148,6 +148,7 @@ es:
       long: ! '%d de %B de %Y'
       short: ! '%d de %b'
     month_names:
+    - 
     - enero
     - febrero
     - marzo
