@@ -1,6 +1,6 @@
 report.start_new_page
 
-from = (Time.now.year.to_s + "-" + @month.to_s + "-01").to_date
+from = (@year.to_s + "-" + @month.to_s + "-01").to_date
 to =  (from + 1.month) - 1
 
 report.page.values :titulo_ingresos => "RELACION DE INGRESOS #{I18n::translate('date.month_names')[from.month]} #{from.strftime("%Y")}"
@@ -296,6 +296,7 @@ acum_total_cobranza = 0
 acum_diferencia_cobranza = 0
 acum_2011_cobranza = 0
 acum_2012_cobranza = 0
+acum_porcen_cobranza = 0
 
 acum_meta_ventas = 0
 acum_logrado_ventas = 0
@@ -304,6 +305,7 @@ acum_diferencia_ventas = 0
 acum_2011_ventas = 0
 acum_2012_ventas = 0
 acum_2013_ventas = 0
+acum_porcen_ventas = 0
 
 
 # Acumulados Comparativos Cobranza
@@ -369,7 +371,9 @@ acum_2013_ventas = 0
     acum_diferencia_ventas += dif
 
     report.page.values ("porcen" + (mes).to_s).to_sym => ((cobranza['giros'] * 100) / meta_c).round(2).to_s + "%" unless cobranza['giros'].nil?
+    acum_porcen_cobranza += ((cobranza['giros'] * 100) / meta_c).round(2) unless cobranza['giros'].nil?
     report.page.values ("aporcen" + (mes).to_s).to_sym => ((ventas['neto'] * 100) / meta_v).round(2).to_s + "%" unless ventas['neto'].nil?
+    acum_porcen_ventas += ((ventas['neto'] * 100) / meta_v).round(2) unless ventas['neto'].nil?
     
 
     ing = 0
@@ -422,6 +426,13 @@ report.page.values :a2012 => acum_2012_cobranza
 report.page.values :p2011 => (acum_2011_cobranza / meses).round(2)
 report.page.values :p2012 => (acum_2012_cobranza / meses).round(2)
 
+# Acumulado y Promedio Cobranza
+report.page.values :porc_a => (acum_porcen_cobranza).round(2).to_s + "%"
+report.page.values :porc_p => (acum_porcen_cobranza / meses).round(2).to_s + "%"
+
+# Acumulado y Promedio Ventas
+report.page.values :v_porc_a => (acum_porcen_ventas).round(2).to_s + "%"
+report.page.values :v_porc_p => (acum_porcen_ventas / meses).round(2).to_s + "%"
 
 # Acumulado de años anteriores
 report.page.values :aa2010 => acum_2011_ventas

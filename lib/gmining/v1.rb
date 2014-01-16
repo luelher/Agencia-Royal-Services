@@ -1,4 +1,3 @@
-
 class Gmining::V1
   include HTTParty
   base_uri 'gmining.herokuapp.com'

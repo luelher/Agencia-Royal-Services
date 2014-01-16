@@ -2,6 +2,13 @@
 
 <%= form_tag show_informe_path + ".pdf", :method => :post, :class => 'form-horizontal' do |f| %>
   <div class="control-group">
+    <%= label_tag :ano, "Año",:class => 'control-label' %>
+    <div class="controls">
+      <%= select_year_tag %>
+    </div>
+  </div>  
+
+  <div class="control-group">
     <%= label_tag :mes, "Mes",:class => 'control-label' %>
     <div class="controls">
       <%= select_month_tag %>

@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class Sms
   CUENTA_TOKEN = "400488a3a8e0f5aed77d0bcc06614e74"
   SUBCUENTA_TOKEN = "f98a5c4b2dd2e61553faa0987a319622"
@@ -49,7 +47,7 @@ class Sms
       end
       true
     else
-      log.debug "Sin Conexión"
+      log.debug "Sin Conexion"
       false
     end
   end

@@ -191,6 +191,14 @@ class Profit::Factura < ActiveRecord::Base
     @fecha_ultimo_pago
   end
 
+  def ultimo_pago_entre?(desde, hasta)
+    if !fecha_ultimo_pago.nil?
+      fecha_ultimo_pago >= desde && fecha_ultimo_pago <= hasta
+    else
+      false
+    end
+  end
+
   def dias_desde_ultimo_pago
     @dias_desde_ultimo_pago
   end
@@ -393,7 +401,7 @@ class Profit::Factura < ActiveRecord::Base
               a.fec_emis >= '#{from.to_s('%Y-%m-%d')} 00:00:00'
               and
               a.fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00' and 
-             b.co_ven in ('01', '02', '03', '06', '07', '11')
+             b.co_ven in ('01', '02', '03', '07', '11', '14')
              group by 
              a.co_ven, b.ven_des
 
@@ -405,7 +413,7 @@ class Profit::Factura < ActiveRecord::Base
               a.ven_des
             from vendedor a
             where 
-            a.co_ven in ('01', '02', '03', '06', '07', '11')
+            a.co_ven in ('01', '02', '03', '07', '11', '14')
             ) x
              group by 
              x.co_ven, x.ven_des

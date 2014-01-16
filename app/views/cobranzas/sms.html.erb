@@ -1,0 +1,92 @@
+<h2>Gestión de Cobranzas</h2>
+<div class="container offset1">
+  <%= form_for @factura, :url => send_sms_cobranzas_path do |f| %>
+  <div class="row span6 offset1">
+      <div class="row">
+        <div class="span4">
+          <div class="control-group">
+            <%= f.label :mensaje, :class => 'control-label' %>
+            <div class="controls">
+              <%= f.text_area :fact_num, size: '90x4' %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%= submit_tag 'Enviar SMS', :class => 'bnt', :confirm => "¿Está seguro de enviar estos mensajes?" %>
+  </div>
+  <div class="row" style="font-size:12px">
+    <div class="span7" data-toggle="modal-gallery" data-target="#modal-gallery">
+      <table id="tfacturas" class="table table-striped tablesorter">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Cédula <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Nombre <i style="color:transparent" class="icon-resize-vertical"></i></th>
+            <th data-sorter="false">Teléfonos</th>
+            <th>Nro. Factura <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Fecha de Compra <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Ultima Fecha Pago <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Días sin cancelar <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Giros Vencídos <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Monto Vencído <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th data-sorter="false">Experiencia</th>
+            <th>Vendedora <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+            <th>Zona <i style="color:transparent" class="icon-resize-vertical"></i> </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% unless @facturas.nil? %>
+            <% @facturas.each do |factu| %>
+            <%= f.fields_for "factu[]", factu do |telf| %>
+              <% factu.generar_resumen Time.now %>
+              <% unless factu.cancelado? or (factu.atendido_recientemente?(10) and @sin_seguimientos_recientes) or (@sin_pagos_recientes and (factu.fecha_ultimo_pago >= @ven_desde and factu.fecha_ultimo_pago <= @ven_hasta)) %>
+                
+                <tr id="<%= factu.fact_num %>">
+                  <td> <a style="color:transparent" id="" href="javascript:$('#<%= factu.fact_num %>').remove();$('#tfacturas').trigger('updateAll');"><i class="icon-remove-circle"></i></a>  </td>
+                  <td> 
+                    <%= factu.cliente.co_cli %> <br>
+                  </td>  
+                  <td> <%= factu.cliente.cli_des %> </td>
+                  <td> 
+                    <%= telf.hidden_field :telefono1, :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono  %>
+                    <%= telf.hidden_field :telefono2, :value => factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono2  %>
+                    <%= factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono  %> <br>
+                    <%= factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono2 %> 
+                    <%= factu.cliente_venta.nil? ? "" : factu.cliente_venta.telefono3 %> 
+                  </td>
+                  <td> <%= factu.fact_num %> </td>
+                  <td> <%= factu.fec_emis.to_date %> </td>
+                  <td class="span2"> 
+                    <%= factu.fecha_ultimo_pago.to_date unless factu.fecha_ultimo_pago.nil? %> 
+                  </td>
+                  <td> <%= factu.dias_desde_ultimo_pago %> </td>
+                  <td> <%= factu.giros_vencidos_sin_cancelar %> </td>
+                  <td> <%= factu.saldo_vencido_sin_cancelar.round 2 %> 
+                  </td>
+                  <td> 
+                    <%= factu.experiencia %> 
+                  </td>
+                  <td> <%= factu.vendedor.ven_des %> </td>
+                  <td> <%= factu.cliente.zona.zon_des %> </td>
+                </tr>
+              <% end %>
+            <% end %>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+      <div id="pager" class="pager">
+        <form>
+          <img src="/img/first.png" class="first"/>
+          <img src="/img/prev.png" class="prev"/>
+          <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+          <img src="/img/next.png" class="next"/>
+          <img src="/img/last.png" class="last"/>        
+        </form>
+      </div>    
+
+    </div>
+  </div>
+  <% end %>    
+</div>

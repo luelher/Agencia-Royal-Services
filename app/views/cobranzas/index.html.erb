@@ -69,12 +69,22 @@
               <%= check_box_tag :recientes, "1", params[:recientes].nil? ? false : true %>
             </div>
           </div>
+          <div class="control-group">
+            <%= label_tag :sin_pagos_recientes, nil, :class => 'control-label' %>
+            <div class="controls">
+              <%= check_box_tag :sin_pagos_recientes, "1", params[:sin_pagos_recientes].nil? ? false : true %>
+            </div>
+          </div>
+    
+          <%= submit_tag "Buscar", :class => 'bnt',:id => 'btn_html' %>
+          <br><br>
+          <%= submit_tag 'Exportar XLS', :class => 'bnt', :id => 'btn_xls' %>
+          <br><br>
+          <%= submit_tag 'Enviar SMS', :class => 'bnt', :id => 'btn_xls' %>
+
         </div>
       </div>
 
-      <%= submit_tag "Buscar", :class => 'bnt',:id => 'btn_html' %>
-      <br><br>
-      <%= submit_tag 'Exportar XLS', :class => 'bnt', :id => 'btn_xls' %>
 
     <% end %>    
   </div>
@@ -105,7 +115,7 @@
           <% unless @facturas.nil? %>
             <% @facturas.each do |factu| %>
               <% factu.generar_resumen Time.now %>
-              <% unless factu.cancelado? or (factu.atendido_recientemente?(10) and !@recientes.empty?) %>
+              <% unless factu.cancelado? or (@sin_seguimientos_recientes and factu.atendido_recientemente?(10)) or (@sin_pagos_recientes and (factu.ultimo_pago_entre?(@ven_desde,@ven_hasta))) %>
                 
                 <tr id="<%= factu.fact_num %>">
                   <%= form_for factu, :url => update_cobranzas_path, :remote => true do |f| %>

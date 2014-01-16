@@ -8,7 +8,8 @@ class InformeController < ApplicationController
 
     def show
       @month = params['date']['month']
-      meta = Goal.find_by_month_and_year(@month, Date.today.year)
+      @year = params['date']['year']
+      meta = Goal.find_by_month_and_year(@month, @year)
 
       if meta
         @meta_ventas = meta.sales
