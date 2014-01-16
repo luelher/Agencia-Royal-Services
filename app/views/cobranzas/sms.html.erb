@@ -1,13 +1,13 @@
 <h2>Gestión de Cobranzas</h2>
-<div class="container offset1">
+<div class="container">
   <%= form_for @factura, :url => send_sms_cobranzas_path do |f| %>
-  <div class="row span6 offset1">
+  <div class="row span6">
       <div class="row">
-        <div class="span4">
+        <div class="span8">
           <div class="control-group">
             <%= f.label :mensaje, :class => 'control-label' %>
             <div class="controls">
-              <%= f.text_area :fact_num, size: '90x4' %>
+              <%= f.text_field :fact_num, :maxlength => 140, :class => "span9" %>
             </div>
           </div>
         </div>
