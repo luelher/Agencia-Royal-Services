@@ -26,26 +26,38 @@ class CobranzasController < ApplicationController
     co_zon = params[:co_zon]
     @ven_desde = params[:vencidos_desde].first
     @ven_hasta = params[:vencidos_hasta].first  
-    plazo_pago = params[:plazo_pago]
+    plazo_pago = params[:plazo_pago].first
+    telefono = params[:telefono].first
     @sin_seguimientos_recientes = params[:recientes].nil? ? false : true
     @sin_pagos_recientes = params[:sin_pagos_recientes].nil? ? false : true
 
 
 
     if !co_cli.empty?
+      logger.debug "co_cli"
       @facturas = Profit::Factura.by_cliente co_cli
     elsif dias_desde.to_i >= 0 and dias_hasta.to_i > 0 and dias_desde.to_i <= dias_hasta.to_i
+      logger.debug "dias_desde"
       @facturas = Profit::Factura.by_dias_vencidos dias_desde, dias_hasta, co_lin, co_ven, co_zon
     elsif giros_vencidos_desde.to_i > 0 and giros_vencidos_hasta.to_i > 0
+      logger.debug "plazo_pago"
       @facturas = Profit::Factura.by_giros_vencidos giros_vencidos_desde, giros_vencidos_hasta, co_lin, co_ven, co_zon
     elsif !@ven_desde.empty? and !@ven_hasta.empty?
+      logger.debug "ven_desde"
       @facturas = Profit::Factura.by_fecha_vencidos @ven_desde, @ven_hasta, co_lin, co_ven, co_zon
     elsif !plazo_pago.empty?
-      @facturas = Profit::Factura.by_plazo_pago plazo_pago[0]
+      logger.debug "plazo_pago"
+      @facturas = Profit::Factura.by_plazo_pago plazo_pago
+    elsif !telefono.empty?
+      logger.debug "telefonos"
+      clientes = Ventas::Cliente.by_telefono telefono
+      co_clis = clientes.map{|c| c.ci.to_s }
+      logger.debug co_clis.to_s
+      @facturas = Profit::Factura.by_clientes co_clis
     else
       @facturas = nil
     end
-
+    
     combos
 
     respond_to do |format|

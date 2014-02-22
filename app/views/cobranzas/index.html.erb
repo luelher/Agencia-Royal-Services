@@ -64,6 +64,12 @@
             </div>
           </div>
           <div class="control-group">
+            <%= label_tag :telefono, nil, :class => 'control-label' %>
+            <div class="controls">
+              <%= text_field :telefono, "", :class => 'input-medium', :value => (params[:telefono].nil? ? "" : params[:telefono][0]) %>
+            </div>
+          </div>          
+          <div class="control-group">
             <%= label_tag :sin_seguimientos_recientes, nil, :class => 'control-label' %>
             <div class="controls">
               <%= check_box_tag :recientes, "1", params[:recientes].nil? ? false : true %>

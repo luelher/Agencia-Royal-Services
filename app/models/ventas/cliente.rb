@@ -8,6 +8,7 @@ class Ventas::Cliente < ActiveRecord::Base
 
   attr_accessible :referencia_uno_nombre, :referencia_uno_direccion, :referencia_uno_telefono, :referencia_uno_parentesco, :referencia_dos_nombre, :referencia_dos_direccion, :referencia_dos_telefono, :referencia_dos_parentesco, :referencia_tres_nombre, :referencia_tres_direccion, :referencia_tres_telefono, :referencia_tres_parentesco
 
+  scope :by_telefono,lambda { |telf|  where("telefono like ? or telefono2 like ? or telefono3 like ?", "%#{telf}%", "%#{telf}%", "%#{telf}%") }
 
   validates :nombre, :presence => true
   # validates :latitude, :presence => true

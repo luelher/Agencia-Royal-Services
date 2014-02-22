@@ -70,12 +70,14 @@ class Ventas::SeguimientosController < ApplicationController
   # PUT /ventas/seguimientos/1.json
   def update
     @ventas_seguimiento = Ventas::Seguimiento.find(params[:id])
+    @ventas_seguimiento.actual_user(current_user)
 
     respond_to do |format|
       if @ventas_seguimiento.update_attributes(params[:ventas_seguimiento])
         format.html { redirect_to @ventas_seguimiento, notice: 'Seguimiento was successfully updated.' }
         format.json { head :no_content }
       else
+        flash.now[:error] = @ventas_seguimiento.errors.first[1]
         format.html { render action: "edit" }
         format.json { render json: @ventas_seguimiento.errors, status: :unprocessable_entity }
       end
@@ -86,8 +88,12 @@ class Ventas::SeguimientosController < ApplicationController
   # DELETE /ventas/seguimientos/1.json
   def destroy
     @ventas_seguimiento = Ventas::Seguimiento.find(params[:id])
-    @ventas_seguimiento.destroy
-
+    @ventas_seguimiento.actual_user(current_user)
+    if @ventas_seguimiento.valid?
+      @ventas_seguimiento.destroy
+    else
+      flash[:error] = @ventas_seguimiento.errors.first[1]
+    end
     respond_to do |format|
       format.html { redirect_to ventas_seguimientos_url }
       format.json { head :no_content }

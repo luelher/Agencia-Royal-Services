@@ -12,19 +12,33 @@ class Ventas::Seguimiento < ActiveRecord::Base
 	['Correo Electronico'],
 	['Correo Electronico']
         ]
+
+  actual_user = nil
+
   attr_accessible :cliente_id, :motivo, :observacion, :usuario, :plazo_pago, :factura, :user_id
 
   belongs_to :cliente, :class_name => "Ventas::Cliente"
 
-  has_one :user
+  belongs_to :user
 
   validates :cliente_id, :presence => true
   validates :motivo, :presence => true
+  validate :verificar_usuario,  on: :destroy
+  validate :verificar_usuario,  on: :update
 
-  before_validation :agregar_usuario
-
-  def agregar_usuario # Agregar el nombre del usuario
-
+  def actual_user(u)
+    @actual_user = u
   end
+
+  def verificar_usuario
+    if @actual_user
+      unless usuario == @actual_user.name
+        errors.add(:user, "El registro no puede ser modificado ni eliminado por otro usuario al original")
+      end
+    end
+  end
+
+private
+
 
 end

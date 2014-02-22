@@ -215,6 +215,10 @@ class Profit::Factura < ActiveRecord::Base
     Profit::Factura.solo_facturas_creditos.where('factura.co_cli like ?',"%#{cliente}%") 
   end
 
+  def self.by_clientes(clientes)
+    Profit::Factura.solo_facturas_creditos.where('factura.co_cli in (?)',clientes) 
+  end
+
   def self.by_plazo_pago(plazo_pago)
     seguimientos = Ventas::Seguimiento.where(:plazo_pago => plazo_pago.to_date)
     clientes = seguimientos.map{|s| s.cliente_id.strip}.uniq
