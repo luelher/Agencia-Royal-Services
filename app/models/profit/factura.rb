@@ -405,7 +405,7 @@ class Profit::Factura < ActiveRecord::Base
               a.fec_emis >= '#{from.to_s('%Y-%m-%d')} 00:00:00'
               and
               a.fec_emis <= '#{to.to_s('%Y-%m-%d')} 00:00:00' and 
-             b.co_ven in ('01', '02', '03', '07', '11', '14')
+             b.co_ven in ('01', '02', '03', '07', '11', '17')
              group by 
              a.co_ven, b.ven_des
 
@@ -417,7 +417,7 @@ class Profit::Factura < ActiveRecord::Base
               a.ven_des
             from vendedor a
             where 
-            a.co_ven in ('01', '02', '03', '07', '11', '14')
+            a.co_ven in ('01', '02', '03', '07', '11', '17')
             ) x
              group by 
              x.co_ven, x.ven_des
