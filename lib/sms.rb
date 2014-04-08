@@ -12,7 +12,7 @@ class Sms
       balance = Sms::balance
 
       if balance > 0
-        for_send = Sms::Outbox.where(:processed => false).order(:insertdate).limit(5)
+        for_send = Sms::Outbox.where(:processed => false).order(:insertdate).limit(20)
 
         for_send.each do |msj|
           if balance > 0
