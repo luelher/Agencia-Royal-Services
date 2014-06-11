@@ -11,6 +11,8 @@ class InformeController < ApplicationController
       @year = params['date']['year']
       meta = Goal.find_by_month_and_year(@month, @year)
 
+      Feriado.all.map{|holiday| BusinessTime::Config.holidays << holiday.fecha}
+
       if meta
         @meta_ventas = meta.sales
         @meta_cobranza = meta.billing
