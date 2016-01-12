@@ -350,8 +350,13 @@ acum_porcen_ventas = 0
     report.page.values ("2012" + (mes).to_s).to_sym => cobranza_ano2['giros'] unless cobranza_ano2['giros'].nil?
     acum_2012_cobranza += cobranza_ano2['giros'] unless cobranza_ano2['giros'].nil?
 
+    tmp_neto = 0
+    tmp_neto = ventas['neto'] unless ventas['neto'].nil?
+    tmp_neto -= ventas['iva'] unless ventas['iva'].nil?
+    tmp_neto -= ventas['costo_dev'] unless ventas['costo_dev'].nil?
+    tmp_neto -= ventas['iva_dev'] unless ventas['iva_dev'].nil?
 
-    report.page.values ("alogrado" + (mes).to_s).to_sym => (ventas['neto']-ventas['iva']-ventas['costo_dev']-ventas['iva_dev']) unless ventas['neto'].nil?
+    report.page.values ("alogrado" + (mes).to_s).to_sym => (tmp_neto) unless ventas['neto'].nil?
     acum_logrado_ventas += ventas['neto'] unless ventas['neto'].nil?
     report.page.values ("2010" + (mes).to_s).to_sym => ventas_ano1['neto'] unless ventas_ano1['neto'].nil?
     acum_2011_ventas += ventas_ano1['neto'] unless ventas_ano1['neto'].nil?

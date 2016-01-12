@@ -1,4 +1,6 @@
 Arv2::Application.routes.draw do
+  resources :feriados
+
   resources :goals
 
   resources :parroquia
