@@ -15,22 +15,22 @@ class Sms
         for_send = Sms::Outbox.where(:processed => false).order(:insertdate).limit(20)
 
         for_send.each do |msj|
-          if balance > 0
+          if true
             result = sms.send_sms(msj.number.gsub("+58","0"),msj.text)
             msj.processed_date = Time.now
             msj.processed = true
             if result.count > 0
               # puts result.first.to_json
-              if result.first[1]["transaccion"] == "exitosa"
+              if result.first[1]["respuesta"] == "ok"
                 msj.error = 0
                 log.debug "Enviado Nro: #{msj.number.gsub("+58","0")}, a las #{msj.processed_date.to_s}"
               else
                 msj.error = 8
-                log.debug "Error del API. Nro: #{msj.number.gsub("+58","0")}, a las #{msj.processed_date.to_s}, #{result.first[1]['mensaje_transaccion']}"
+                log.debug "Error del API. Nro: #{msj.number.gsub("+58","0")}, a las #{msj.processed_date.to_s}, #{result.first[1]['detalle']}"
               end
             else
               msj.error = 6
-              log.debug "Error del API. Nro: #{msj.number.gsub("+58","0")}, a las #{msj.processed_date.to_s}, #{result.first[1]['mensaje_transaccion']}"
+              log.debug "Error del API. Nro: #{msj.number.gsub("+58","0")}, a las #{msj.processed_date.to_s}, #{result.first[1]['detalle']}"
             end
             msj.save
 
