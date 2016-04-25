@@ -7,7 +7,7 @@ class Sms
 
     log = Logger.new('sms.log')
 
-    if Sms::connection?
+    if true
 
       balance = Sms::balance
 
