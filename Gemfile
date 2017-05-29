@@ -80,4 +80,4 @@ gem "holidays"
 
 gem "business_time"
 
-gem "textveloper"
+gem "textveloper", :git => "https://github.com/luelher/Textveloper.git"
